@@ -259,7 +259,7 @@ collections:
       - name: slider
         label: Home page slider
         file: data/slider.json
-        description: The photographs under the headline at the top of the home page, in the order they appear. Three are shown at a time on a computer. Wide pictures suit this space better than tall ones.
+        description: The photographs across the top of the home page, in the order they appear. One is centred with its caption on it; the others show at the edges of the screen. Wide pictures suit this space better than tall ones.
         fields:
           - name: _comment
             label: Note to editors
@@ -272,7 +272,7 @@ collections:
             widget: list
             collapsed: true
             summary: '{{fields.title}} — {{fields.date}}'
-            hint: Drag to reorder. Three are shown at a time on a computer, so nine or twelve works best — a number that divides by three.
+            hint: Drag to reorder. The row steps along one picture at a time and runs round to the beginning on its own, so there is no last one.
             fields:
               - { name: title, label: What it shows, widget: string, hint: 'The large caption — for example: Mayfield Mall' }
               - { name: date, label: Date, widget: string, required: false, hint: 'Follows the title on the same line, so write it lower case — for example: circa 1966' }

@@ -1812,21 +1812,27 @@
   /* ====================================================================
      10. Home page photographs
      --------------------------------------------------------------------
-     Three photographs at a time under the headline, sliding along a page
-     at a time. The pictures, their captions and their order all live in
+     The band of photographs across the top of the home page. One is
+     centred and captioned; the ones either side of it show at the edges
+     of the screen, and the whole row steps along one picture at a time.
+
+     The pictures, their captions and their order all live in
      data/slider.json, so nothing here needs editing to change them.
 
-     They sit below the words rather than behind them, which is what lets
-     them be shown at their own brightness: a photograph with a headline
-     over it has to be darkened until the words are readable, and these
-     are not.
+     They are shown at their own brightness, with nothing over them --
+     which is why the words sit underneath rather than on top.
+
+     The row holds two copies of every photograph. That is what lets it
+     run on past the last one and come back to the first without the
+     picture visibly jumping backwards: it slides into the second copy,
+     then swaps to the identical first copy with the animation switched
+     off, which nobody can see.
 
      The page ships with the first photograph already in the HTML, so it
      appears at once, is what the browser starts downloading first, and
      is still there for anybody without JavaScript. This replaces it with
      the same picture and adds the rest, so nothing is downloaded twice.
-     Keeping those two in step matters: tools/check.js warns if the
-     picture in index.html is no longer the first in data/slider.json.
+     tools/check.js warns if the two ever drift apart.
      ==================================================================== */
 
   (async function initSlider() {
@@ -1840,99 +1846,89 @@
     const calm = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    const real = slides.length;
+
+    function slideHtml(s, i, clone) {
+      const inner =
+        '<img src="' + esc(s.src) + '" alt="' + esc(clone ? '' : (s.alt || s.title || '')) + '"' +
+          (i < 2 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
+        '<span class="slider-caption">' +
+          '<strong>' + esc(s.title || '') + '</strong>' +
+          (s.date ? '<span>' + esc(s.date) + '</span>' : '') +
+        '</span>';
+      return '<li class="slider-slide"' + (clone ? ' aria-hidden="true" data-clone' : '') + '>' +
+        (s.link ? '<a href="' + esc(s.link) + '">' + inner + '</a>' : inner) +
+        '</li>';
+    }
+
     mount.innerHTML =
       '<ul class="slider-track">' +
-        slides.map(function (s, i) {
-          const inner =
-            '<img src="' + esc(s.src) + '" alt="' + esc(s.alt || s.title || '') + '"' +
-              (i < 3 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
-            '<span class="slider-caption">' +
-              '<strong>' + esc(s.title || '') + '</strong>' +
-              (s.date ? '<span>' + esc(s.date) + '</span>' : '') +
-            '</span>';
-          return '<li class="slider-slide">' +
-            (s.link ? '<a href="' + esc(s.link) + '">' + inner + '</a>' : inner) +
-            '</li>';
-        }).join('') +
+        slides.map(function (s, i) { return slideHtml(s, i, false); }).join('') +
+        slides.map(function (s, i) { return slideHtml(s, i, true); }).join('') +
       '</ul>' +
-      '<div class="slider-controls">' +
-        '<button class="slider-arrow" type="button" data-step="-1" aria-label="Previous photographs"><span aria-hidden="true">&lsaquo;</span></button>' +
-        '<div class="slider-dots" role="tablist" aria-label="Choose a set of photographs"></div>' +
-        '<button class="slider-arrow" type="button" data-step="1" aria-label="Next photographs"><span aria-hidden="true">&rsaquo;</span></button>' +
-      '</div>';
+      '<button class="slider-arrow slider-arrow--prev" type="button" data-step="-1" aria-label="Previous photograph"><span aria-hidden="true">&lsaquo;</span></button>' +
+      '<button class="slider-arrow slider-arrow--next" type="button" data-step="1" aria-label="Next photograph"><span aria-hidden="true">&rsaquo;</span></button>';
 
     const track = $('.slider-track', mount);
     const items = $$('.slider-slide', mount);
-    const dotBox = $('.slider-dots', mount);
-    let perView = 3, pages = 1, at = 0, timer = null;
+    let at = 0;
+    let timer = null;
 
-    /* How many fit depends on the width of the screen, and must agree with
-       the widths in the stylesheet -- three across, two on a tablet, one on
-       a telephone. Asking the browser how wide a slide actually came out
-       keeps the two from drifting apart. */
-    function measure() {
-      const whole = track.clientWidth;
-      const one = items[0].getBoundingClientRect().width;
-      perView = Math.max(1, Math.round(whole / (one || whole)));
-      pages = Math.max(1, Math.ceil(items.length / perView));
-      if (at > pages - 1) at = pages - 1;
+    function slideWidth() {
+      return items[0].getBoundingClientRect().width;
     }
 
-    function drawDots() {
-      dotBox.innerHTML = '';
-      for (let i = 0; i < pages; i++) {
-        dotBox.insertAdjacentHTML('beforeend',
-          '<button class="slider-dot" type="button" role="tab" data-go="' + i + '"' +
-          ' aria-selected="' + (i === at) + '"' +
-          ' aria-label="Photographs ' + (i * perView + 1) + ' to ' +
-            Math.min((i + 1) * perView, items.length) + '"></button>');
+    /* Put the picture at `at` in the middle of the screen. */
+    function place(animate) {
+      if (!animate) track.style.transition = 'none';
+      const w = slideWidth();
+      track.style.transform =
+        'translateX(' + ((mount.clientWidth / 2) - (w / 2) - (at * w)) + 'px)';
+      if (!animate) {
+        void track.offsetWidth;      // make the browser apply it before we re-enable
+        track.style.transition = '';
       }
+      items.forEach(function (li, i) {
+        const on = i === at;
+        li.classList.toggle('is-on', on);
+        const link = $('a', li);
+        // Only the centred picture, and never a copy, is worth landing on.
+        if (link) link.tabIndex = (on && !li.hasAttribute('data-clone')) ? 0 : -1;
+      });
     }
 
     function show(next) {
-      at = (next + pages) % pages;
-      // Never slide past the end: the last page lines up with the last picture.
-      const firstOfPage = Math.min(at * perView, Math.max(0, items.length - perView));
-      const step = items[0].getBoundingClientRect().width +
-        parseFloat(getComputedStyle(track).columnGap || 0);
-      track.style.transform = 'translateX(' + (-firstOfPage * step) + 'px)';
-
-      $$('.slider-dot', dotBox).forEach(function (d, i) {
-        d.setAttribute('aria-selected', String(i === at));
-      });
-      // Anything off screen should not be reachable by keyboard or read out.
-      items.forEach(function (li, i) {
-        const on = i >= firstOfPage && i < firstOfPage + perView;
-        li.classList.toggle('is-on', on);
-        if (on) li.removeAttribute('aria-hidden');
-        else li.setAttribute('aria-hidden', 'true');
-        const link = $('a', li);
-        if (link) link.tabIndex = on ? 0 : -1;
-      });
+      if (next < 0) {
+        // Stepping back off the front: jump to the identical copy at the
+        // far end first, so the move is forwards on screen.
+        at = real;
+        place(false);
+        next = real - 1;
+      }
+      at = next;
+      place(true);
     }
 
+    track.addEventListener('transitionend', function (e) {
+      if (e.propertyName !== 'transform') return;
+      if (at >= real) { at -= real; place(false); }
+    });
+
     function start() {
-      if (calm || timer || pages < 2) return;
-      timer = setInterval(function () { show(at + 1); }, 7000);
+      if (calm || timer) return;
+      timer = setInterval(function () { show(at + 1); }, 6000);
     }
     function stop() {
       if (timer) { clearInterval(timer); timer = null; }
     }
 
-    function layout() {
-      const before = perView;
-      measure();
-      if (dotBox.children.length !== pages || before !== perView) drawDots();
-      show(at);
-    }
-
-    layout();
+    place(false);
     start();
 
     let resizeTimer = null;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(layout, 150);
+      resizeTimer = setTimeout(function () { place(false); }, 150);
     });
 
     // Stop while somebody is looking, start again when they leave.
@@ -1945,15 +1941,13 @@
     });
 
     mount.addEventListener('click', function (e) {
-      const dot = e.target.closest('[data-go]');
-      if (dot) { stop(); show(Number(dot.dataset.go)); return; }
       const step = e.target.closest('[data-step]');
       if (step) { stop(); show(at + Number(step.dataset.step)); }
     });
 
     // Arrow keys, once one of the slider's own buttons has the keyboard.
     mount.addEventListener('keydown', function (e) {
-      if (!e.target.closest('.slider-dot, .slider-arrow')) return;
+      if (!e.target.closest('.slider-arrow')) return;
       if (e.key === 'ArrowRight') { stop(); show(at + 1); }
       else if (e.key === 'ArrowLeft') { stop(); show(at - 1); }
     });

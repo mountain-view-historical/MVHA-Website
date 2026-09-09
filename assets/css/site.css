@@ -1086,98 +1086,101 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 /* ==========================================================================
    Home page photographs
    --------------------------------------------------------------------------
-   Three at a time under the headline, sliding a page at a time. They sit
-   below the words rather than behind them, so no dark overlay is needed and
-   the photographs are shown at their own brightness.
+   A full-width band across the top of the page: one photograph centred and
+   captioned, the ones either side of it running off both edges of the screen,
+   stepping along one at a time.
 
-   The slide widths here and the "how many fit" sum in site.js have to agree.
-   The script measures a real slide rather than assuming, so changing the
-   widths below is enough — but change them in one place only.
+   No rounded corners, no gaps and nothing over the pictures — they are shown
+   as they are, which is why the headline and the introduction sit below the
+   band rather than on top of it.
    ========================================================================== */
 
 .hero--gallery { background: var(--green-dark); }
-.hero--gallery .hero-inner { padding: 4rem 0 2.25rem; max-width: 720px; }
 
-.hero-gallery { position: relative; padding-bottom: 3.25rem; overflow: hidden; }
+.hero-gallery {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #1a2622;
+}
 
 .slider-track {
   list-style: none; margin: 0; padding: 0;
   display: flex;
-  gap: 1.5rem;
-  transition: transform .6s ease;
+  transition: transform .55s ease;
 }
 
 .slider-slide {
-  flex: 0 0 calc((100% - 3rem) / 3);   /* three across, two 1.5rem gaps */
-  opacity: .35;
-  transition: opacity .4s ease;
+  position: relative;
+  flex: 0 0 min(640px, 92vw);
 }
-.slider-slide.is-on { opacity: 1; }
-
-.slider-slide a { text-decoration: none; display: block; }
+.slider-slide a { display: block; text-decoration: none; }
 .slider-slide img {
   display: block; width: 100%;
-  aspect-ratio: 3 / 2; object-fit: cover;
-  border-radius: var(--radius);
-  background: rgba(255,255,255,.06);
+  aspect-ratio: 4 / 3; object-fit: cover;
 }
-.slider-slide a:hover img { opacity: .9; }
 
-.slider-caption { display: block; margin-top: .6rem; color: #fff; }
+/* Every picture is shown at its own brightness, the ones at the edges
+   included. It is the caption, not a dimming, that marks the middle one. */
+
+/* Only the centred picture is captioned. */
+.slider-caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  z-index: 2;
+  padding: 1.5rem 1.4rem 1.1rem;
+  color: #fff;
+  background: linear-gradient(to top, rgba(16,24,21,.9) 0%, rgba(16,24,21,.6) 60%, rgba(16,24,21,0) 100%);
+  opacity: 0;
+  transition: opacity .45s ease;
+}
+.slider-slide.is-on .slider-caption { opacity: 1; }
 .slider-caption strong {
   display: block;
   font-family: var(--font-display);
-  font-size: 1rem; font-weight: 600; line-height: 1.25;
+  font-size: 1.3rem; font-weight: 600; line-height: 1.25;
 }
 .slider-caption span {
   display: block;
-  font-size: .78rem; color: rgba(255,255,255,.68);
-  margin-top: .1rem;
-}
-
-.slider-controls {
-  position: absolute; right: 0; bottom: 0;
-  display: flex; align-items: center; gap: .6rem;
+  font-size: .85rem; font-weight: 600;
+  color: rgba(255,255,255,.85);
+  margin-top: .15rem;
 }
 
 .slider-arrow {
-  width: 30px; height: 30px;
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 3;
+  width: 34px; height: 44px;
   display: flex; align-items: center; justify-content: center;
-  border: 0; border-radius: 50%;
-  background: rgba(255,255,255,.14);
+  border: 0; border-radius: 2px;
+  background: rgba(90,96,94,.75);
   color: #fff;
-  font-size: 1.3rem; line-height: 1;
+  font-size: 1.4rem; line-height: 1;
   cursor: pointer;
   transition: background .15s ease;
 }
-.slider-arrow:hover { background: rgba(255,255,255,.3); }
+.slider-arrow:hover { background: rgba(40,46,44,.9); }
+.slider-arrow--prev { left: 24px; }
+.slider-arrow--next { right: 24px; }
 .slider-arrow span { position: relative; top: -2px; }
 
-.slider-dots { display: flex; gap: .45rem; }
-.slider-dot {
-  width: 8px; height: 8px; padding: 0;
-  border: 0; border-radius: 50%;
-  background: rgba(255,255,255,.35);
-  cursor: pointer;
-  transition: background .15s ease, transform .15s ease;
-}
-.slider-dot:hover { background: rgba(255,255,255,.6); }
-.slider-dot[aria-selected="true"] { background: #fff; transform: scale(1.3); }
+/* The words below the band. The introduction is given the full width of the
+   page so it settles into two lines rather than three. */
+.hero--gallery .hero-inner { max-width: none; padding: 3rem 0 3.25rem; }
+.hero--gallery .hero-inner h1 { margin-bottom: .75rem; }
+.hero--gallery .hero-inner p:last-child { margin-bottom: 0; max-width: 60em; }
 
-@media (max-width: 900px) {
-  .slider-slide { flex-basis: calc((100% - 1.5rem) / 2); }   /* two across */
-  .hero--gallery .hero-inner { padding: 3rem 0 2rem; }
-}
-@media (max-width: 620px) {
-  .slider-slide { flex-basis: 100%; }                        /* one across */
-  .slider-controls { position: static; justify-content: center; margin-top: 1rem; }
-  .hero-gallery { padding-bottom: 0; }
+@media (max-width: 720px) {
+  .slider-arrow { left: 8px; width: 30px; height: 38px; }
+  .slider-arrow--next { right: 8px; left: auto; }
+  .slider-caption { padding: 1.2rem 1rem .9rem; }
+  .slider-caption strong { font-size: 1.05rem; }
+  .hero--gallery .hero-inner { padding: 2.25rem 0 2.5rem; }
 }
 
 /* Somebody who has asked their computer to keep still gets the photographs
    without the sliding, and nothing moves on its own. */
 @media (prefers-reduced-motion: reduce) {
-  .slider-track, .slider-slide { transition: none; }
+  .slider-track, .slider-caption { transition: none; }
 }
 
 /* ==========================================================================

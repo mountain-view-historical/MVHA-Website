@@ -472,32 +472,39 @@ async function render(page, query, patch) {
 
   console.log('\nHome page photographs');
   doc = await render('index.html');
-  const slides = doc.querySelectorAll('.hero-gallery .slider-slide');
   const wanted = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/slider.json'), 'utf8')).slides;
-  check(`renders every picture (${slides.length})`, slides.length === wanted.length);
+  const slides = doc.querySelectorAll('.hero-gallery .slider-slide');
+  const originals = doc.querySelectorAll('.hero-gallery .slider-slide:not([data-clone])');
+  check(`renders every picture (${originals.length})`, originals.length === wanted.length);
+  check('and a second copy of each, so the band can run round to the start',
+    slides.length === wanted.length * 2);
   check('the first picture is the one already in the page',
     slides[0].querySelector('img').getAttribute('src') === wanted[0].src);
-  check('the headline is still the page heading',
-    !!doc.querySelector('.hero h1') && doc.querySelectorAll('h1').length === 1);
-  check('the headline and buttons survive',
-    doc.querySelectorAll('.hero-inner .btn').length === 2);
-  check('every picture has alt text',
-    [...slides].every(s => s.querySelector('img').getAttribute('alt')));
-  check('each picture is captioned and dated',
+  check('exactly one picture is the centred one',
+    doc.querySelectorAll('.hero-gallery .slider-slide.is-on').length === 1);
+  check('the copies are hidden from screen readers',
+    [...doc.querySelectorAll('[data-clone]')].every(s => s.getAttribute('aria-hidden') === 'true'));
+  check('only the centred picture can be reached by keyboard',
+    [...slides].filter(s => s.querySelector('a').tabIndex === 0).length === 1);
+  check('every real picture has alt text',
+    [...originals].every(s => s.querySelector('img').getAttribute('alt')));
+  check('each picture carries its caption and date',
     doc.querySelector('.slider-caption strong').textContent === wanted[0].title &&
     doc.querySelector('.slider-caption span').textContent === wanted[0].date,
     doc.querySelector('.slider-caption').textContent);
   check('each picture links into the archive',
-    doc.querySelectorAll('.slider-slide a[href*="archive.html"]').length === wanted.length);
-  check('there is no dark overlay over the photographs',
-    !doc.querySelector('.hero--slider') && !!doc.querySelector('.hero--gallery'));
+    originals.length === doc.querySelectorAll('.slider-slide:not([data-clone]) a[href*="archive.html"]').length);
   check('back and forward buttons', doc.querySelectorAll('.slider-arrow[data-step]').length === 2);
-  check('the pictures off screen are hidden from screen readers',
-    [...slides].some(s => s.getAttribute('aria-hidden') === 'true'));
-  check('and cannot be reached by keyboard',
-    [...slides].filter(s => s.getAttribute('aria-hidden') === 'true')
-      .every(s => s.querySelector('a').tabIndex === -1));
-  check('no second slider left further down the page', !doc.querySelector('.slider-band'));
+
+  console.log('\nHome page words');
+  check('the Association is the page heading',
+    doc.querySelector('.hero h1').textContent.trim() === 'Mountain View Historical Association',
+    doc.querySelector('.hero h1').textContent.trim());
+  check('one heading only, and it is not the old tagline',
+    doc.querySelectorAll('h1').length === 1 && !/kept in the open/.test(doc.querySelector('main').textContent));
+  check('the two hero buttons are gone', doc.querySelectorAll('.hero-inner .btn').length === 0);
+  check('the introduction is still there',
+    /non-profit, volunteer-run association/.test(doc.querySelector('.hero-inner').textContent));
 
   console.log('\nPayment buttons');
 

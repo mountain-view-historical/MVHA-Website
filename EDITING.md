@@ -193,23 +193,24 @@ unlikely to come up.
 
 **Home page pictures → Pictures.**
 
-These are the photographs under the headline at the top of the home page.
-Three are shown at a time on a computer, two on a tablet and one on a
-telephone, and they slide along a set at a time. You can drag them to
-reorder.
+These are the photographs across the top of the home page. One sits in the
+middle with its caption on it, the ones either side of it run off the edges
+of the screen, and the whole row steps along one picture at a time. You can
+drag them to reorder.
 
-- **What it shows** — the caption under the picture, such as *Mayfield Mall*.
-- **Date** — the smaller line beneath it: *circa 1966*.
-- **The picture** — each one is shown in a landscape box, a little wider than
-  it is tall, and cropped to fit. A tall photograph is not wrong; it will
-  simply lose its top and bottom.
+- **What it shows** — the caption, in bold, over the bottom of the picture:
+  *Mayfield Mall*.
+- **Date** — the smaller line under it: *circa 1966*.
+- **The picture** — each is shown in a box a third wider than it is tall, and
+  cropped to fit. A tall photograph is not wrong; it will simply lose its top
+  and bottom. The caption sits over the bottom left, so a photograph with
+  something important in that corner is worth avoiding.
 - **Where it links to** — optional. Point it at the same photograph in the
   archive, like `archive.html?photo=mayfield-mall`, or leave it empty for a
   picture nobody can click.
 
-**Nine or twelve pictures works best**, because they divide evenly into sets
-of three. Ten leaves a last set with only one in it, which looks unfinished
-on a wide screen.
+Any number from about six upwards works. The row runs round to the beginning
+on its own, so there is no last one.
 
 **One thing to tell whoever maintains the site**: if you change which
 photograph comes *first*, the same picture also has to be changed in
