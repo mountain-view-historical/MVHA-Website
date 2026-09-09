@@ -1,8 +1,14 @@
 {
-  "_comment": "Payment links. Each line below is the web address of a Stripe payment link — the page Stripe hosts where somebody actually types their card details. Create the links in the Stripe dashboard and paste the addresses here; see PAYMENTS.md in the main folder for step-by-step instructions. A line left empty simply hides that button on the website, so it is safe to add them one at a time. Nothing secret belongs in this file: these addresses are meant to be public.",
+  "_comment": "Payment links. Each link below is the web address of a Stripe payment link — the page Stripe hosts where somebody actually types their card details. Create the links in the Stripe dashboard and paste the addresses here; see PAYMENTS.md in the main folder for step-by-step instructions. A link left empty hides that choice on the website, so it is safe to add them one at a time. Nothing secret belongs in this file: these addresses are meant to be public.",
 
   "donate": {
-    "link": "",
+    "funds": [
+      { "label": "Where it is needed most", "link": "" },
+      { "label": "The archive & History Center", "link": "" },
+      { "label": "Historical markers & plaques", "link": "" },
+      { "label": "Castro Street MVHS monument", "link": "" },
+      { "label": "Publications & newsletter", "link": "" }
+    ],
     "amounts": [50, 100, 250, 500],
     "monthlyLink": ""
   },

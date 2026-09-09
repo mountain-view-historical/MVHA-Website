@@ -167,6 +167,60 @@ const upcomingCount = (events.events || []).filter(e => e.date >= new Date().toI
 console.log(`  ok    ${(events.events || []).length} events, ${upcomingCount} still to come`);
 if (!upcomingCount) warn('nothing is coming up — the events page will show its empty message');
 
+/* ---- Home page slider and payment links ---- */
+
+console.log('\nChecking the home page slider');
+{
+  const sliderFile = path.join(dataDir, 'slider.json');
+  const slider = JSON.parse(fs.readFileSync(sliderFile, 'utf8'));
+  const slides = slider.slides || [];
+  if (slides.length < 2) {
+    warn('data/slider.json has fewer than two pictures — the home page will simply show the one already in index.html');
+  }
+  slides.forEach((s, i) => {
+    if (!s.src) fail(`slider picture ${i + 1} has no picture`);
+    if (!s.title) warn(`slider picture ${i + 1} has no caption`);
+  });
+
+  /* index.html carries the first photograph in its own HTML so that it
+     appears before the script runs, and so that anybody without JavaScript
+     still sees one. If somebody reorders the pictures in /admin and that
+     one is no longer first, the home page swaps pictures as it loads. */
+  const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  const m = home.match(/<div class="hero-media" data-slider>\s*<img src="([^"]+)"/);
+  if (!m) {
+    warn('index.html no longer has a picture inside the hero — visitors without JavaScript will see a plain green banner');
+  } else if (slides.length && m[1] !== slides[0].src) {
+    warn('the picture in index.html is not the first one in data/slider.json, so the home page will swap pictures as it loads — put the same picture first in both, then rebuild');
+  } else {
+    console.log(`  ok    ${slides.length} pictures, and index.html starts with the same one`);
+  }
+}
+
+console.log('\nChecking payment links');
+{
+  const pay = JSON.parse(fs.readFileSync(path.join(dataDir, 'payments.json'), 'utf8'));
+  const found = [];
+  const check = (label, url) => {
+    if (!url) return;
+    if (!/^https:\/\//i.test(url)) fail(`the ${label} payment link does not start with https:// — "${url}"`);
+    else if (/\/test_|dashboard\.stripe\.com/.test(url)) {
+      warn(`the ${label} payment link looks like a Stripe test link, which takes no money — "${url}"`);
+    } else found.push(label);
+  };
+  (pay.donate && pay.donate.funds || []).forEach(f => check(`donation (${f.label || 'unnamed fund'})`, f.link));
+  check('monthly donation', pay.donate && pay.donate.monthlyLink);
+  check('household membership', pay.membership && pay.membership.householdLink);
+  check('household membership, renewing', pay.membership && pay.membership.householdAutoLink);
+  check('lifetime membership', pay.membership && pay.membership.lifetimeLink);
+
+  if (!found.length) {
+    console.log('  ok    none set up yet — the Donate and Membership pages will show the pay-by-check wording (see PAYMENTS.md)');
+  } else {
+    console.log(`  ok    ${found.length} payment link(s) in place: ${found.join(', ')}`);
+  }
+}
+
 console.log('\nChecking newsletter archive data');
 const news = JSON.parse(fs.readFileSync(path.join(dataDir, 'newsletters.json'), 'utf8'));
 

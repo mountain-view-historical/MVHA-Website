@@ -275,7 +275,7 @@ collections:
             hint: Drag to reorder. Eight to twelve works well; any more and most visitors never see the last of them.
             fields:
               - { name: title, label: What it shows, widget: string, hint: 'The large caption — for example: Mayfield Mall' }
-              - { name: date, label: Date, widget: string, required: false, hint: 'The small caption underneath — for example: Circa 1966' }
+              - { name: date, label: Date, widget: string, required: false, hint: 'Follows the title on the same line, so write it lower case — for example: circa 1966' }
               - { name: src, label: The picture, widget: image }
               - { name: alt, label: Description for screen readers, widget: string, required: false, hint: 'Optional. Leave empty and the caption above is used.' }
               - { name: link, label: Where it links to, widget: string, required: false, hint: 'Optional — for example: archive.html?photo=mayfield-mall. Leave empty for a picture that is not a link.' }
@@ -306,7 +306,20 @@ collections:
             label: Donations
             widget: object
             fields:
-              - { name: link, label: Donation page, widget: string, required: false, default: '', hint: 'The Stripe link where the donor chooses the amount. Starts with https://buy.stripe.com/ — leave empty to hide the donation buttons.' }
+              - name: funds
+                label: What a gift can be for
+                label_singular: Fund
+                widget: list
+                required: false
+                summary: '{{fields.label}}'
+                hint: >-
+                  Each of these is a choice on the Donate page, and each needs its own
+                  Stripe link so the money is recorded against the right fund. A fund
+                  with no link yet is simply not offered. Put the general one first —
+                  it is the choice the page starts on.
+                fields:
+                  - { name: label, label: What the gift is for, widget: string, hint: 'For example: Historical markers & plaques' }
+                  - { name: link, label: Its Stripe link, widget: string, required: false, default: '', hint: 'Starts with https://buy.stripe.com/' }
               - name: amounts
                 label: Suggested amounts
                 label_singular: Amount

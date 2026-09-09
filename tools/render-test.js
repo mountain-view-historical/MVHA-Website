@@ -472,21 +472,27 @@ async function render(page, query, patch) {
 
   console.log('\nHome page slider');
   doc = await render('index.html');
-  const slides = doc.querySelectorAll('[data-slider] .slider-slide');
+  const slides = doc.querySelectorAll('.hero-media .slider-slide');
   const wanted = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/slider.json'), 'utf8')).slides;
   check(`renders every picture (${slides.length})`, slides.length === wanted.length);
-  check('exactly one is showing', doc.querySelectorAll('[data-slider] .slider-slide.is-on').length === 1);
+  check('exactly one is showing', doc.querySelectorAll('.hero-media .slider-slide.is-on').length === 1);
   check('the rest are hidden from screen readers',
     [...slides].filter(s => s.getAttribute('aria-hidden') === 'true').length === slides.length - 1);
-  check('every picture has alt text',
-    [...slides].every(s => s.querySelector('img') && s.querySelector('img').getAttribute('alt')));
-  check('captions are filled in from the data file',
-    doc.querySelector('[data-slider] .slider-caption strong').textContent === wanted[0].title,
-    doc.querySelector('[data-slider] .slider-caption strong').textContent);
-  check('a dot for each picture', doc.querySelectorAll('[data-slider] .slider-dot').length === wanted.length);
-  check('back and forward buttons', doc.querySelectorAll('[data-slider] .slider-arrow').length === 2);
-  check('a picture with a link is clickable',
-    !!doc.querySelector('[data-slider] .slider-slide a[href*="archive.html"]'));
+  check('the first picture is the one already in the page',
+    slides[0].querySelector('img').getAttribute('src') === wanted[0].src);
+  check('the headline is still the page heading',
+    !!doc.querySelector('.hero h1') && doc.querySelectorAll('h1').length === 1);
+  check('the headline and buttons survive',
+    doc.querySelectorAll('.hero-inner .btn').length === 2);
+  check('the caption names the picture',
+    doc.querySelector('[data-slider-credit]').textContent.includes(wanted[0].title),
+    doc.querySelector('[data-slider-credit]').textContent);
+  check('the caption links to the photograph in the archive',
+    !!doc.querySelector('[data-slider-credit] a[href*="archive.html"]'));
+  check('the fixed credit line is gone', !doc.querySelector('.hero-credit'));
+  check('a dot for each picture', doc.querySelectorAll('.slider-dot').length === wanted.length);
+  check('back and forward buttons', doc.querySelectorAll('.slider-arrow[data-step]').length === 2);
+  check('no second slider left further down the page', !doc.querySelector('.slider-band'));
 
   console.log('\nPayment buttons');
 
@@ -495,6 +501,7 @@ async function render(page, query, patch) {
   doc = await render('donate.html');
   check('no dead buttons on the donate page',
     doc.querySelectorAll('#give [data-pay], #give .amount-btn').length === 0);
+  check('no fund menu with nothing to choose from', !doc.querySelector('[data-pay-fund]'));
   check('the donate page says how to give by check instead',
     /being set up/.test(doc.querySelector('#give').textContent));
   doc = await render('membership.html');
@@ -506,7 +513,11 @@ async function render(page, query, patch) {
   /* And once they have been created. */
   const stripe = (rel, data) => rel !== 'data/payments.json' ? data : {
     donate: {
-      link: 'https://buy.stripe.com/donate',
+      funds: [
+        { label: 'Where it is needed most', link: 'https://buy.stripe.com/general' },
+        { label: 'Castro Street MVHS monument', link: 'https://buy.stripe.com/eagle' },
+        { label: 'Not ready yet', link: '' }
+      ],
       amounts: [50, 100],
       monthlyLink: 'https://buy.stripe.com/monthly'
     },
@@ -518,13 +529,28 @@ async function render(page, query, patch) {
   };
 
   doc = await render('donate.html', '', stripe);
+  const fund = doc.querySelector('[data-pay-fund] select');
+  check('the donor is asked what the gift is for', !!fund);
+  check('a fund with no link yet is not offered',
+    fund && fund.querySelectorAll('option').length === 2,
+    fund && [...fund.querySelectorAll('option')].map(o => o.textContent).join(' / '));
   const amounts = [...doc.querySelectorAll('#give .amount-btn')];
   check(`an amount button each, plus one for any other amount (${amounts.length})`, amounts.length === 3);
-  check('an amount is passed to Stripe in cents',
-    amounts[0].getAttribute('href') === 'https://buy.stripe.com/donate?prefilled_amount=5000',
+  check('the amount goes to the first fund, in cents',
+    amounts[0].getAttribute('href') === 'https://buy.stripe.com/general?prefilled_amount=5000',
     amounts[0].getAttribute('href'));
   check('the last button leaves the amount open',
-    amounts[2].getAttribute('href') === 'https://buy.stripe.com/donate');
+    amounts[2].getAttribute('href') === 'https://buy.stripe.com/general');
+
+  // Choosing another fund sends the same amounts somewhere else.
+  fund.value = '1';
+  fund.dispatchEvent(new (fund.ownerDocument.defaultView.Event)('change'));
+  const moved = [...doc.querySelectorAll('#give .amount-btn')];
+  check('choosing another fund re-points every button',
+    moved[0].getAttribute('href') === 'https://buy.stripe.com/eagle?prefilled_amount=5000' &&
+    moved[2].getAttribute('href') === 'https://buy.stripe.com/eagle',
+    moved[0].getAttribute('href'));
+
   check('the monthly button appears once there is a link for it',
     doc.querySelector('[data-pay="donate-monthly"]').getAttribute('href') === 'https://buy.stripe.com/monthly');
   check('the pay-by-check notice steps aside',

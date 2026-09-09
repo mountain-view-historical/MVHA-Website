@@ -1086,92 +1086,83 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 /* ==========================================================================
    Home page picture slider
    --------------------------------------------------------------------------
-   One picture at a time, cross-fading. The slides are stacked on top of one
-   another rather than laid out in a row, so the band keeps a steady height
-   whatever shape the photographs are.
+   The photographs behind the headline on the home page. They are stacked on
+   top of one another inside .hero-media and cross-faded, so the hero keeps
+   exactly the height and the dark overlay it had with a single picture. The
+   caption and controls sit in the corner where the fixed credit line was.
    ========================================================================== */
 
-.slider-band { padding: 3.5rem 0; }
-
-.slider-frame {
-  position: relative;
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--green-dark);
-  box-shadow: var(--shadow);
-  aspect-ratio: 21 / 9;
-}
+.hero--slider .hero-media { overflow: hidden; }
 
 .slider-track { list-style: none; margin: 0; padding: 0; height: 100%; }
 
 .slider-slide {
   position: absolute; inset: 0;
   opacity: 0;
-  transition: opacity .8s ease;
-  pointer-events: none;
+  transition: opacity 1s ease;
 }
-.slider-slide.is-on { opacity: 1; pointer-events: auto; }
-.slider-slide a { display: block; height: 100%; text-decoration: none; }
+.slider-slide.is-on { opacity: 1; }
 .slider-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.slider-caption {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 3.5rem 1.5rem 1.25rem;
-  color: #fff;
-  background: linear-gradient(to top, rgba(20,30,27,.85) 0%, rgba(20,30,27,.55) 45%, rgba(20,30,27,0) 100%);
-}
-.slider-caption strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-.slider-caption span {
-  display: block;
-  margin-top: .2rem;
-  font-size: .85rem;
-  letter-spacing: .04em;
-  color: rgba(255,255,255,.82);
+.slider-controls {
+  position: absolute; right: 24px; bottom: 12px;
+  z-index: 2;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .4rem;
+  text-align: right;
 }
 
+/* ".hero p" sets the size and colour of the introduction paragraph, and it
+   is more specific than a bare class, so the caption has to say ".hero"
+   too or it comes out as body text. */
+.hero .slider-credit {
+  margin: 0;
+  font-size: .8rem;
+  color: rgba(255,255,255,.75);
+}
+.hero .slider-credit a { color: rgba(255,255,255,.75); text-decoration: none; }
+.hero .slider-credit a:hover { color: #fff; text-decoration: underline; }
+
+.slider-nav { display: flex; align-items: center; gap: .5rem; }
+
 .slider-arrow {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  width: 44px; height: 44px;
+  width: 30px; height: 30px;
   display: flex; align-items: center; justify-content: center;
   border: 0; border-radius: 50%;
-  background: rgba(20,30,27,.45);
+  background: rgba(255,255,255,.14);
   color: #fff;
-  font-size: 1.8rem; line-height: 1;
+  font-size: 1.3rem; line-height: 1;
   cursor: pointer;
   transition: background .15s ease;
 }
-.slider-arrow:hover { background: rgba(20,30,27,.75); }
-.slider-arrow--prev { left: 12px; }
-.slider-arrow--next { right: 12px; }
+.slider-arrow:hover { background: rgba(255,255,255,.3); }
 .slider-arrow span { position: relative; top: -2px; }
 
-.slider-dots { display: flex; justify-content: center; gap: .5rem; margin-top: 1rem; }
+.slider-dots { display: flex; gap: .45rem; }
 .slider-dot {
-  width: 9px; height: 9px; padding: 0;
+  width: 8px; height: 8px; padding: 0;
   border: 0; border-radius: 50%;
-  background: var(--rule);
+  background: rgba(255,255,255,.35);
   cursor: pointer;
   transition: background .15s ease, transform .15s ease;
 }
-.slider-dot:hover { background: var(--ink-faint); }
-.slider-dot[aria-selected="true"] { background: var(--green); transform: scale(1.35); }
+.slider-dot:hover { background: rgba(255,255,255,.6); }
+.slider-dot[aria-selected="true"] { background: #fff; transform: scale(1.3); }
 
+/* Once the headline needs the full width, the controls can no longer sit
+   beside it: they go underneath, centred, and the hero makes room for them
+   so they never land on top of the buttons. */
+@media (max-width: 1080px) {
+  .slider-controls { right: 16px; left: 16px; align-items: center; text-align: center; }
+  .hero--slider .hero-inner { padding-bottom: 6rem; }
+}
 @media (max-width: 720px) {
-  .slider-band { padding: 2.25rem 0; }
-  .slider-frame { aspect-ratio: 4 / 3; }
-  .slider-caption { padding: 3rem 1.1rem 1rem; }
-  .slider-caption strong { font-size: 1.15rem; }
-  .slider-arrow { width: 38px; height: 38px; font-size: 1.5rem; }
+  .slider-nav { gap: .65rem; }
+  .slider-arrow { width: 34px; height: 34px; }
+  .hero--slider .hero-inner { padding-bottom: 5.5rem; }
 }
 
-/* Somebody who has asked their computer to keep still gets the first
-   picture and the buttons, and nothing moves on its own. */
+/* Somebody who has asked their computer to keep still gets the photographs
+   without the fade, and nothing moves on its own. */
 @media (prefers-reduced-motion: reduce) {
   .slider-slide { transition: none; }
 }
@@ -1183,6 +1174,7 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
    that amount already filled in; the last opens Stripe with the box empty.
    ========================================================================== */
 
+.give-fund { max-width: 420px; margin-top: 1.75rem; }
 .amount-row { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0 .5rem; }
 .amount-btn { min-width: 92px; justify-content: center; font-variant-numeric: tabular-nums; }
 .amount-btn--other { min-width: 150px; }

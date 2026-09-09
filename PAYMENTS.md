@@ -41,18 +41,25 @@ below are the three that matter and no more.
 
 ## What has to be created
 
-Five links altogether. **They can be made one at a time** — the website hides
+Nine links altogether, of which five are the same link with a different name.
+**They can be made one at a time** — the website hides
 any button whose link has not been filled in yet, and puts the "please send a
 check" wording in its place, so nothing on the site is ever broken or
 half-finished while you work through them.
 
 | # | What it is for | Amount |
 | --- | --- | --- |
-| 1 | Donation | Whatever the donor chooses |
-| 2 | Monthly donation *(optional)* | Whatever the donor chooses, every month |
-| 3 | Household membership, one year | $30 once |
-| 4 | Household membership, renewing automatically | $30 a year |
-| 5 | Lifetime membership | $300 once |
+| 1–5 | One donation link per fund — where it is needed most, the archive and History Center, markers and plaques, the Castro Street MVHS monument, publications and newsletter | Whatever the donor chooses |
+| 6 | Monthly donation *(optional)* | Whatever the donor chooses, every month |
+| 7 | Household membership, one year | $30 once |
+| 8 | Household membership, renewing automatically | $30 a year |
+| 9 | Lifetime membership | $300 once |
+
+A link per fund is why there are nine and not five. The alternative was one
+donation link with a dropdown on Stripe's page; the Association preferred to
+ask on its own page, which means the answer has to be carried by *which* link
+the donor is sent to. The gain is that the money arrives already recorded
+against the right fund, with no question for the donor to answer twice.
 
 ---
 
@@ -76,37 +83,53 @@ money — its address contains `test_`, which is the giveaway.
 
 ---
 
-## 1. The donation link
+## 1–5. The donation links, one per fund
 
 **Payments → Payment links → Create payment link** (or **+ New**).
 
-1. Choose **Donation** as the type, if Stripe offers it. If it does not, choose
-   **Product**, then under pricing choose **Customers choose what to pay**.
-2. Name the product **Donation to the Mountain View Historical Association**.
-   Whatever you type here is what the donor sees and what the receipt says.
+Make the first one properly and then duplicate it four times, changing only
+the name. The Donate page shows one choice per fund, and sends the donor to
+the link belonging to whichever they picked.
+
+1. Choose **Donation** as the type, if Stripe offers it. If it does not,
+   choose **Product**, then under pricing choose **Customers choose what to
+   pay**.
+2. Name the product for the fund, beginning with the Association's name so
+   that receipts and bank statements make sense on their own:
+   **MVHA donation — where it is needed most**. Whatever you type here is what
+   the donor sees and what the receipt says, so it is worth getting right.
 3. Set a **suggested amount** of $100 and a **minimum** of $5.
 4. Under **Options**:
    - Tick **Collect customer addresses** → *Billing addresses only*. We need
      this for our records and for tax receipts.
    - Tick **Collect customer names**.
-   - **Add a custom field** — one only:
-     - Type: **Dropdown**
-     - Label: **What is your gift for?**
-     - Options: *Where it is needed most*, *The archive and History Center*,
-       *Historical markers and plaques*, *Castro Street MVHS monument*,
-       *Publications and newsletter*
+   - No custom fields are needed. What the gift is for is answered on our own
+     page, and is recorded by which link the donor used.
 5. Create the link and **copy its address**.
 
-### 2. The monthly donation link (optional)
+Then duplicate it (the **⋯** menu on the link, then **Duplicate**) once per
+fund, renaming each:
 
-Exactly the same, with two differences: the price is **recurring, monthly**,
-and the product is named **Monthly gift to the Mountain View Historical
-Association**. Skip this one if the board would rather not offer it — the
-website simply leaves that button out.
+- MVHA donation — the archive and History Center
+- MVHA donation — historical markers and plaques
+- MVHA donation — Castro Street MVHS monument
+- MVHA donation — publications and newsletter
+
+Adding or retiring a fund later is a matter of creating one more link and
+adding a line in `/admin` → Payment links → *What a gift can be for*. A fund
+listed there with no link yet is simply not offered on the page, so a
+half-finished one can never be clicked.
+
+### 6. The monthly donation link (optional)
+
+Same as the first, with two differences: the price is **recurring, monthly**,
+and the product is named **MVHA monthly gift**. It is not tied to a fund.
+Skip this one if the board would rather not offer it — the website simply
+leaves that button out.
 
 ---
 
-## 3–5. The membership links
+## 7–9. The membership links
 
 Each membership is its own link. They differ only in the price, so the fastest
 way is to make the first one properly and then duplicate it.
@@ -148,11 +171,11 @@ each address into the matching box:
 
 | Box | Which link |
 | --- | --- |
-| Donations → Donation page | 1 |
-| Donations → Monthly giving page | 2 |
-| Membership → Household, one year | 3 |
-| Membership → Household, renewing automatically | 4 |
-| Membership → Lifetime | 5 |
+| Donations → What a gift can be for → *each fund's* Stripe link | 1–5 |
+| Donations → Monthly giving page | 6 |
+| Membership → Household, one year | 7 |
+| Membership → Household, renewing automatically | 8 |
+| Membership → Lifetime | 9 |
 
 Press **Publish**. The website updates itself a minute or two later.
 
@@ -225,8 +248,15 @@ The addresses live in `data/payments.json`. Buttons carry a `data-pay`
 attribute naming which link they want, and `initPayments` in
 `assets/js/site.js` fills in the addresses, removes any button whose link is
 missing, and shows the pay-by-check wording in its place. An amount button is
-the donation link with `?prefilled_amount=` and the amount in cents, which is
-Stripe's own way of pre-filling the box.
+the chosen fund's link with `?prefilled_amount=` and the amount in cents,
+which is Stripe's own way of pre-filling the box; changing the fund menu
+re-points every amount button.
+
+Worth knowing before proposing anything cleverer: a payment link accepts only
+four things in its address — `prefilled_email`, `prefilled_amount`,
+`prefilled_promo_code` and `locale`. Answers given on our own page cannot be
+passed to Stripe any other way, which is exactly why a question asked here
+has to be carried by *which* link is used.
 
 `node tools/render-test.js` covers both states — links set up and not yet set
 up — so a mistake here shows up as a failing test rather than as a dead button

@@ -1812,8 +1812,16 @@
   /* ====================================================================
      10. Home page picture slider
      --------------------------------------------------------------------
-     The pictures, their captions and their order all live in
-     data/slider.json, so nothing here needs editing to change them.
+     The photographs behind the headline on the home page. They, their
+     captions and their order all live in data/slider.json, so nothing
+     here needs editing to change them.
+
+     The page ships with the first photograph already in the HTML, so it
+     appears at once, is what the browser starts downloading first, and
+     is still there for anybody without JavaScript. This replaces it with
+     the same picture and adds the rest, so nothing is downloaded twice.
+     Keeping those two in step matters: tools/check.js warns if the
+     picture in index.html is no longer the first in data/slider.json.
 
      It moves on by itself every seven seconds, and stops the moment
      somebody takes an interest -- a hover, a tap, or the keyboard
@@ -1826,44 +1834,50 @@
     const mount = $('[data-slider]');
     if (!mount) return;
 
+    const hero = mount.closest('.hero') || mount.parentNode;
     const data = await loadData('slider');
     const slides = (data && data.slides || []).filter(function (s) { return s && s.src; });
-    if (!slides.length) { mount.remove(); return; }
+    if (slides.length < 2) return;   // leave the single picture already there
 
     const calm = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     mount.innerHTML =
-      '<div class="slider-frame">' +
-        '<ul class="slider-track">' +
-          slides.map(function (s, i) {
-            const inner =
-              '<img src="' + esc(s.src) + '" alt="' + esc(s.alt || s.title || '') + '"' +
-                (i === 0 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
-              '<div class="slider-caption">' +
-                '<strong>' + esc(s.title || '') + '</strong>' +
-                (s.date ? '<span>' + esc(s.date) + '</span>' : '') +
-              '</div>';
-            return '<li class="slider-slide"' + (i === 0 ? '' : ' aria-hidden="true"') + '>' +
-              (s.link
-                ? '<a href="' + esc(s.link) + '">' + inner + '</a>'
-                : inner) +
-              '</li>';
-          }).join('') +
-        '</ul>' +
-        '<button class="slider-arrow slider-arrow--prev" type="button" aria-label="Previous picture"><span aria-hidden="true">&lsaquo;</span></button>' +
-        '<button class="slider-arrow slider-arrow--next" type="button" aria-label="Next picture"><span aria-hidden="true">&rsaquo;</span></button>' +
-      '</div>' +
-      '<div class="slider-dots" role="tablist" aria-label="Choose a picture">' +
+      '<ul class="slider-track">' +
         slides.map(function (s, i) {
-          return '<button class="slider-dot" type="button" role="tab" data-go="' + i + '"' +
-            ' aria-selected="' + (i === 0) + '"' +
-            ' aria-label="' + esc(s.title || ('Picture ' + (i + 1))) + '"></button>';
+          return '<li class="slider-slide' + (i === 0 ? ' is-on' : '') + '"' +
+            (i === 0 ? '' : ' aria-hidden="true"') + '>' +
+            '<img src="' + esc(s.src) + '" alt=""' +
+              (i === 0 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
+            '</li>';
         }).join('') +
-      '</div>';
+      '</ul>';
 
-    const items = $$('.slider-slide', mount);
-    const dots  = $$('.slider-dot', mount);
+    /* The caption and controls go in the corner the fixed credit line
+       used to occupy, so the headline and buttons keep the left-hand
+       side of the picture to themselves. */
+    const fixedCredit = $('.hero-credit', hero);
+    if (fixedCredit) fixedCredit.remove();
+
+    hero.insertAdjacentHTML('beforeend',
+      '<div class="slider-controls">' +
+        '<p class="slider-credit" data-slider-credit></p>' +
+        '<div class="slider-nav">' +
+          '<button class="slider-arrow" type="button" data-step="-1" aria-label="Previous photograph"><span aria-hidden="true">&lsaquo;</span></button>' +
+          '<div class="slider-dots" role="tablist" aria-label="Choose a photograph">' +
+            slides.map(function (s, i) {
+              return '<button class="slider-dot" type="button" role="tab" data-go="' + i + '"' +
+                ' aria-selected="' + (i === 0) + '"' +
+                ' aria-label="' + esc(s.title || ('Photograph ' + (i + 1))) + '"></button>';
+            }).join('') +
+          '</div>' +
+          '<button class="slider-arrow" type="button" data-step="1" aria-label="Next photograph"><span aria-hidden="true">&rsaquo;</span></button>' +
+        '</div>' +
+      '</div>');
+
+    const items  = $$('.slider-slide', mount);
+    const dots   = $$('.slider-dot', hero);
+    const credit = $('[data-slider-credit]', hero);
     let at = 0;
     let timer = null;
 
@@ -1874,9 +1888,13 @@
         if (i === at) li.removeAttribute('aria-hidden');
         else li.setAttribute('aria-hidden', 'true');
       });
-      dots.forEach(function (d, i) {
-        d.setAttribute('aria-selected', String(i === at));
-      });
+      dots.forEach(function (d, i) { d.setAttribute('aria-selected', String(i === at)); });
+
+      const s = slides[at];
+      const words = esc(s.title || '') + (s.date ? ', ' + esc(s.date) : '');
+      credit.innerHTML = s.link
+        ? '<a href="' + esc(s.link) + '">' + words + '</a>'
+        : words;
     }
 
     function start() {
@@ -1891,33 +1909,34 @@
     start();
 
     // Stop while somebody is looking, start again when they leave.
-    mount.addEventListener('mouseenter', stop);
-    mount.addEventListener('mouseleave', start);
-    mount.addEventListener('focusin', stop);
-    mount.addEventListener('focusout', start);
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+    hero.addEventListener('focusin', stop);
+    hero.addEventListener('focusout', start);
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) stop(); else start();
     });
 
-    mount.addEventListener('click', function (e) {
+    hero.addEventListener('click', function (e) {
       const dot = e.target.closest('[data-go]');
       if (dot) { stop(); show(Number(dot.dataset.go)); return; }
-      if (e.target.closest('.slider-arrow--next')) { stop(); show(at + 1); return; }
-      if (e.target.closest('.slider-arrow--prev')) { stop(); show(at - 1); }
+      const step = e.target.closest('[data-step]');
+      if (step) { stop(); show(at + Number(step.dataset.step)); }
     });
 
     // Arrow keys, once one of the slider's own buttons has the keyboard.
-    mount.addEventListener('keydown', function (e) {
+    hero.addEventListener('keydown', function (e) {
+      if (!e.target.closest('.slider-dot, .slider-arrow')) return;
       if (e.key === 'ArrowRight') { stop(); show(at + 1); }
       else if (e.key === 'ArrowLeft') { stop(); show(at - 1); }
     });
 
     // Swipe on a phone.
     let x0 = null;
-    mount.addEventListener('touchstart', function (e) {
+    hero.addEventListener('touchstart', function (e) {
       x0 = e.touches[0].clientX;
     }, { passive: true });
-    mount.addEventListener('touchend', function (e) {
+    hero.addEventListener('touchend', function (e) {
       if (x0 === null) return;
       const dx = e.changedTouches[0].clientX - x0;
       x0 = null;
@@ -1935,6 +1954,10 @@
      this website. The web address of each Stripe page lives in
      data/payments.json; see PAYMENTS.md for how to create them.
 
+     Each fund the Association collects for has its own Stripe page, so
+     "what is your gift for?" is asked here and the answer decides which
+     page the amount buttons lead to.
+
      Anything marked data-pay="..." here is filled in from that file. If
      the matching address has not been set up yet, the button is removed
      rather than left pointing nowhere. Blocks marked data-pay-when="..."
@@ -1945,45 +1968,81 @@
      ==================================================================== */
 
   (async function initPayments() {
-    if (!$('[data-pay], [data-pay-amounts], [data-pay-when], [data-pay-unless]')) return;
+    if (!$('[data-pay], [data-pay-amounts], [data-pay-fund], [data-pay-when], [data-pay-unless]')) return;
 
     const data = await loadData('payments') || {};
     const d = data.donate || {};
     const m = data.membership || {};
 
+    function isReal(url) {
+      return typeof url === 'string' && /^https:\/\//i.test(url.trim());
+    }
+
+    /* Each fund the Association is collecting for has a Stripe page of its
+       own, so the donor answers "what is this for?" here rather than
+       again on Stripe. Funds with no link yet are simply not offered. */
+    const funds = (d.funds || []).filter(function (f) { return f && isReal(f.link); });
+
     const links = {
-      'donate':               d.link,
+      'donate':               funds.length ? funds[0].link : '',
       'donate-monthly':       d.monthlyLink,
       'membership-household': m.householdLink,
       'membership-auto':      m.householdAutoLink,
       'membership-lifetime':  m.lifetimeLink
     };
 
-    function isReal(url) {
-      return typeof url === 'string' && /^https:\/\//i.test(url.trim());
-    }
-
-    /* An amount button points at the same Stripe page as the plain
-       Donate button, with the amount already filled in. Stripe calls
-       that prefilled_amount, and counts in cents. The visitor can still
-       change it on Stripe's own page. */
+    /* An amount button points at the fund the donor has chosen, with the
+       amount already filled in. Stripe calls that prefilled_amount, and
+       counts in cents. The visitor can still change it on Stripe's own
+       page. */
     function withAmount(url, dollars) {
       const n = Math.round(Number(dollars) * 100);
       if (!n || n < 0) return url;
       return url + (url.indexOf('?') === -1 ? '?' : '&') + 'prefilled_amount=' + n;
     }
 
+    // The "what is your gift for?" menu, built from the funds that have a
+    // link. With only one fund there is nothing to ask, so nothing appears.
+    const fundBox = $('[data-pay-fund]');
+    let fundLink = funds.length ? funds[0].link.trim() : '';
+
+    if (fundBox) {
+      if (funds.length < 2) {
+        fundBox.remove();
+      } else {
+        fundBox.innerHTML =
+          '<label for="d-fund">What is your gift for?</label>' +
+          '<select id="d-fund">' +
+            funds.map(function (f, i) {
+              return '<option value="' + i + '">' + esc(f.label || 'The Association') + '</option>';
+            }).join('') +
+          '</select>';
+        fundBox.hidden = false;
+        $('#d-fund', fundBox).addEventListener('change', function () {
+          fundLink = funds[Number(this.value)].link.trim();
+          drawAmounts();
+        });
+      }
+    }
+
     // Preset amount buttons, built from the list in payments.json.
-    $$('[data-pay-amounts]').forEach(function (row) {
+    const amountRow = $('[data-pay-amounts]');
+
+    function drawAmounts() {
+      if (!amountRow) return;
       const amounts = (d.amounts || []).filter(function (n) { return Number(n) > 0; });
-      if (!isReal(d.link) || !amounts.length) { row.remove(); return; }
-      row.innerHTML = amounts.map(function (n) {
+      amountRow.innerHTML = amounts.map(function (n) {
         return '<a class="btn btn--ghost amount-btn" href="' +
-          esc(withAmount(d.link.trim(), n)) + '">$' + esc(n) + '</a>';
+          esc(withAmount(fundLink, n)) + '">$' + esc(n) + '</a>';
       }).join('') +
       '<a class="btn btn--primary amount-btn amount-btn--other" href="' +
-        esc(d.link.trim()) + '">Another amount</a>';
-    });
+        esc(fundLink) + '">Another amount</a>';
+    }
+
+    if (amountRow) {
+      if (!fundLink || !(d.amounts || []).length) amountRow.remove();
+      else drawAmounts();
+    }
 
     $$('[data-pay]').forEach(function (el) {
       const url = links[el.getAttribute('data-pay')];

@@ -193,19 +193,29 @@ unlikely to come up.
 
 **Home page pictures → Pictures.**
 
-These are the photographs that slide across the top of the home page. They
-appear in the order they are listed, and you can drag them to reorder.
+These are the photographs behind the headline at the top of the home page.
+They fade from one to the next, in the order they are listed, and you can
+drag them to reorder.
 
-- **What it shows** — the large caption, such as *Mayfield Mall*.
-- **Date** — the small caption underneath, such as *Circa 1966*.
+- **What it shows** — the caption, such as *Mayfield Mall*.
+- **Date** — follows it on the same line, so write it lower case:
+  *circa 1966*, not *Circa 1966*.
 - **The picture** — wide pictures suit this space much better than tall ones.
-  A tall photograph is not wrong, it is simply cropped top and bottom.
-- **Where it links to** — optional. Leave it empty for a picture that is not
-  a link, or point it at the same photograph in the archive, like
-  `archive.html?photo=mayfield-mall`.
+  A tall photograph is not wrong, it is simply cropped top and bottom. The
+  headline sits over the left-hand side, so a photograph whose subject is on
+  the left will be partly covered.
+- **Where it links to** — optional. It is the caption that becomes the link,
+  not the picture, so the headline's own buttons still work. Point it at the
+  same photograph in the archive, like `archive.html?photo=mayfield-mall`,
+  or leave it empty.
 
 Eight to twelve pictures works well. Beyond that, most visitors never reach
 the last of them.
+
+**One thing to tell whoever maintains the site**: if you change which
+photograph comes *first*, the same picture also has to be changed in
+`index.html`, because that is the one visitors see before the page has
+finished loading. `node tools/check.js` says so if they drift apart.
 
 ---
 
