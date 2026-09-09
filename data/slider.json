@@ -1,5 +1,5 @@
 {
-  "_comment": "The photographs that slide across the home page. They are shown in the order listed here. 'title' is the large caption, 'date' the small one that follows it, so write it lower case: circa 1966, not Circa 1966. 'link' is optional — where the picture takes you when clicked; leave it empty for a picture that is not a link. Eight to twelve pictures works well. Wide pictures suit this space better than tall ones.",
+  "_comment": "The photographs that slide across the home page. They are shown in the order listed here. 'title' is the large caption, 'date' the small one that follows it, so write it lower case: circa 1966, not Circa 1966. 'link' is optional — where the picture takes you when clicked; leave it empty for a picture that is not a link. Three are shown at a time on a computer, so nine or twelve works best — a number that divides by three. Each is cropped to a landscape box, so wide pictures suit this space better than tall ones.",
   "slides": [
     {
       "title": "Castro Street",

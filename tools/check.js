@@ -187,7 +187,7 @@ console.log('\nChecking the home page slider');
      still sees one. If somebody reorders the pictures in /admin and that
      one is no longer first, the home page swaps pictures as it loads. */
   const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-  const m = home.match(/<div class="hero-media" data-slider>\s*<img src="([^"]+)"/);
+  const m = home.match(/<div class="hero-gallery" data-slider>[\s\S]{0,400}?<img src="([^"]+)"/);
   if (!m) {
     warn('index.html no longer has a picture inside the hero — visitors without JavaScript will see a plain green banner');
   } else if (slides.length && m[1] !== slides[0].src) {

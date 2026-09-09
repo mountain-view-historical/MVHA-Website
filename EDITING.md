@@ -193,24 +193,23 @@ unlikely to come up.
 
 **Home page pictures → Pictures.**
 
-These are the photographs behind the headline at the top of the home page.
-They fade from one to the next, in the order they are listed, and you can
-drag them to reorder.
+These are the photographs under the headline at the top of the home page.
+Three are shown at a time on a computer, two on a tablet and one on a
+telephone, and they slide along a set at a time. You can drag them to
+reorder.
 
-- **What it shows** — the caption, such as *Mayfield Mall*.
-- **Date** — follows it on the same line, so write it lower case:
-  *circa 1966*, not *Circa 1966*.
-- **The picture** — wide pictures suit this space much better than tall ones.
-  A tall photograph is not wrong, it is simply cropped top and bottom. The
-  headline sits over the left-hand side, so a photograph whose subject is on
-  the left will be partly covered.
-- **Where it links to** — optional. It is the caption that becomes the link,
-  not the picture, so the headline's own buttons still work. Point it at the
-  same photograph in the archive, like `archive.html?photo=mayfield-mall`,
-  or leave it empty.
+- **What it shows** — the caption under the picture, such as *Mayfield Mall*.
+- **Date** — the smaller line beneath it: *circa 1966*.
+- **The picture** — each one is shown in a landscape box, a little wider than
+  it is tall, and cropped to fit. A tall photograph is not wrong; it will
+  simply lose its top and bottom.
+- **Where it links to** — optional. Point it at the same photograph in the
+  archive, like `archive.html?photo=mayfield-mall`, or leave it empty for a
+  picture nobody can click.
 
-Eight to twelve pictures works well. Beyond that, most visitors never reach
-the last of them.
+**Nine or twelve pictures works best**, because they divide evenly into sets
+of three. Ten leaves a last set with only one in it, which looks unfinished
+on a wide screen.
 
 **One thing to tell whoever maintains the site**: if you change which
 photograph comes *first*, the same picture also has to be changed in

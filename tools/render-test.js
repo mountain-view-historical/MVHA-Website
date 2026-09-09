@@ -470,28 +470,33 @@ async function render(page, query, patch) {
   check('handles no matches gracefully',
     /No matches/.test(doc.querySelector('[data-dir-status]').textContent));
 
-  console.log('\nHome page slider');
+  console.log('\nHome page photographs');
   doc = await render('index.html');
-  const slides = doc.querySelectorAll('.hero-media .slider-slide');
+  const slides = doc.querySelectorAll('.hero-gallery .slider-slide');
   const wanted = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/slider.json'), 'utf8')).slides;
   check(`renders every picture (${slides.length})`, slides.length === wanted.length);
-  check('exactly one is showing', doc.querySelectorAll('.hero-media .slider-slide.is-on').length === 1);
-  check('the rest are hidden from screen readers',
-    [...slides].filter(s => s.getAttribute('aria-hidden') === 'true').length === slides.length - 1);
   check('the first picture is the one already in the page',
     slides[0].querySelector('img').getAttribute('src') === wanted[0].src);
   check('the headline is still the page heading',
     !!doc.querySelector('.hero h1') && doc.querySelectorAll('h1').length === 1);
   check('the headline and buttons survive',
     doc.querySelectorAll('.hero-inner .btn').length === 2);
-  check('the caption names the picture',
-    doc.querySelector('[data-slider-credit]').textContent.includes(wanted[0].title),
-    doc.querySelector('[data-slider-credit]').textContent);
-  check('the caption links to the photograph in the archive',
-    !!doc.querySelector('[data-slider-credit] a[href*="archive.html"]'));
-  check('the fixed credit line is gone', !doc.querySelector('.hero-credit'));
-  check('a dot for each picture', doc.querySelectorAll('.slider-dot').length === wanted.length);
+  check('every picture has alt text',
+    [...slides].every(s => s.querySelector('img').getAttribute('alt')));
+  check('each picture is captioned and dated',
+    doc.querySelector('.slider-caption strong').textContent === wanted[0].title &&
+    doc.querySelector('.slider-caption span').textContent === wanted[0].date,
+    doc.querySelector('.slider-caption').textContent);
+  check('each picture links into the archive',
+    doc.querySelectorAll('.slider-slide a[href*="archive.html"]').length === wanted.length);
+  check('there is no dark overlay over the photographs',
+    !doc.querySelector('.hero--slider') && !!doc.querySelector('.hero--gallery'));
   check('back and forward buttons', doc.querySelectorAll('.slider-arrow[data-step]').length === 2);
+  check('the pictures off screen are hidden from screen readers',
+    [...slides].some(s => s.getAttribute('aria-hidden') === 'true'));
+  check('and cannot be reached by keyboard',
+    [...slides].filter(s => s.getAttribute('aria-hidden') === 'true')
+      .every(s => s.querySelector('a').tabIndex === -1));
   check('no second slider left further down the page', !doc.querySelector('.slider-band'));
 
   console.log('\nPayment buttons');

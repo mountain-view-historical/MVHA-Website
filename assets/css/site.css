@@ -1084,45 +1084,61 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 }
 
 /* ==========================================================================
-   Home page picture slider
+   Home page photographs
    --------------------------------------------------------------------------
-   The photographs behind the headline on the home page. They are stacked on
-   top of one another inside .hero-media and cross-faded, so the hero keeps
-   exactly the height and the dark overlay it had with a single picture. The
-   caption and controls sit in the corner where the fixed credit line was.
+   Three at a time under the headline, sliding a page at a time. They sit
+   below the words rather than behind them, so no dark overlay is needed and
+   the photographs are shown at their own brightness.
+
+   The slide widths here and the "how many fit" sum in site.js have to agree.
+   The script measures a real slide rather than assuming, so changing the
+   widths below is enough — but change them in one place only.
    ========================================================================== */
 
-.hero--slider .hero-media { overflow: hidden; }
+.hero--gallery { background: var(--green-dark); }
+.hero--gallery .hero-inner { padding: 4rem 0 2.25rem; max-width: 720px; }
 
-.slider-track { list-style: none; margin: 0; padding: 0; height: 100%; }
+.hero-gallery { position: relative; padding-bottom: 3.25rem; overflow: hidden; }
+
+.slider-track {
+  list-style: none; margin: 0; padding: 0;
+  display: flex;
+  gap: 1.5rem;
+  transition: transform .6s ease;
+}
 
 .slider-slide {
-  position: absolute; inset: 0;
-  opacity: 0;
-  transition: opacity 1s ease;
+  flex: 0 0 calc((100% - 3rem) / 3);   /* three across, two 1.5rem gaps */
+  opacity: .35;
+  transition: opacity .4s ease;
 }
 .slider-slide.is-on { opacity: 1; }
-.slider-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.slider-slide a { text-decoration: none; display: block; }
+.slider-slide img {
+  display: block; width: 100%;
+  aspect-ratio: 3 / 2; object-fit: cover;
+  border-radius: var(--radius);
+  background: rgba(255,255,255,.06);
+}
+.slider-slide a:hover img { opacity: .9; }
+
+.slider-caption { display: block; margin-top: .6rem; color: #fff; }
+.slider-caption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 600; line-height: 1.25;
+}
+.slider-caption span {
+  display: block;
+  font-size: .78rem; color: rgba(255,255,255,.68);
+  margin-top: .1rem;
+}
 
 .slider-controls {
-  position: absolute; right: 24px; bottom: 12px;
-  z-index: 2;
-  display: flex; flex-direction: column; align-items: flex-end; gap: .4rem;
-  text-align: right;
+  position: absolute; right: 0; bottom: 0;
+  display: flex; align-items: center; gap: .6rem;
 }
-
-/* ".hero p" sets the size and colour of the introduction paragraph, and it
-   is more specific than a bare class, so the caption has to say ".hero"
-   too or it comes out as body text. */
-.hero .slider-credit {
-  margin: 0;
-  font-size: .8rem;
-  color: rgba(255,255,255,.75);
-}
-.hero .slider-credit a { color: rgba(255,255,255,.75); text-decoration: none; }
-.hero .slider-credit a:hover { color: #fff; text-decoration: underline; }
-
-.slider-nav { display: flex; align-items: center; gap: .5rem; }
 
 .slider-arrow {
   width: 30px; height: 30px;
@@ -1148,23 +1164,20 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 .slider-dot:hover { background: rgba(255,255,255,.6); }
 .slider-dot[aria-selected="true"] { background: #fff; transform: scale(1.3); }
 
-/* Once the headline needs the full width, the controls can no longer sit
-   beside it: they go underneath, centred, and the hero makes room for them
-   so they never land on top of the buttons. */
-@media (max-width: 1080px) {
-  .slider-controls { right: 16px; left: 16px; align-items: center; text-align: center; }
-  .hero--slider .hero-inner { padding-bottom: 6rem; }
+@media (max-width: 900px) {
+  .slider-slide { flex-basis: calc((100% - 1.5rem) / 2); }   /* two across */
+  .hero--gallery .hero-inner { padding: 3rem 0 2rem; }
 }
-@media (max-width: 720px) {
-  .slider-nav { gap: .65rem; }
-  .slider-arrow { width: 34px; height: 34px; }
-  .hero--slider .hero-inner { padding-bottom: 5.5rem; }
+@media (max-width: 620px) {
+  .slider-slide { flex-basis: 100%; }                        /* one across */
+  .slider-controls { position: static; justify-content: center; margin-top: 1rem; }
+  .hero-gallery { padding-bottom: 0; }
 }
 
 /* Somebody who has asked their computer to keep still gets the photographs
-   without the fade, and nothing moves on its own. */
+   without the sliding, and nothing moves on its own. */
 @media (prefers-reduced-motion: reduce) {
-  .slider-slide { transition: none; }
+  .slider-track, .slider-slide { transition: none; }
 }
 
 /* ==========================================================================
