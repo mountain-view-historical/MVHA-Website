@@ -1822,11 +1822,13 @@
      They are shown at their own brightness, with nothing over them --
      which is why the words sit underneath rather than on top.
 
-     The row holds two copies of every photograph. That is what lets it
-     run on past the last one and come back to the first without the
-     picture visibly jumping backwards: it slides into the second copy,
-     then swaps to the identical first copy with the animation switched
-     off, which nobody can see.
+     The row holds three copies of every photograph and starts in the
+     middle one. That is what puts a picture either side from the moment
+     the page opens -- with a single copy the first photograph has empty
+     space to its left -- and what lets the row run on past the last
+     picture and back to the first without visibly jumping: it slides
+     into the next copy, then swaps to the identical picture in the
+     middle copy with the animation switched off, which nobody can see.
 
      The page ships with the first photograph already in the HTML, so it
      appears at once, is what the browser starts downloading first, and
@@ -1851,7 +1853,7 @@
     function slideHtml(s, i, clone) {
       const inner =
         '<img src="' + esc(s.src) + '" alt="' + esc(clone ? '' : (s.alt || s.title || '')) + '"' +
-          (i < 2 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
+          (!clone && i < 2 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
         '<span class="slider-caption">' +
           '<strong>' + esc(s.title || '') + '</strong>' +
           (s.date ? '<span>' + esc(s.date) + '</span>' : '') +
@@ -1863,6 +1865,7 @@
 
     mount.innerHTML =
       '<ul class="slider-track">' +
+        slides.map(function (s, i) { return slideHtml(s, i, true); }).join('') +
         slides.map(function (s, i) { return slideHtml(s, i, false); }).join('') +
         slides.map(function (s, i) { return slideHtml(s, i, true); }).join('') +
       '</ul>' +
@@ -1871,7 +1874,7 @@
 
     const track = $('.slider-track', mount);
     const items = $$('.slider-slide', mount);
-    let at = 0;
+    let at = real;          // the first picture, in the middle copy
     let timer = null;
 
     function slideWidth() {
@@ -1898,32 +1901,34 @@
     }
 
     function show(next) {
-      if (next < 0) {
-        // Stepping back off the front: jump to the identical copy at the
-        // far end first, so the move is forwards on screen.
-        at = real;
-        place(false);
-        next = real - 1;
-      }
       at = next;
       place(true);
     }
 
+    /* Once a move has finished, quietly step back to the identical picture
+       in the middle copy, so there is always a copy to run into next. */
     track.addEventListener('transitionend', function (e) {
       if (e.propertyName !== 'transform') return;
-      if (at >= real) { at -= real; place(false); }
+      if (at >= real * 2) { at -= real; place(false); }
+      else if (at < real) { at += real; place(false); }
     });
 
-    function start() {
+    /* The first move comes sooner than the rest: waiting the full six
+       seconds before anything happens reads as a picture that is simply
+       sitting there, rather than as the beginning of a slideshow. */
+    function start(delay) {
       if (calm || timer) return;
-      timer = setInterval(function () { show(at + 1); }, 6000);
+      timer = setTimeout(function again() {
+        show(at + 1);
+        timer = setTimeout(again, 6000);
+      }, delay || 6000);
     }
     function stop() {
-      if (timer) { clearInterval(timer); timer = null; }
+      if (timer) { clearTimeout(timer); timer = null; }
     }
 
     place(false);
-    start();
+    start(2500);
 
     let resizeTimer = null;
     window.addEventListener('resize', function () {
@@ -1933,11 +1938,11 @@
 
     // Stop while somebody is looking, start again when they leave.
     mount.addEventListener('mouseenter', stop);
-    mount.addEventListener('mouseleave', start);
+    mount.addEventListener('mouseleave', function () { start(); });
     mount.addEventListener('focusin', stop);
-    mount.addEventListener('focusout', start);
+    mount.addEventListener('focusout', function () { start(); });
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) stop(); else start();
+      if (document.hidden) stop(); else start();   // normal pace
     });
 
     mount.addEventListener('click', function (e) {

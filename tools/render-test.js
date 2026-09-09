@@ -476,24 +476,31 @@ async function render(page, query, patch) {
   const slides = doc.querySelectorAll('.hero-gallery .slider-slide');
   const originals = doc.querySelectorAll('.hero-gallery .slider-slide:not([data-clone])');
   check(`renders every picture (${originals.length})`, originals.length === wanted.length);
-  check('and a second copy of each, so the band can run round to the start',
-    slides.length === wanted.length * 2);
+  check('and three copies in all, so there is a picture either side from the start',
+    slides.length === wanted.length * 3);
+  check('the centred picture is in the middle copy, not the first',
+    [...slides].indexOf(doc.querySelector('.slider-slide.is-on')) === wanted.length);
   check('the first picture is the one already in the page',
-    slides[0].querySelector('img').getAttribute('src') === wanted[0].src);
+    slides[wanted.length].querySelector('img').getAttribute('src') === wanted[0].src);
+  check('every picture on the current site is here',
+    [...originals].map(s => s.querySelector('img').getAttribute('src')).join('|') ===
+      wanted.map(w => w.src).join('|'));
   check('exactly one picture is the centred one',
     doc.querySelectorAll('.hero-gallery .slider-slide.is-on').length === 1);
   check('the copies are hidden from screen readers',
     [...doc.querySelectorAll('[data-clone]')].every(s => s.getAttribute('aria-hidden') === 'true'));
-  check('only the centred picture can be reached by keyboard',
-    [...slides].filter(s => s.querySelector('a').tabIndex === 0).length === 1);
+  check('no more than the centred picture can be reached by keyboard',
+    [...slides].filter(s => s.querySelector('a') && s.querySelector('a').tabIndex === 0).length <= 1);
   check('every real picture has alt text',
     [...originals].every(s => s.querySelector('img').getAttribute('alt')));
   check('each picture carries its caption and date',
-    doc.querySelector('.slider-caption strong').textContent === wanted[0].title &&
-    doc.querySelector('.slider-caption span').textContent === wanted[0].date,
+    [...originals].every((s, i) =>
+      s.querySelector('.slider-caption strong').textContent === wanted[i].title &&
+      s.querySelector('.slider-caption span').textContent === wanted[i].date),
     doc.querySelector('.slider-caption').textContent);
-  check('each picture links into the archive',
-    originals.length === doc.querySelectorAll('.slider-slide:not([data-clone]) a[href*="archive.html"]').length);
+  check('the pictures we also hold in the archive link to it',
+    doc.querySelectorAll('.slider-slide:not([data-clone]) a[href*="archive.html"]').length ===
+      wanted.filter(w => w.link).length);
   check('back and forward buttons', doc.querySelectorAll('.slider-arrow[data-step]').length === 2);
 
   console.log('\nHome page words');

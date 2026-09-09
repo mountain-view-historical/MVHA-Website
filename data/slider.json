@@ -1,23 +1,36 @@
 {
-  "_comment": "The photographs that slide across the home page. They are shown in the order listed here. 'title' is the large caption, 'date' the small one that follows it, so write it lower case: circa 1966, not Circa 1966. 'link' is optional — where the picture takes you when clicked; leave it empty for a picture that is not a link. One picture is centred with its caption on it and the ones either side show at the edges of the screen; the row steps along one at a time and runs round to the beginning on its own. Each is cropped to a box a third wider than it is tall, so wide pictures suit this space better than tall ones. Six or more works well.",
+  "_comment": "The photographs across the top of the home page. They are shown in the order listed here. 'title' is the caption over the picture, 'date' the smaller line under it. One picture is centred with its caption on it and the ones either side show at the edges of the screen; the row steps along one at a time and runs round to the beginning on its own. Each is cropped to a box a third wider than it is tall, so wide pictures suit this space better than tall ones. 'link' is optional — leave it empty for a picture that is not a link. The first picture here must also be the one in index.html, or the home page changes picture as it loads; tools/check.js checks that.",
   "slides": [
     {
-      "title": "Castro Street",
-      "date": "circa 1953",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg",
-      "link": "archive.html?photo=castro-street-1953"
+      "title": "Castro and California Streets",
+      "date": "circa 1960",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/castro-1960-1.jpg"
+    },
+    {
+      "title": "Bayshore Highway (US 101)",
+      "date": "circa 1957",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/hwy101.jpg"
+    },
+    {
+      "title": "Mountain View Water Tower",
+      "date": "Grant Road and Cuesta Avenue, 1953–1987",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/mv-water-tower.jpg"
+    },
+    {
+      "title": "Mtn. View Fire Station",
+      "date": "Franklin Street location, 1924–1953",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/old-fire-station.jpg"
+    },
+    {
+      "title": "Farming in the North Bayshore",
+      "date": "circa 1987",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/moffet-field-farm.jpg"
     },
     {
       "title": "The Historic Adobe Building",
-      "date": "built 1934, restored 2001",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Historic-Adobe-Building-1024x683.jpg",
+      "date": "built in 1934, restored in 2001",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/10/MtnViewAdobe-bw.jpg",
       "link": "archive.html?photo=adobe-building"
-    },
-    {
-      "title": "Mountain View Station Depot",
-      "date": "built circa 1888",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Station.png",
-      "link": "archive.html?photo=mountain-view-station"
     },
     {
       "title": "Mayfield Mall",
@@ -26,40 +39,46 @@
       "link": "archive.html?photo=mayfield-mall"
     },
     {
-      "title": "The Rengstorff House",
-      "date": "built 1867",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Rengstorff-house-1024x834.png",
-      "link": "archive.html?photo=rengstorff-house"
+      "title": "Castro Street",
+      "date": "circa 1953",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg",
+      "link": "archive.html?photo=castro-street-1953"
     },
     {
-      "title": "Mountain View High School",
-      "date": "Castro Street campus, 1924–1981",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-VIew-High-School.png",
-      "link": "archive.html?photo=mvhs-castro-campus"
+      "title": "Mancini Motors Globe Tower",
+      "date": "El Camino Real and Castro Street, 1940–1974",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/castro-st-globe.jpg"
     },
     {
-      "title": "Rengstorff Avenue",
-      "date": "1966",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/10.jpg",
-      "link": "archive.html?photo=rengstorff-avenue-1966"
+      "title": "Rengstorff Avenue & Old Middlefield Road",
+      "date": "circa 1960",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/rengstorff-omiddlefield.jpg"
     },
     {
-      "title": "Hangar One",
-      "date": "built 1931",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Hanger-one-hanger-1-e1594691504749-1024x821.jpg",
-      "link": "archive.html?photo=hangar-one"
+      "title": "The Weilheimer General Store",
+      "date": "built circa 1874, 124 Castro Street",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/The-Weilheimer-General-Store-Building-is-the-oldest-1874.png"
     },
     {
-      "title": "Mountain View in 1954",
-      "date": "The year the Association was founded",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-1954.png",
-      "link": "archive.html?photo=mountain-view-1954"
+      "title": "Mountain View Station Depot",
+      "date": "built circa 1888",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Station.png",
+      "link": "archive.html?photo=mountain-view-station"
     },
     {
-      "title": "The Eagle has landed",
-      "date": "Castro Street monument, December 2023",
-      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2024/03/PXL_20231216_193332065-compressed-1024x563.jpg",
-      "link": "archive.html?photo=eagle-monument-dedication"
+      "title": "Mountain View City Hall",
+      "date": "Castro and California Streets, 1910–1962",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/old-city-hall.jpg"
+    },
+    {
+      "title": "The Mountain View Theater",
+      "date": "grand reopening in 1962",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/view-theatre.jpg"
+    },
+    {
+      "title": "200 Block of Castro Street",
+      "date": "circa 1949",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/11/castro-flags.jpg"
     }
   ]
 }

@@ -209,8 +209,9 @@ drag them to reorder.
   archive, like `archive.html?photo=mayfield-mall`, or leave it empty for a
   picture nobody can click.
 
-Any number from about six upwards works. The row runs round to the beginning
-on its own, so there is no last one.
+There are fifteen at the moment — the same photographs, in the same order, as
+the current website's. Any number from about six upwards works, and the row
+runs round to the beginning on its own, so there is no last one.
 
 **One thing to tell whoever maintains the site**: if you change which
 photograph comes *first*, the same picture also has to be changed in
