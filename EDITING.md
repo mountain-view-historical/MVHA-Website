@@ -51,7 +51,7 @@ You stay signed in afterwards, so this is a one-off.
 
 ## What you will see
 
-Five sections down the left-hand side:
+Seven sections down the left-hand side:
 
 | Section | What it controls |
 | --- | --- |
@@ -59,6 +59,8 @@ Five sections down the left-hand side:
 | **Events** | Every event, and the annual community calendar |
 | **Photographs** | The photo archive |
 | **Newsletters** | Every issue of *The Mountain ReView* |
+| **Home page pictures** | The photographs that slide across the front page |
+| **Payment links** | Where the Donate and Membership buttons lead |
 | **Board of Directors** | The names and biographies on the About page |
 
 Click one, make your changes, and press **Publish** at the top.
@@ -184,6 +186,51 @@ paper, which holds pictures of words rather than the words themselves. Those
 stay listed and still open normally; they simply do not turn up in searches.
 The newsletters from about 2015 onwards are all proper PDFs, so this is
 unlikely to come up.
+
+---
+
+## Changing the home page pictures
+
+**Home page pictures → Pictures.**
+
+These are the photographs that slide across the top of the home page. They
+appear in the order they are listed, and you can drag them to reorder.
+
+- **What it shows** — the large caption, such as *Mayfield Mall*.
+- **Date** — the small caption underneath, such as *Circa 1966*.
+- **The picture** — wide pictures suit this space much better than tall ones.
+  A tall photograph is not wrong, it is simply cropped top and bottom.
+- **Where it links to** — optional. Leave it empty for a picture that is not
+  a link, or point it at the same photograph in the archive, like
+  `archive.html?photo=mayfield-mall`.
+
+Eight to twelve pictures works well. Beyond that, most visitors never reach
+the last of them.
+
+---
+
+## Changing where the Donate and Membership buttons go
+
+**Payment links.**
+
+Donations and dues are taken by Stripe. The buttons on the Donate and
+Membership pages open a page Stripe hosts and looks after — nobody types a
+card number on our website, and nobody should ever send us one by email.
+
+This section holds nothing but the web addresses of those Stripe pages, which
+are public by design. There is no password or account detail here, and
+nothing here can put anyone's card at risk.
+
+- **A box left empty hides that button**, and the website shows the
+  "please send a check" wording instead. So the links can be added one at a
+  time without ever leaving a broken button on the site.
+- **Suggested amounts** are the buttons on the Donate page. Change them to
+  whatever the board prefers. Each one opens the same Stripe page with that
+  amount already filled in, and the donor can still change it there.
+
+Creating the Stripe pages themselves is a separate job, done once, on
+Stripe's own website. **PAYMENTS.md**, in the main folder, walks through it
+step by step.
 
 ---
 

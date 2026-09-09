@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=369d4079">
+<link rel="stylesheet" href="assets/css/site.css?v=84aa182c">
 </head>
 <body>
 
@@ -111,7 +111,7 @@
   <div class="wrap">
     <div class="section-head">
       <p class="eyebrow">Choose a membership</p>
-      <h2>Two ways to join</h2>
+      <h2>Ways to join</h2>
     </div>
 
     <div class="tiers">
@@ -126,7 +126,9 @@
           <li>Discounts on fee-based events</li>
           <li>Free entry to quarterly membership meetings</li>
         </ul>
-        <a class="btn btn--primary" href="#join-form">Join or renew</a>
+        <a class="btn btn--primary" data-pay="membership-household">Join for a year</a>
+        <a class="btn btn--ghost" data-pay="membership-auto">Join and renew automatically</a>
+        <a class="btn btn--primary" data-pay-unless="membership-household membership-auto" href="#join-online" hidden>How to join</a>
       </div>
 
       <div class="tier">
@@ -138,7 +140,8 @@
           <li>No renewals to remember</li>
           <li>Directly supports the archive long term</li>
         </ul>
-        <a class="btn btn--ghost" href="#join-form">Join for life</a>
+        <a class="btn btn--ghost" data-pay="membership-lifetime">Join for life</a>
+        <a class="btn btn--ghost" data-pay-unless="membership-lifetime" href="#join-online" hidden>How to join</a>
       </div>
 
       <div class="tier">
@@ -151,75 +154,43 @@
   </div>
 </section>
 
-<section class="section section--tint" id="join-form">
+<section class="section section--tint" id="join-online">
   <div class="wrap wrap-narrow">
     <div class="section-head">
       <p class="eyebrow">New membership &amp; renewal</p>
-      <h2>Join or renew online</h2>
-      <p>Complete the form below and we will be in touch to confirm your membership and arrange payment. If you would rather pay by check, see the details above.</p>
+      <h2>Joining online</h2>
+      <p data-pay-when="membership-household membership-auto membership-lifetime" hidden>Choosing a membership above takes you to Stripe, the company that handles our card payments. Your card details are typed on Stripe&rsquo;s own secure page &mdash; never on this website, and never by email &mdash; and a receipt is emailed to you the moment the payment goes through.</p>
     </div>
 
-    <form class="form-grid" action="mailto:membership@mountainviewhistorical.org" method="post" enctype="text/plain">
-      <div class="form-field"><label for="m-first">First name *</label><input type="text" id="m-first" name="First name" required></div>
-      <div class="form-field"><label for="m-last">Last name *</label><input type="text" id="m-last" name="Last name" required></div>
-      <div class="form-field"><label for="m-email">Email *</label><input type="email" id="m-email" name="Email" required></div>
-      <div class="form-field"><label for="m-phone">Phone number</label><input type="tel" id="m-phone" name="Phone"></div>
-      <div class="form-field full"><label for="m-address">Address *</label><input type="text" id="m-address" name="Address" required></div>
-      <div class="form-field"><label for="m-city">City *</label><input type="text" id="m-city" name="City" required></div>
-      <div class="form-field"><label for="m-state">State *</label><input type="text" id="m-state" name="State" required></div>
-      <div class="form-field"><label for="m-zip">ZIP *</label><input type="text" id="m-zip" name="ZIP" required></div>
+    <div class="callout callout--warn" data-pay-unless="membership-household membership-auto membership-lifetime" hidden>
+      <p><strong>Joining online is being set up.</strong> In the meantime please send your name and address with a check payable to the <strong>Mountain View Historical Association</strong> to P.O. Box 252, Mountain View, CA 94042, or email <a href="mailto:membership@mountainviewhistorical.org">membership@mountainviewhistorical.org</a> and we will help.</p>
+    </div>
 
-      <div class="form-field">
-        <label for="m-kind">New membership or renewal? *</label>
-        <select id="m-kind" name="New or renewal" required>
-          <option value="">Choose&hellip;</option>
-          <option>New membership</option>
-          <option>Renewal</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label for="m-type">Membership type *</label>
-        <select id="m-type" name="Membership type" required>
-          <option value="">Choose&hellip;</option>
-          <option>Household membership, 1 year &mdash; $30.00</option>
-          <option>Lifetime membership &mdash; $300.00</option>
-        </select>
-      </div>
+    <div class="callout">
+      <h3>What Stripe asks you</h3>
+      <ul>
+        <li>Your name, email address and postal address</li>
+        <li>Whether this is a new membership or a renewal</li>
+        <li>Which newsletter you would like &mdash; digital, print, both or none</li>
+        <li>Anyone else in your household the membership should cover</li>
+      </ul>
+      <p>That is everything the Membership Committee needs. It arrives with the payment, so nothing has to be sent on separately.</p>
+    </div>
 
-      <div class="form-field full">
-        <label for="m-household">Additional household members</label>
-        <input type="text" id="m-household" name="Household members">
-        <span class="hint">For annual household memberships, list anyone else you would like covered.</span>
-      </div>
+    <p>Two ways to pay for a household membership, whichever suits you better:</p>
+    <ul>
+      <li><strong>Join for a year</strong> &mdash; a single $30 payment. We will write to you when it is time to renew.</li>
+      <li><strong>Join and renew automatically</strong> &mdash; $30 now and $30 each year afterwards, until you tell us to stop. You can cancel at any time by emailing <a href="mailto:membership@mountainviewhistorical.org">membership@mountainviewhistorical.org</a>.</li>
+    </ul>
 
-      <div class="form-field full">
-        <label for="m-news">Newsletter preference *</label>
-        <select id="m-news" name="Newsletter preference" required>
-          <option value="">Choose&hellip;</option>
-          <option>Digital edition (full colour, by email)</option>
-          <option>Print edition (black &amp; white, by post)</option>
-          <option>Both</option>
-          <option>I do not wish to receive a newsletter</option>
-        </select>
-        <span class="hint">We encourage members to go green and choose the digital edition.</span>
-      </div>
+    <p>If you would like to help as well as join, have a look at the <a href="volunteer.html">volunteer opportunities</a> and tell us which appeal &mdash; there is always something that needs doing, and no experience is required.</p>
 
-      <div class="form-field full">
-        <label>Interested in&hellip;</label>
-        <label class="check-row"><input type="checkbox" name="Interest" value="Leadership opportunities"> Leadership opportunities (board &amp; committee positions)</label>
-        <label class="check-row"><input type="checkbox" name="Interest" value="Volunteer opportunities"> Volunteer opportunities (History Center docent, community &amp; educational outreach)</label>
+    <noscript>
+      <div class="callout">
+        <p><strong>To join online you will need JavaScript switched on</strong>, because the membership buttons are put in place by a small script. If you would rather not, please send your name and address with a check payable to the <strong>Mountain View Historical Association</strong> to P.O. Box 252, Mountain View, CA 94042.</p>
       </div>
+    </noscript>
 
-      <div class="form-field full">
-        <label for="m-notes">Anything else?</label>
-        <textarea id="m-notes" name="Notes" rows="4"></textarea>
-      </div>
-
-      <div class="form-field full">
-        <button class="btn btn--primary" type="submit">Send membership request</button>
-        <span class="hint">This form opens your email programme with the details filled in. Questions? Email <a href="mailto:membership@mountainviewhistorical.org">membership@mountainviewhistorical.org</a>.</span>
-      </div>
-    </form>
   </div>
 </section>
 
@@ -299,6 +270,6 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=ab694c46"></script>
+<script src="assets/js/site.js?v=9977dfd3"></script>
 </body>
 </html>

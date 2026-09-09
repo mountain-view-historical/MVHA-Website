@@ -251,6 +251,80 @@ collections:
                   fill it in from the headings in the PDF the next time it runs.
 
   # ------------------------------------------------------------------
+  # Home page slider — the photographs that move across the front page.
+  # ------------------------------------------------------------------
+  - name: slider
+    label: Home page pictures
+    files:
+      - name: slider
+        label: Home page slider
+        file: data/slider.json
+        description: The photographs that slide across the top of the home page, in the order they appear. Wide pictures suit this space better than tall ones.
+        fields:
+          - name: _comment
+            label: Note to editors
+            widget: hidden
+            default: "The photographs that slide across the home page. They are shown in the order listed here. 'title' is the large caption, 'date' the small one underneath. 'link' is optional — where the picture takes you when clicked; leave it empty for a picture that is not a link. Eight to twelve pictures works well. Wide pictures suit this space better than tall ones."
+
+          - name: slides
+            label: Pictures
+            label_singular: Picture
+            widget: list
+            collapsed: true
+            summary: '{{fields.title}} — {{fields.date}}'
+            hint: Drag to reorder. Eight to twelve works well; any more and most visitors never see the last of them.
+            fields:
+              - { name: title, label: What it shows, widget: string, hint: 'The large caption — for example: Mayfield Mall' }
+              - { name: date, label: Date, widget: string, required: false, hint: 'The small caption underneath — for example: Circa 1966' }
+              - { name: src, label: The picture, widget: image }
+              - { name: alt, label: Description for screen readers, widget: string, required: false, hint: 'Optional. Leave empty and the caption above is used.' }
+              - { name: link, label: Where it links to, widget: string, required: false, hint: 'Optional — for example: archive.html?photo=mayfield-mall. Leave empty for a picture that is not a link.' }
+
+  # ------------------------------------------------------------------
+  # Payment links — the Stripe pages the Donate and Membership buttons
+  # hand visitors over to. Nothing secret belongs here: these addresses
+  # are meant to be public. See PAYMENTS.md in the main folder.
+  # ------------------------------------------------------------------
+  - name: payments
+    label: Payment links
+    files:
+      - name: payments
+        label: Stripe payment links
+        file: data/payments.json
+        description: >-
+          The Stripe pages our Donate and Membership buttons lead to. Create the links
+          in the Stripe dashboard, then paste each web address here. A box left empty
+          simply hides that button on the website, so they can be added one at a time.
+          Step-by-step instructions are in PAYMENTS.md.
+        fields:
+          - name: _comment
+            label: Note to editors
+            widget: hidden
+            default: "Payment links. Each line below is the web address of a Stripe payment link — the page Stripe hosts where somebody actually types their card details. Create the links in the Stripe dashboard and paste the addresses here; see PAYMENTS.md in the main folder for step-by-step instructions. A line left empty simply hides that button on the website, so it is safe to add them one at a time. Nothing secret belongs in this file: these addresses are meant to be public."
+
+          - name: donate
+            label: Donations
+            widget: object
+            fields:
+              - { name: link, label: Donation page, widget: string, required: false, default: '', hint: 'The Stripe link where the donor chooses the amount. Starts with https://buy.stripe.com/ — leave empty to hide the donation buttons.' }
+              - name: amounts
+                label: Suggested amounts
+                label_singular: Amount
+                widget: list
+                required: false
+                field: { name: amount, label: Dollars, widget: number, value_type: int }
+                hint: One button per amount, in dollars, followed by an "Another amount" button. Three or four works well.
+              - { name: monthlyLink, label: Monthly giving page, widget: string, required: false, default: '', hint: 'Optional. A Stripe link for a gift that repeats every month. Leave empty and no monthly button appears.' }
+
+          - name: membership
+            label: Membership
+            widget: object
+            fields:
+              - { name: householdLink, label: Household, one year, widget: string, required: false, default: '', hint: 'A single $30 payment.' }
+              - { name: householdAutoLink, label: Household, renewing automatically, widget: string, required: false, default: '', hint: '$30 now and $30 every year afterwards, until the member cancels.' }
+              - { name: lifetimeLink, label: Lifetime, widget: string, required: false, default: '', hint: 'A single $300 payment.' }
+
+  # ------------------------------------------------------------------
   # Board of Directors
   # ------------------------------------------------------------------
   - name: board

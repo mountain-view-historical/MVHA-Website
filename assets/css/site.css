@@ -681,6 +681,10 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 .tier li { padding: .4rem 0; color: var(--ink-soft); display: flex; gap: .55rem; }
 .tier li::before { content: "\2713"; color: var(--clay); font-weight: 700; }
 .tier .btn { margin-top: auto; }
+/* A tier can offer more than one way to pay — a single year, or a
+   membership that renews itself. Only the first is pushed to the
+   bottom of the card; the rest stack neatly under it. */
+.tier .btn + .btn { margin-top: .6rem; }
 
 /* ==========================================================================
    Newsletter archive
@@ -1078,3 +1082,119 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
   .news-item { grid-template-columns: 1fr; gap: 1.1rem; }
   .news-thumb img { aspect-ratio: 16 / 9; }
 }
+
+/* ==========================================================================
+   Home page picture slider
+   --------------------------------------------------------------------------
+   One picture at a time, cross-fading. The slides are stacked on top of one
+   another rather than laid out in a row, so the band keeps a steady height
+   whatever shape the photographs are.
+   ========================================================================== */
+
+.slider-band { padding: 3.5rem 0; }
+
+.slider-frame {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--green-dark);
+  box-shadow: var(--shadow);
+  aspect-ratio: 21 / 9;
+}
+
+.slider-track { list-style: none; margin: 0; padding: 0; height: 100%; }
+
+.slider-slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity .8s ease;
+  pointer-events: none;
+}
+.slider-slide.is-on { opacity: 1; pointer-events: auto; }
+.slider-slide a { display: block; height: 100%; text-decoration: none; }
+.slider-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.slider-caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 3.5rem 1.5rem 1.25rem;
+  color: #fff;
+  background: linear-gradient(to top, rgba(20,30,27,.85) 0%, rgba(20,30,27,.55) 45%, rgba(20,30,27,0) 100%);
+}
+.slider-caption strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.slider-caption span {
+  display: block;
+  margin-top: .2rem;
+  font-size: .85rem;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,.82);
+}
+
+.slider-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 50%;
+  background: rgba(20,30,27,.45);
+  color: #fff;
+  font-size: 1.8rem; line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.slider-arrow:hover { background: rgba(20,30,27,.75); }
+.slider-arrow--prev { left: 12px; }
+.slider-arrow--next { right: 12px; }
+.slider-arrow span { position: relative; top: -2px; }
+
+.slider-dots { display: flex; justify-content: center; gap: .5rem; margin-top: 1rem; }
+.slider-dot {
+  width: 9px; height: 9px; padding: 0;
+  border: 0; border-radius: 50%;
+  background: var(--rule);
+  cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+.slider-dot:hover { background: var(--ink-faint); }
+.slider-dot[aria-selected="true"] { background: var(--green); transform: scale(1.35); }
+
+@media (max-width: 720px) {
+  .slider-band { padding: 2.25rem 0; }
+  .slider-frame { aspect-ratio: 4 / 3; }
+  .slider-caption { padding: 3rem 1.1rem 1rem; }
+  .slider-caption strong { font-size: 1.15rem; }
+  .slider-arrow { width: 38px; height: 38px; font-size: 1.5rem; }
+}
+
+/* Somebody who has asked their computer to keep still gets the first
+   picture and the buttons, and nothing moves on its own. */
+@media (prefers-reduced-motion: reduce) {
+  .slider-slide { transition: none; }
+}
+
+/* ==========================================================================
+   Donation amount buttons
+   --------------------------------------------------------------------------
+   A row of suggested amounts on the Donate page. Each one opens Stripe with
+   that amount already filled in; the last opens Stripe with the box empty.
+   ========================================================================== */
+
+.amount-row { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1.5rem 0 .5rem; }
+.amount-btn { min-width: 92px; justify-content: center; font-variant-numeric: tabular-nums; }
+.amount-btn--other { min-width: 150px; }
+
+.pay-note {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .86rem; color: var(--ink-faint);
+  margin-top: 1.25rem;
+}
+
+/* A block hidden with the HTML "hidden" attribute must stay hidden even when
+   a rule above gives it display:flex or display:grid. The payment buttons
+   rely on this: blocks wait, hidden, until the script knows whether the
+   Stripe links have been set up. */
+[hidden] { display: none !important; }

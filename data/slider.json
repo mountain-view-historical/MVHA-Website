@@ -1,0 +1,65 @@
+{
+  "_comment": "The photographs that slide across the home page. They are shown in the order listed here. 'title' is the large caption, 'date' the small one underneath. 'link' is optional — where the picture takes you when clicked; leave it empty for a picture that is not a link. Eight to twelve pictures works well. Wide pictures suit this space better than tall ones.",
+  "slides": [
+    {
+      "title": "Castro Street",
+      "date": "Circa 1953",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg",
+      "link": "archive.html?photo=castro-street-1953"
+    },
+    {
+      "title": "The Historic Adobe Building",
+      "date": "Built 1934, restored 2001",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Historic-Adobe-Building-1024x683.jpg",
+      "link": "archive.html?photo=adobe-building"
+    },
+    {
+      "title": "Mountain View Station Depot",
+      "date": "Built circa 1888",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Station.png",
+      "link": "archive.html?photo=mountain-view-station"
+    },
+    {
+      "title": "Mayfield Mall",
+      "date": "Circa 1966",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mall.png",
+      "link": "archive.html?photo=mayfield-mall"
+    },
+    {
+      "title": "The Rengstorff House",
+      "date": "Built 1867",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Rengstorff-house-1024x834.png",
+      "link": "archive.html?photo=rengstorff-house"
+    },
+    {
+      "title": "Mountain View High School",
+      "date": "Castro Street campus, 1924–1981",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-VIew-High-School.png",
+      "link": "archive.html?photo=mvhs-castro-campus"
+    },
+    {
+      "title": "Rengstorff Avenue",
+      "date": "1966",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/10.jpg",
+      "link": "archive.html?photo=rengstorff-avenue-1966"
+    },
+    {
+      "title": "Hangar One",
+      "date": "Built 1931",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Hanger-one-hanger-1-e1594691504749-1024x821.jpg",
+      "link": "archive.html?photo=hangar-one"
+    },
+    {
+      "title": "Mountain View in 1954",
+      "date": "The year the Association was founded",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-1954.png",
+      "link": "archive.html?photo=mountain-view-1954"
+    },
+    {
+      "title": "The Eagle has landed",
+      "date": "Castro Street monument, December 2023",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2024/03/PXL_20231216_193332065-compressed-1024x563.jpg",
+      "link": "archive.html?photo=eagle-monument-dedication"
+    }
+  ]
+}

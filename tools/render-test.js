@@ -470,6 +470,76 @@ async function render(page, query, patch) {
   check('handles no matches gracefully',
     /No matches/.test(doc.querySelector('[data-dir-status]').textContent));
 
+  console.log('\nHome page slider');
+  doc = await render('index.html');
+  const slides = doc.querySelectorAll('[data-slider] .slider-slide');
+  const wanted = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/slider.json'), 'utf8')).slides;
+  check(`renders every picture (${slides.length})`, slides.length === wanted.length);
+  check('exactly one is showing', doc.querySelectorAll('[data-slider] .slider-slide.is-on').length === 1);
+  check('the rest are hidden from screen readers',
+    [...slides].filter(s => s.getAttribute('aria-hidden') === 'true').length === slides.length - 1);
+  check('every picture has alt text',
+    [...slides].every(s => s.querySelector('img') && s.querySelector('img').getAttribute('alt')));
+  check('captions are filled in from the data file',
+    doc.querySelector('[data-slider] .slider-caption strong').textContent === wanted[0].title,
+    doc.querySelector('[data-slider] .slider-caption strong').textContent);
+  check('a dot for each picture', doc.querySelectorAll('[data-slider] .slider-dot').length === wanted.length);
+  check('back and forward buttons', doc.querySelectorAll('[data-slider] .slider-arrow').length === 2);
+  check('a picture with a link is clickable',
+    !!doc.querySelector('[data-slider] .slider-slide a[href*="archive.html"]'));
+
+  console.log('\nPayment buttons');
+
+  /* Before anybody has created the Stripe links, data/payments.json is
+     empty. Nothing on the page may point nowhere. */
+  doc = await render('donate.html');
+  check('no dead buttons on the donate page',
+    doc.querySelectorAll('#give [data-pay], #give .amount-btn').length === 0);
+  check('the donate page says how to give by check instead',
+    /being set up/.test(doc.querySelector('#give').textContent));
+  doc = await render('membership.html');
+  check('no dead buttons on the membership page',
+    doc.querySelectorAll('.tier [data-pay]').length === 0);
+  check('the membership page says how to join by post instead',
+    /being set up/.test(doc.querySelector('#join-online').textContent));
+
+  /* And once they have been created. */
+  const stripe = (rel, data) => rel !== 'data/payments.json' ? data : {
+    donate: {
+      link: 'https://buy.stripe.com/donate',
+      amounts: [50, 100],
+      monthlyLink: 'https://buy.stripe.com/monthly'
+    },
+    membership: {
+      householdLink: 'https://buy.stripe.com/household',
+      householdAutoLink: 'https://buy.stripe.com/auto',
+      lifetimeLink: 'https://buy.stripe.com/lifetime'
+    }
+  };
+
+  doc = await render('donate.html', '', stripe);
+  const amounts = [...doc.querySelectorAll('#give .amount-btn')];
+  check(`an amount button each, plus one for any other amount (${amounts.length})`, amounts.length === 3);
+  check('an amount is passed to Stripe in cents',
+    amounts[0].getAttribute('href') === 'https://buy.stripe.com/donate?prefilled_amount=5000',
+    amounts[0].getAttribute('href'));
+  check('the last button leaves the amount open',
+    amounts[2].getAttribute('href') === 'https://buy.stripe.com/donate');
+  check('the monthly button appears once there is a link for it',
+    doc.querySelector('[data-pay="donate-monthly"]').getAttribute('href') === 'https://buy.stripe.com/monthly');
+  check('the pay-by-check notice steps aside',
+    !doc.querySelector('#give [data-pay-unless]'));
+
+  doc = await render('membership.html', '', stripe);
+  check('a year, an automatic renewal and a lifetime membership',
+    doc.querySelectorAll('.tier [data-pay]').length === 3);
+  check('each goes to its own Stripe page',
+    doc.querySelector('[data-pay="membership-household"]').getAttribute('href') === 'https://buy.stripe.com/household' &&
+    doc.querySelector('[data-pay="membership-auto"]').getAttribute('href') === 'https://buy.stripe.com/auto' &&
+    doc.querySelector('[data-pay="membership-lifetime"]').getAttribute('href') === 'https://buy.stripe.com/lifetime');
+  check('no card details are asked for on our own pages',
+    !/type="(card|cc)|card number|credit card/i.test(doc.querySelector('main').innerHTML));
+
   console.log('\nNavigation');
   doc = await render('events.html');
   check('marks the current page in the nav',

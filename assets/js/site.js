@@ -1810,7 +1810,205 @@
   })();
 
   /* ====================================================================
-     10. Footer year
+     10. Home page picture slider
+     --------------------------------------------------------------------
+     The pictures, their captions and their order all live in
+     data/slider.json, so nothing here needs editing to change them.
+
+     It moves on by itself every seven seconds, and stops the moment
+     somebody takes an interest -- a hover, a tap, or the keyboard
+     reaching one of the buttons -- so it never slides out from under a
+     visitor who is reading a caption. Somebody who has asked their
+     computer for reduced motion gets the pictures without the movement.
+     ==================================================================== */
+
+  (async function initSlider() {
+    const mount = $('[data-slider]');
+    if (!mount) return;
+
+    const data = await loadData('slider');
+    const slides = (data && data.slides || []).filter(function (s) { return s && s.src; });
+    if (!slides.length) { mount.remove(); return; }
+
+    const calm = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    mount.innerHTML =
+      '<div class="slider-frame">' +
+        '<ul class="slider-track">' +
+          slides.map(function (s, i) {
+            const inner =
+              '<img src="' + esc(s.src) + '" alt="' + esc(s.alt || s.title || '') + '"' +
+                (i === 0 ? ' fetchpriority="high"' : ' loading="lazy"') + '>' +
+              '<div class="slider-caption">' +
+                '<strong>' + esc(s.title || '') + '</strong>' +
+                (s.date ? '<span>' + esc(s.date) + '</span>' : '') +
+              '</div>';
+            return '<li class="slider-slide"' + (i === 0 ? '' : ' aria-hidden="true"') + '>' +
+              (s.link
+                ? '<a href="' + esc(s.link) + '">' + inner + '</a>'
+                : inner) +
+              '</li>';
+          }).join('') +
+        '</ul>' +
+        '<button class="slider-arrow slider-arrow--prev" type="button" aria-label="Previous picture"><span aria-hidden="true">&lsaquo;</span></button>' +
+        '<button class="slider-arrow slider-arrow--next" type="button" aria-label="Next picture"><span aria-hidden="true">&rsaquo;</span></button>' +
+      '</div>' +
+      '<div class="slider-dots" role="tablist" aria-label="Choose a picture">' +
+        slides.map(function (s, i) {
+          return '<button class="slider-dot" type="button" role="tab" data-go="' + i + '"' +
+            ' aria-selected="' + (i === 0) + '"' +
+            ' aria-label="' + esc(s.title || ('Picture ' + (i + 1))) + '"></button>';
+        }).join('') +
+      '</div>';
+
+    const items = $$('.slider-slide', mount);
+    const dots  = $$('.slider-dot', mount);
+    let at = 0;
+    let timer = null;
+
+    function show(next) {
+      at = (next + items.length) % items.length;
+      items.forEach(function (li, i) {
+        li.classList.toggle('is-on', i === at);
+        if (i === at) li.removeAttribute('aria-hidden');
+        else li.setAttribute('aria-hidden', 'true');
+      });
+      dots.forEach(function (d, i) {
+        d.setAttribute('aria-selected', String(i === at));
+      });
+    }
+
+    function start() {
+      if (calm || timer || items.length < 2) return;
+      timer = setInterval(function () { show(at + 1); }, 7000);
+    }
+    function stop() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    show(0);
+    start();
+
+    // Stop while somebody is looking, start again when they leave.
+    mount.addEventListener('mouseenter', stop);
+    mount.addEventListener('mouseleave', start);
+    mount.addEventListener('focusin', stop);
+    mount.addEventListener('focusout', start);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+
+    mount.addEventListener('click', function (e) {
+      const dot = e.target.closest('[data-go]');
+      if (dot) { stop(); show(Number(dot.dataset.go)); return; }
+      if (e.target.closest('.slider-arrow--next')) { stop(); show(at + 1); return; }
+      if (e.target.closest('.slider-arrow--prev')) { stop(); show(at - 1); }
+    });
+
+    // Arrow keys, once one of the slider's own buttons has the keyboard.
+    mount.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { stop(); show(at + 1); }
+      else if (e.key === 'ArrowLeft') { stop(); show(at - 1); }
+    });
+
+    // Swipe on a phone.
+    let x0 = null;
+    mount.addEventListener('touchstart', function (e) {
+      x0 = e.touches[0].clientX;
+    }, { passive: true });
+    mount.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) < 40) return;
+      stop();
+      show(dx < 0 ? at + 1 : at - 1);
+    });
+  })();
+
+  /* ====================================================================
+     11. Payment buttons (Stripe)
+     --------------------------------------------------------------------
+     The Donate and Membership pages have buttons that hand the visitor
+     over to Stripe, which is where card details are typed -- never on
+     this website. The web address of each Stripe page lives in
+     data/payments.json; see PAYMENTS.md for how to create them.
+
+     Anything marked data-pay="..." here is filled in from that file. If
+     the matching address has not been set up yet, the button is removed
+     rather than left pointing nowhere. Blocks marked data-pay-when="..."
+     appear only once that address is in place; blocks marked
+     data-pay-unless="..." appear only while it is missing, which is how
+     the pay-by-check wording stays visible until online payments are
+     ready.
+     ==================================================================== */
+
+  (async function initPayments() {
+    if (!$('[data-pay], [data-pay-amounts], [data-pay-when], [data-pay-unless]')) return;
+
+    const data = await loadData('payments') || {};
+    const d = data.donate || {};
+    const m = data.membership || {};
+
+    const links = {
+      'donate':               d.link,
+      'donate-monthly':       d.monthlyLink,
+      'membership-household': m.householdLink,
+      'membership-auto':      m.householdAutoLink,
+      'membership-lifetime':  m.lifetimeLink
+    };
+
+    function isReal(url) {
+      return typeof url === 'string' && /^https:\/\//i.test(url.trim());
+    }
+
+    /* An amount button points at the same Stripe page as the plain
+       Donate button, with the amount already filled in. Stripe calls
+       that prefilled_amount, and counts in cents. The visitor can still
+       change it on Stripe's own page. */
+    function withAmount(url, dollars) {
+      const n = Math.round(Number(dollars) * 100);
+      if (!n || n < 0) return url;
+      return url + (url.indexOf('?') === -1 ? '?' : '&') + 'prefilled_amount=' + n;
+    }
+
+    // Preset amount buttons, built from the list in payments.json.
+    $$('[data-pay-amounts]').forEach(function (row) {
+      const amounts = (d.amounts || []).filter(function (n) { return Number(n) > 0; });
+      if (!isReal(d.link) || !amounts.length) { row.remove(); return; }
+      row.innerHTML = amounts.map(function (n) {
+        return '<a class="btn btn--ghost amount-btn" href="' +
+          esc(withAmount(d.link.trim(), n)) + '">$' + esc(n) + '</a>';
+      }).join('') +
+      '<a class="btn btn--primary amount-btn amount-btn--other" href="' +
+        esc(d.link.trim()) + '">Another amount</a>';
+    });
+
+    $$('[data-pay]').forEach(function (el) {
+      const url = links[el.getAttribute('data-pay')];
+      if (!isReal(url)) { el.remove(); return; }
+      const amount = el.getAttribute('data-pay-amount');
+      el.setAttribute('href', amount ? withAmount(url.trim(), amount) : url.trim());
+    });
+
+    // Blocks that only appear once a button is ready...
+    $$('[data-pay-when]').forEach(function (el) {
+      const wanted = el.getAttribute('data-pay-when').split(/\s+/);
+      const ready = wanted.some(function (k) { return isReal(links[k]); });
+      if (ready) el.hidden = false; else el.remove();
+    });
+
+    // ...and blocks that only appear while one is still missing.
+    $$('[data-pay-unless]').forEach(function (el) {
+      const wanted = el.getAttribute('data-pay-unless').split(/\s+/);
+      const ready = wanted.some(function (k) { return isReal(links[k]); });
+      if (ready) el.remove(); else el.hidden = false;
+    });
+  })();
+
+  /* ====================================================================
+     12. Footer year
      ==================================================================== */
 
   $$('[data-year]').forEach(function (el) {

@@ -491,19 +491,20 @@ These were external on the old site too and continue to work unchanged:
 - **Landmarks map** — Google My Maps (embedded on `landmarks.html`)
 - **Videos** — YouTube (embedded on `videos.html`)
 
-### Forms
+### Forms and payments
 
-The membership, donation, volunteer and contact forms currently open the
-visitor's email programme with the details filled in. That needs no server and
-costs nothing, but it is clumsy on some devices and card payments cannot be
-taken this way.
+**Payments are done.** Donations and membership dues are taken by Stripe: the
+buttons on the Donate and Membership pages open a page Stripe hosts, and no
+card details are typed on this website or sent by email. The web addresses of
+those Stripe pages are the only thing kept here, in `data/payments.json`, and
+they are meant to be public. **PAYMENTS.md** explains how to create the links,
+what each one is for, and how to look after them afterwards.
 
-When you are ready to improve them, the usual options are:
-
-- **Formspree** or **Netlify Forms** — change the form's `action` to their URL
-  and submissions arrive by email. Free tiers cover a small organisation.
-- **Payments** — a Stripe Payment Link or PayPal button for dues and donations.
-  Replace the "Join or renew" and "Make a donation" buttons with those links.
+**The volunteer and contact forms** still open the visitor's email programme
+with the details filled in. That needs no server and costs nothing, but it is
+clumsy on some devices. When you are ready to improve them, point the form's
+`action` at **Formspree** or a similar service and submissions arrive by
+email instead; their free tiers cover an organisation this size.
 
 ---
 
@@ -536,6 +537,10 @@ data/posts.json                 Generated. The news index, for the listing
 
 data/events.json                Events. Edit freely.
 data/photos.json                Our own photographs. Edit freely.
+data/slider.json                The pictures that slide across the home page.
+                                Edit freely, or in /admin.
+data/payments.json              The Stripe pages the Donate and Membership
+                                buttons lead to. See PAYMENTS.md.
 data/photos-ia.json             Generated. The Internet Archive catalogue —
                                 run tools/ia/build-photos.js, do not edit.
 data/timeline.json              City timeline. Edit freely.
