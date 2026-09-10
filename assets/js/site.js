@@ -1805,7 +1805,10 @@
           const n = index.filter(function (i) { return i.kind === el.dataset.countFor; }).length;
           el.textContent = n.toLocaleString();
         });
-        if (summary) summary.textContent = 'Type a word or two above — try “Castro”, “Adobe Building”, “1902” or “orchard”. Several words find the pages that have all of them.';
+        /* Nothing typed yet, so nothing to say: the examples in the search
+           box itself already show what to try. The line is hidden rather
+           than merely emptied, so it leaves no gap above the results. */
+        if (summary) { summary.textContent = ''; summary.hidden = true; }
         return;
       }
 
@@ -1835,6 +1838,7 @@
         .sort(function (a, b) { return b.score - a.score; });
 
       if (summary) {
+        summary.hidden = false;
         const hidden = scored.length - hits.length;
         if (hits.length) {
           summary.textContent = hits.length + ' result' + (hits.length === 1 ? '' : 's') +
