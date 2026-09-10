@@ -120,15 +120,45 @@
      treated as one word rather than two. */
   const WORD_CHAR = /[\p{L}\p{N}]/u;
 
-  /** Does `term` (lower case) start a word somewhere in `hay` (lower case)? */
-  function startsAWord(hay, term) {
-    if (!term) return true;
-    let at = hay.indexOf(term);
+  /**
+   * Where `term` (lower case) starts a word in `hay` (lower case), or -1.
+   * `from` lets the caller carry on past an earlier match.
+   */
+  function wordStartIndex(hay, term, from) {
+    if (!term) return -1;
+    let at = hay.indexOf(term, from || 0);
     while (at !== -1) {
-      if (at === 0 || !WORD_CHAR.test(hay.charAt(at - 1))) return true;
+      if (at === 0 || !WORD_CHAR.test(hay.charAt(at - 1))) return at;
       at = hay.indexOf(term, at + 1);
     }
-    return false;
+    return -1;
+  }
+
+  /** Does `term` (lower case) start a word somewhere in `hay` (lower case)? */
+  function startsAWord(hay, term) {
+    return !term || wordStartIndex(hay, term) !== -1;
+  }
+
+  /** How many words in `hay` start with `term`. Used to rank search results. */
+  function countWordStarts(hay, term) {
+    if (!term) return 0;
+    let n = 0;
+    let at = wordStartIndex(hay, term);
+    while (at !== -1) {
+      n++;
+      at = wordStartIndex(hay, term, at + term.length);
+    }
+    return n;
+  }
+
+  /**
+   * A pattern that finds `term` only where it starts a word, for marking it
+   * in a result. The character in front is captured too and put back, which
+   * does the same job as a look-behind without needing one.
+   */
+  function wordStartPattern(term) {
+    const safe = String(term).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp('(^|[^\\p{L}\\p{N}])(' + safe + ')', 'giu');
   }
 
   /** Split what was typed into the separate words to look for. */
@@ -1710,7 +1740,7 @@
       var lower = fullText.toLowerCase();
       var at = -1;
       for (var i = 0; i < terms.length; i++) {
-        at = lower.indexOf(terms[i]);
+        at = wordStartIndex(lower, terms[i]);
         if (at > -1) break;
       }
       if (at === -1) return '';
@@ -1726,7 +1756,7 @@
       let out = esc(text);
       terms.forEach(function (t) {
         if (t.length < 2) return;
-        out = out.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>');
+        out = out.replace(wordStartPattern(t), '$1<mark>$2</mark>');
       });
       return out;
     }
@@ -1775,23 +1805,22 @@
           const n = index.filter(function (i) { return i.kind === el.dataset.countFor; }).length;
           el.textContent = n.toLocaleString();
         });
-        if (summary) summary.textContent = 'Type a word or phrase above — try “Castro”, “Adobe Building”, “1902” or “orchard”.';
+        if (summary) summary.textContent = 'Type a word or two above — try “Castro”, “Adobe Building”, “1902” or “orchard”. Several words find the pages that have all of them.';
         return;
       }
 
-      const terms = q.split(/\s+/).filter(Boolean);
+      const terms = searchTerms(q);
 
       // Score everything first, so the per-source counts stay honest even for
       // sources the visitor has switched off.
       const scored = index.map(function (item) {
         let score = 0;
         terms.forEach(function (t) {
-          if (item.title.toLowerCase().indexOf(t) !== -1) score += 5;
-          const matches = item.haystack.split(t).length - 1;
-          score += Math.min(matches, 4);
+          if (startsAWord(item.title.toLowerCase(), t)) score += 5;
+          score += Math.min(countWordStarts(item.haystack, t), 4);
         });
-        // Require every term to appear somewhere.
-        const all = terms.every(function (t) { return item.haystack.indexOf(t) !== -1; });
+        // Require every word typed to start a word somewhere.
+        const all = matchesTerms(item.haystack, terms);
         return all && score > 0 ? { item: item, score: score } : null;
       }).filter(Boolean);
 
