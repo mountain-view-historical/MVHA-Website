@@ -11,3 +11,13 @@ mvha-site-test.zip
 
 # Files parked for manual deletion — not part of the site.
 _to_delete/
+
+# The photograph export is a working copy of pictures that already exist on
+# the old WordPress server. It is made on demand by Launchers/Export
+# Photographs.command and does not belong in the repository.
+photo-export/
+mvha-photographs.zip
+
+# Board documents. The repository is public, so anything naming who holds
+# which account stays out of it.
+*.docx

@@ -14,6 +14,11 @@ nothing to the site visitors download, and is not switched on until you
 follow [SETUP-CMS.md](SETUP-CMS.md). Once it is on, hand editors
 [EDITING.md](EDITING.md) and nothing else.
 
+Payments run through Stripe — [PAYMENTS.md](PAYMENTS.md). Neither the Stripe
+account nor the old site's HostGator hosting is owned by whoever maintains
+this site, so [ACCOUNTS.md](ACCOUNTS.md) explains how to get added to each
+one, at a level that carries no control over the money.
+
 ---
 
 ## Looking at the site on your own computer
@@ -508,6 +513,25 @@ email instead; their free tiers cover an organisation this size.
 
 ---
 
+## The photographs that exist nowhere else
+
+About thirteen hundred photographs are held at the Internet Archive and the
+site only links to them, so they are safe whatever happens here. Sixty others
+— the Association's own pictures and the ones used inside pages — exist only
+on the old WordPress server.
+
+Double-click **Launchers/Export Photographs.command** to download them all
+into `photo-export/`, with `README.md` and `catalogue.csv` describing each
+one, and a `mvha-photographs.zip` beside `index.html`.
+
+That package is also the shape you would want for uploading them to the
+Association's own Internet Archive collection — the catalogue notes which
+pictures are credited to somebody else and which may already be there. The
+export folder and the zip are deliberately kept out of the repository and off
+the live site.
+
+---
+
 ## What is in this folder
 
 ```
@@ -517,6 +541,9 @@ Launchers/                      Double-clickable helpers:
   Build Test Site.command         Same, but hidden from search engines.
   Package For Upload.command      Make a .zip ready to upload to a web host.
   Index Newsletters.command       Make the newsletter PDFs searchable.
+  Export Photographs.command      Save the pictures that exist nowhere but
+                                  the old WordPress server, with their
+                                  descriptions.
   find-node.sh                    Helper. Locates Node; not run directly.
 
 index.html, about.html, ...     The built site. Do not edit these directly —
@@ -557,6 +584,9 @@ tools/ia/build-photos.js        Turns the Internet Archive catalogue export
 tools/ia/ia-photos-source.csv   That export. The only file to edit if a
                                 photograph's title or description is wrong.
 tools/check.js                  Link and data checker.
+tools/export-photos.js          Downloads every picture still held on the old
+                                WordPress server, writes a catalogue of what
+                                is known about each, and zips the lot.
 tools/package.js                Builds the upload .zip.
 tools/index_newsletters.py      Reads the newsletter PDFs: full text for search,
                                 plus each issue's contents list.
