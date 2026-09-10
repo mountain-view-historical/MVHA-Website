@@ -102,6 +102,45 @@
     return MONTHS_LONG[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
   }
 
+  /* --------------------------------------------------------------------
+     Matching what somebody typed into a search box
+     --------------------------------------------------------------------
+     Asking only "do these letters appear anywhere in the text" is too
+     eager: a search for Ames then finds James and Flames alongside the
+     Ames Building and the Ames family. So the letters have to start a
+     word. That still works while somebody is only part way through
+     typing, because "Ame" starts "Ames" too, and it still finds plurals
+     and endings -- "orchard" starts "orchards".
+
+     Several words typed together are treated as several conditions: every
+     one of them has to start a word somewhere, in any order.
+     -------------------------------------------------------------------- */
+
+  /* Letters and digits in any language, so that an accented name is
+     treated as one word rather than two. */
+  const WORD_CHAR = /[\p{L}\p{N}]/u;
+
+  /** Does `term` (lower case) start a word somewhere in `hay` (lower case)? */
+  function startsAWord(hay, term) {
+    if (!term) return true;
+    let at = hay.indexOf(term);
+    while (at !== -1) {
+      if (at === 0 || !WORD_CHAR.test(hay.charAt(at - 1))) return true;
+      at = hay.indexOf(term, at + 1);
+    }
+    return false;
+  }
+
+  /** Split what was typed into the separate words to look for. */
+  function searchTerms(query) {
+    return String(query == null ? '' : query).trim().toLowerCase().split(/\s+/).filter(Boolean);
+  }
+
+  /** True when every word typed starts a word in the text. */
+  function matchesTerms(hay, terms) {
+    return terms.every(function (t) { return startsAWord(hay, t); });
+  }
+
   /* ====================================================================
      1. Mobile navigation
      ==================================================================== */
@@ -253,7 +292,13 @@
       if (typeof p.decade === 'number') return p.decade;
       return Infinity;
     }
-    photos.forEach(function (p) { p.year = yearOf(p); });
+    photos.forEach(function (p) {
+      p.year = yearOf(p);
+      /* The text the search box looks through, worked out once rather than
+         on every keystroke -- there are thirteen hundred photographs. */
+      p.hay = [p.title, p.caption, p.date, p.topic, p.creator]
+        .filter(Boolean).join(' ').toLowerCase();
+    });
     photos.sort(function (a, b) {
       if (a.year !== b.year) return a.year - b.year;
       return a.title.localeCompare(b.title);
@@ -347,7 +392,7 @@
     }
 
     function apply() {
-      const q = (qInput && qInput.value.trim().toLowerCase()) || '';
+      const terms = searchTerms(qInput && qInput.value);
       const dec = (decadeSel && decadeSel.value) || '';
       const top = (topicSel && topicSel.value) || '';
       const place = (placeSel && placeSel.value) || '';
@@ -357,10 +402,7 @@
         else if (dec && String(p.decade) !== dec) return false;
         if (top && p.topic !== top) return false;
         if (place && p.collection !== place) return false;
-        if (q) {
-          const hay = [p.title, p.caption, p.date, p.topic, p.creator].join(' ').toLowerCase();
-          if (hay.indexOf(q) === -1) return false;
-        }
+        if (terms.length && !matchesTerms(p.hay, terms)) return false;
         return true;
       });
       shown = PAGE;
