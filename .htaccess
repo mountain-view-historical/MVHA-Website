@@ -1,43 +1,29 @@
 # ==========================================================================
-# Apache settings for the MVHA site.
+# Apache settings for the TEST copy of the site.
 #
-# Only needed on a traditional Apache host (GoDaddy, cPanel, shared hosting).
-# Netlify and Cloudflare Pages read _redirects instead and ignore this file.
+# This build is meant to sit in a subfolder, for example
+# example.com/mvhistory/, so it deliberately leaves out the redirects from
+# the old WordPress addresses — those only make sense once the site is at
+# the top of mountainviewhistorical.org.
 #
-# Rebuilt automatically by tools/build.js — edit that, not this.
+# Rebuilt automatically. Run "node tools/build.js" to get the production one.
 # ==========================================================================
 
 DirectoryIndex index.html
 
-# ---- Redirects from the old WordPress addresses ----
+# ---- Keep this copy out of search results ----
+#
+# Sends "do not index" with every file, including the JSON data files that
+# have no page of their own to carry a meta tag. Visitors never see this and
+# nothing about the site behaves differently — it only speaks to crawlers.
 
-RewriteEngine On
-
-RedirectMatch 301 ^/about-the-association/?$ /about.html
-RedirectMatch 301 ^/our-history/?$ /our-history.html
-RedirectMatch 301 ^/mountain-view-history-center/?$ /history-center.html
-RedirectMatch 301 ^/history/?$ /history.html
-RedirectMatch 301 ^/mountain-view-history-timeline/?$ /timeline.html
-RedirectMatch 301 ^/castro-city-rengstorff-park/?$ /castro-legacy.html
-RedirectMatch 301 ^/historical-buildings-in-mountain-view-ca/?$ /landmarks.html
-RedirectMatch 301 ^/mvhs-eagle-monument/?$ /eagle-monument.html
-RedirectMatch 301 ^/useful_links/?$ /links.html
-RedirectMatch 301 ^/video-gallery/?$ /videos.html
-RedirectMatch 301 ^/events/?$ /events.html
-RedirectMatch 301 ^/oldest-living-resident/?$ /oldest-resident.html
-RedirectMatch 301 ^/get-involved/?$ /join.html
-RedirectMatch 301 ^/donate/?$ /donate.html
-RedirectMatch 301 ^/memberships/?$ /membership.html
-RedirectMatch 301 ^/volunteer/?$ /volunteer.html
-RedirectMatch 301 ^/newsletters/?$ /newsletters.html
-RedirectMatch 301 ^/archived-newsletters/?$ /newsletters.html
-RedirectMatch 301 ^/contact-us/?$ /contact.html
-RedirectMatch 301 ^/events/page/.*$ /events.html
-RedirectMatch 301 ^/eventbrite-event/.*$ /events.html
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
 
 # ---- Friendly error page ----
 
-ErrorDocument 404 /404.html
+ErrorDocument 404 /mvhistory/404.html
 
 # ---- Compression ----
 

@@ -1,7 +1,9 @@
+# Test copy of the site.
+#
+# Crawlers are allowed in on purpose: every page and every file carries a
+# "noindex" instruction, and a crawler has to be able to read it. Blocking
+# them here would be self-defeating.
+#
+# Visitors are unaffected — anyone with the address sees the full site.
 User-agent: *
 Allow: /
-
-# The editing panel is for volunteers, not for search engines.
-Disallow: /admin/
-
-Sitemap: https://www.mountainviewhistorical.org/sitemap.xml

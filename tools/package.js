@@ -33,11 +33,39 @@ const DIR_MODE  = 0o755;   // owner can edit, everyone can enter and read
 /* Things the web host does not need. 'admin' is the editing panel: it only
    works on a host that rebuilds the site from GitHub, so it is left out of
    the zip for a traditional host, where it could only ever fail to load. */
-const SKIP_DIRS = new Set(['tools', 'Launchers', '.venv', 'node_modules', '.git', 'upload', 'admin']);
+const SKIP_DIRS = new Set([
+  'tools', 'Launchers', '.venv', 'node_modules', '.git', 'upload', 'admin',
+  // working folders that are not part of the site
+  '_to_delete', 'Claude outputs', 'Backups', 'photo-export', '.github',
+]);
 const SKIP_FILES = new Set([
   'README.md', 'SETUP-CMS.md', 'EDITING.md', 'UPLOADING.md',
-  '.DS_Store', 'package-lock.json', 'package.json', '.gitignore'
+  '.DS_Store', 'package-lock.json', 'package.json', '.gitignore',
+  '.gitattributes', '.assetsignore',
 ]);
+
+/* Notes are for you, not for the web. This list used to name each one, which
+   meant every new note was published by default -- ACCOUNTS.md and
+   MVHA-account-access-memo.docx both went into a zip that way. Whole file
+   types are excluded instead, so a new note is left out without anyone having
+   to remember to add it. */
+const SKIP_EXTENSIONS = ['.md', '.docx', '.doc', '.xlsx', '.xls', '.pptx',
+                         '.numbers', '.pages', '.key', '.bak', '.zip', '.log'];
+
+
+/* What a traditional web host is expected to find at the top level. Anything
+   else is reported at the end of the run rather than silently shipped. */
+const EXPECTED_AT_ROOT = new Set([
+  '.htaccess', 'robots.txt', 'sitemap.xml', '_redirects', 'wrangler.jsonc',
+]);
+const strays = [];
+
+/* A file with no extension at the root is not a web page. One turned up as a
+   3.8 MB zip with a random name, left behind by an earlier packaging run. */
+function looksLikeJunk(name, dir) {
+  if (dir !== ROOT || EXPECTED_AT_ROOT.has(name)) return false;
+  return !path.extname(name) && !name.startsWith('.');
+}
 
 const name = TEST_SITE ? 'mvha-site-test.zip' : 'mvha-site.zip';
 const zipPath = path.join(ROOT, name);
@@ -58,7 +86,12 @@ function copyInto(from, to) {
       copyInto(path.join(from, entry.name), path.join(to, entry.name));
     } else {
       if (SKIP_FILES.has(entry.name)) continue;
-      if (entry.name.endsWith('.zip') || entry.name.endsWith('.bak')) continue;
+      const ext = path.extname(entry.name).toLowerCase();
+      if (SKIP_EXTENSIONS.includes(ext)) continue;
+      if (looksLikeJunk(entry.name, from)) continue;
+      if (from === ROOT && ext !== '.html' && !EXPECTED_AT_ROOT.has(entry.name)) {
+        strays.push(entry.name);
+      }
       const target = path.join(to, entry.name);
       fs.copyFileSync(path.join(from, entry.name), target);
       fs.chmodSync(target, FILE_MODE);
@@ -95,7 +128,12 @@ const hasHtaccess = files.some(f => path.basename(f) === '.htaccess');
 console.log(`  .htaccess included:      ${hasHtaccess ? 'yes' : 'NO — check this'}`);
 console.log(`  pages:                   ${files.filter(f => f.endsWith('.html')).length}`);
 console.log(`  data files:              ${files.filter(f => f.includes(path.sep + 'data' + path.sep)).length}`);
-console.log(`  left out:                tools, Launchers, .venv, README`);
+console.log(`  left out:                tools, Launchers, working folders, notes`);
+if (strays.length) {
+  console.log('\n  Worth a look — these are in the zip but are not pages or');
+  console.log('  data, so check each one belongs on a public web server:');
+  strays.forEach(n => console.log('    ' + n));
+}
 
 /* Every file must be world-readable or the web server returns 403 Forbidden. */
 const unreadable = files.filter(f => !(fs.statSync(f).mode & 0o004));

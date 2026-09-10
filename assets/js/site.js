@@ -1363,26 +1363,92 @@
       // The optional fraction matters: without it "340 1/2 Castro" parses as
       // number 340 on a street called "1/2 Castro", which then files separately
       // from Castro itself.
-      const HOUSE = /^(\d+)\s*(1\/2|½|1\/4|3\/4)?\s*([a-zA-Z])?\s+(.+)$/;
+      // The letter after a house number has to be GLUED to the digits: "128a
+      // Castro" is 128 A, but in "406 N Rengstorff Avenue" the N belongs to the
+      // street. Allowing a space between them merged every N, S, E and W street
+      // into its undirected twin -- 406 N Rengstorff filed under Rengstorff.
+      const HOUSE = /^(\d+)([a-zA-Z])?\s*(1\/2|½|1\/4|3\/4)?\s+(.+)$/;
       // Trailing unit markers, pulled off so "Castro apt 5" files under Castro.
-      // Room numbers count as units too: 655 Castro was an office building and
-      // its listings run "655 Castro R1" to "R8", plus "655 Castro Rm 5".
-      const UNIT = /\s+(apt\.?\s*[\w-]+|#\s*[\w-]+|rms?\.?\s*\d+[a-z]?|r\s?\d+[a-z]?|rear|upstairs|upper|lower)$/i;
+      // Room numbers count as units too: 257 and 655 Castro were office
+      // buildings, and their listings run "655 Castro Street R1" to "R8",
+      // "R-2M", "Rm 2J", "Rm 5". A room code always carries a digit -- without
+      // that the pattern would read the "Road" in every road as room "oad".
+      // Apartment, suite and room markers come in more shapes than you would
+      // hope: "apt 3", "apt 12 A", "apt 67 2", "ant 638" (OCR for apt), a bare
+      // "apt" whose number was lost, "Suite E", "rm A", "Bldg 10", "R-2M".
+      // Each keyword has to end on a word boundary followed by a separator,
+      // otherwise "South Nomura Way" reads as unit "no" and street "South",
+      // and a room code has to carry a digit unless it is spelled "rm" or
+      // "room", otherwise every Road in town becomes room "oad".
+      const UNIT = new RegExp('\\s+(' +
+        '(?:apt|apts|ant|ste|suite|unit|no|lot|bldg|building)\\b[.\u2019\']?\\s*[\\w-]+\\.?' +
+          '(?:\\s+[\\w-]{1,3}\\.?){0,2}' +
+        '|(?:apt|apts|ant|ste|suite)\\b\\.?' +
+        '|#\\s*[\\w-]+' +
+        '|(?:rms?|room)\\b\\.?[-\\s]?[\\w-]{1,4}' +
+        '|r\\.?[-\\s]?\\d{1,3}\\s?[a-z]?' +
+        '|rear|upstairs|upper|lower' +
+        ')$', 'i');
+      // A parenthesised tail: "(Sunnyvale)", "(Los Altos)", "(Lane)", "(Pa)".
+      // It has to come off BEFORE the unit, or "Cortez Drive apt 1 (Sunnyvale)"
+      // keeps its apartment number and files as its own street -- which is how
+      // one Sunnyvale street turned into five.
+      const TAG = /\s*\(([^()]{1,20})\)\s*$/;
+      // Only a real place name belongs in a street heading. Anything else --
+      // (Lane), (Se), (Pa) -- rides along with the listing instead, so it can
+      // still be read but cannot split a street in two.
+      const PLACES = ('sunnyvale|los altos hills|los altos|los gatos|palo alto|' +
+        'san jose|santa clara|cupertino|campbell|saratoga|menlo park|' +
+        'redwood city|milpitas|atherton|burlingame|san mateo|fremont|' +
+        'san francisco|alviso|stanford|moffett field|blossom valley|mayfield|' +
+        'woodside|san carlos|mountain view');
+      const PLACE = new RegExp('^(?:' + PLACES + ')$', 'i');
       const MAX_X = 1200;
 
       const xRows = [];
       DATA.forEach(function (e) {
         const m = HOUSE.exec((e.a || '').trim());
         if (!m) return;
-        let street = m[4].trim(), unit = m[2] ? m[2].replace('1/2', '\u00bd') : '';
+        let street = m[4].trim(), unit = m[3] ? m[3].replace('1/2', '\u00bd') : '';
+        let place = '', note = '';
+        // A listing can carry two tags: "(Los A) (Los Altos)". Take them all.
+        for (let t = TAG.exec(street); t; t = TAG.exec(street)) {
+          street = street.slice(0, t.index).trim();
+          const tag = t[1].trim();
+          if (PLACE.test(tag)) place = place || tag;
+          else note = note ? tag + ', ' + note : tag;
+        }
         const u = UNIT.exec(street);
         if (u) {
           unit = (unit ? unit + ' ' : '') + u[1].trim();
           street = street.slice(0, u.index).trim();
         }
         if (!street) return;
-        xRows.push({ e: e, n: parseInt(m[1], 10), sfx: (m[3] || '').toUpperCase(),
-                     street: street, key: norm(street), unit: unit });
+        if (place) street += ' (' + place + ')';
+        xRows.push({ e: e, n: parseInt(m[1], 10), sfx: (m[2] || '').toUpperCase(),
+                     street: street, key: norm(street), unit: unit, note: note });
+      });
+
+      // 1966 lost the word "apt" in about forty listings, leaving "776 Alice
+      // Avenue 20" and "2005 California 32" -- each of which files as its own
+      // street. A trailing bare number is only a unit if the name without it is
+      // a street this collection actually uses, which is why this waits until
+      // every address has been read once: "950 Highway 101" keeps its 101
+      // because there is no street called Highway, and a genuine numbered
+      // street is never touched.
+      const STRAY = /\s+(\d{1,3}[a-z]?)$/i;
+      const seenStreet = {};
+      xRows.forEach(function (r) {
+        if (!STRAY.test(r.street)) seenStreet[r.key] = (seenStreet[r.key] || 0) + 1;
+      });
+      xRows.forEach(function (r) {
+        const m = STRAY.exec(r.street);
+        if (!m) return;
+        const shorter = r.street.slice(0, m.index).trim();
+        if ((seenStreet[norm(shorter)] || 0) < 3) return;
+        r.unit = (r.unit ? r.unit + ' ' : '') + m[1];
+        r.street = shorter;
+        r.key = norm(shorter);
       });
 
       const xYears = [];
@@ -1480,7 +1546,8 @@
             take.map(function (r) {
               return '<tr>' +
                 '<td class="x-num">' + r.n + esc(r.sfx.toLowerCase()) +
-                  (r.unit ? ' <span class="x-unit">' + esc(r.unit) + '</span>' : '') + '</td>' +
+                  (r.unit ? ' <span class="x-unit">' + esc(r.unit) + '</span>' : '') +
+                  (r.note ? ' <span class="x-unit">(' + esc(r.note) + ')</span>' : '') + '</td>' +
                 '<td class="dir-name">' + esc(r.e.n) + '</td>' +
                 '<td class="dir-occ">' + esc(r.e.o) + '</td>' +
                 '<td class="dir-kind">' + (r.e.k
