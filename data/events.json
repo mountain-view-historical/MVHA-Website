@@ -3,6 +3,17 @@
   "registrationUrl": "https://www.eventbrite.com/o/mountain-view-historical-association-10030194297",
   "events": [
     {
+      "id": "newwalkingtour",
+      "title": "Special Event!",
+      "date": "2026-09-25",
+      "time": "2:00pm",
+      "venue": "",
+      "address": "",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
       "id": "2026-nov-meeting",
       "title": "Quarterly Event - Wineries of Mountain View",
       "date": "2026-11-01",
