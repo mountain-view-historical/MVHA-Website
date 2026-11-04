@@ -35,18 +35,32 @@
       ]
     },
     {
+      "id": "spring-2026",
+      "title": "Spring 2026",
+      "date": "2026-04-01",
+      "url": "/assets/newsletters/MtnReview_Spring_2026.pdf",
+      "highlights": [
+        "Join us!",
+        "Burma Calling",
+        "Thank you",
+        "News & Notes",
+        "One Woman’s Journey",
+        "Where there’s a Will, there’s a Way!",
+        "Membership Form 2026"
+      ]
+    },
+    {
       "id": "winter-2026",
       "title": "Winter 2026",
       "date": "2026-01-01",
       "url": "/assets/newsletters/MtnReview_Winter_2026.pdf",
       "highlights": [
-        "Italians Mountain View",
+        "Italians of Mountain View: Families, Founders, Friendships",
         "News & Notes",
         "Drug Stores",
         "Join us!",
         "Thank you!",
-        "Gilded Age Event Was Golden",
-        "Families, Founders, Friendships"
+        "Gilded Age Event Was Golden"
       ]
     },
     {
@@ -71,7 +85,7 @@
       "url": "/assets/newsletters/Mountain-ReView-Summer-2025-Newsletter.pdf",
       "highlights": [
         "News & Notes",
-        "Finding Y our Family History",
+        "Finding Your Family History",
         "Thank you!",
         "Plane Crashes",
         "The Kindness of the Minton Family",
@@ -118,7 +132,7 @@
         "Our Fall 2024 Event",
         "News & Notes",
         "Palmita Park Celebrates Centennial",
-        "Finding Y our Family History",
+        "Finding Your Family History",
         "History Happening Now",
         "Art above our heads",
         "Thank you!"
@@ -132,7 +146,7 @@
       "highlights": [
         "News & Notes",
         "Spring 2024 Event Recap",
-        "Finding Y our Family History",
+        "Finding Your Family History",
         "History Happening Now",
         "MV Public Safety History",
         "Stories of Chinese Residents of Mtn. View - Then & Now",
@@ -147,7 +161,7 @@
       "highlights": [
         "News & Notes",
         "Winter Event Recap",
-        "Finding Y our Family History",
+        "Finding Your Family History",
         "Mtn. View’s Chinese History",
         "MV Milestones in 2024",
         "Airmail Week in Mtn. View",
@@ -162,11 +176,54 @@
       "highlights": [
         "News & Notes",
         "An Airfield Across the Street?",
-        "Finding Y our Family History",
+        "Finding Your Family History",
         "History Happening Now",
         "Fall Event Recap",
         "El Camino Real",
         "Our Winter 2024 Event"
+      ]
+    },
+    {
+      "id": "fall-2023",
+      "title": "Fall 2023",
+      "date": "2023-10-01",
+      "url": "/assets/newsletters/Mtn-ReView-Fall-2023.pdf",
+      "highlights": [
+        "Celebrating Shoreline",
+        "The Evolution of Shoreline Park",
+        "News & Notes",
+        "Summer Event Recap",
+        "Finding Your Family History",
+        "History Happening Now",
+        "Special Feature"
+      ]
+    },
+    {
+      "id": "summer-2023",
+      "title": "Summer 2023",
+      "date": "2023-07-01",
+      "url": "/assets/newsletters/Mtn-ReView-Summer-2023.pdf",
+      "highlights": [
+        "Chinese Restaurants in Downtown Mtn. View",
+        "News & Notes",
+        "Spring Event Recap",
+        "Finding Your Family History",
+        "History Happening Now",
+        "Mexican American Civil Rights"
+      ]
+    },
+    {
+      "id": "spring-2023",
+      "title": "Spring 2023",
+      "date": "2023-04-01",
+      "url": "/assets/newsletters/Mtn-ReView-Spring-2023.pdf",
+      "highlights": [
+        "Mexican American Civil Rights",
+        "News & Notes",
+        "Winter 2023 Highlights",
+        "Finding Your Family History",
+        "Special Feature: MVHA By-Laws Revisions",
+        "History Happening Now"
       ]
     },
     {
@@ -175,10 +232,9 @@
       "date": "2023-01-01",
       "url": "/assets/newsletters/Mtn.-ReView-Winter-2023.pdf",
       "highlights": [
-        "The Valley Of Hearts Delight",
-        "True Tales from",
+        "The Valley of Heart's Delight",
         "News & Notes",
-        "Special FeatureMOUNTAIN VIEW: The World War II Years",
+        "Special Feature: Mountain View, The World War II Years",
         "History Happening Now",
         "A Heartfelt History",
         "Finding Your Family History"
@@ -207,10 +263,10 @@
       "highlights": [
         "Let’s Get Together",
         "Spanish Immigration to Mtn. View",
-        "The History Of Mtn. View’S Civic Orgs",
+        "The History Of Mtn. View’s Civic Orgs",
         "News & Notes",
         "History Happening Now",
-        "Street T alk",
+        "Street Talk",
         "Special Feature"
       ]
     },
@@ -221,12 +277,11 @@
       "url": "/assets/newsletters/Mtn.-Review-Spring-2022.pdf",
       "highlights": [
         "Pacific Press & Shoreline West",
-        "Mtn. View Multicultural FestivalMtn. View Multicultural Festival",
-        "The History ofThe History of",
+        "Mtn. View Multicultural Festival",
         "News & Notes",
         "History Happening Now",
-        "Street T alk",
-        "Our Spring 2022 MeetingOur Spring 2022 Meeting"
+        "Street Talk",
+        "Our Spring 2022 Meeting"
       ]
     },
     {
@@ -235,13 +290,12 @@
       "date": "2022-01-01",
       "url": "/assets/newsletters/Mtn.-ReView-Winter-2022.pdf",
       "highlights": [
-        "The Story Of Stevens Creek",
-        "Exploring Downtown Mtn. ViewExploring Downtown Mtn. View",
-        "A Path to HistoryA Path to History",
+        "The Story of Stevens Creek",
+        "Exploring Downtown Mtn. View",
+        "A Path to History",
         "News & Notes",
-        "Special FeatureStevens Creek T ails",
-        "Stevens Creek",
-        "Street T alk Revisited"
+        "Stevens Creek Tails!",
+        "Street Talk Revisited"
       ]
     },
     {
@@ -281,7 +335,7 @@
       "url": "/assets/newsletters/Mtn.-ReView-Spring-2021.pdf",
       "highlights": [
         "Silicon Valley",
-        "reNgStorFF HoUSe",
+        "Rengstorff House",
         "News & Notes",
         "History Happening Now",
         "Winter 2021 Event Recap",
@@ -315,8 +369,7 @@
         "Board Elections 2020",
         "Mtn. View Memories",
         "MV High 1950s Ephemera",
-        "Retro M V",
-        "you needed copy editor"
+        "Retro MV"
       ]
     },
     {
@@ -328,10 +381,25 @@
         "News & Notes",
         "The 1918 Flu Pandemic in MV",
         "Fraternal Organizations",
-        "Mv Q&A",
-        "Retro M V",
+        "MV Q&A",
+        "Retro MV",
         "President’s Message",
         "Huff School Renaming"
+      ]
+    },
+    {
+      "id": "winter-2020",
+      "title": "Winter 2020",
+      "date": "2020-01-01",
+      "url": "/assets/newsletters/The-Mtn.-ReView-Winter-2020.pdf",
+      "highlights": [
+        "News & Notes",
+        "Back to the Eagle Shack",
+        "Retro Mtn. View",
+        "President’s Message",
+        "Heritage Park Happenings",
+        "Financial Report",
+        "Searching for Women’s Suffrage Stories"
       ]
     },
     {
@@ -343,10 +411,9 @@
         "Eagle Shack",
         "News & Notes",
         "Special Feature",
-        "Back to theBack to the",
         "MVHA Fall Event",
         "Retro Mtn. View",
-        "President’s Message"
+        "President's Message"
       ]
     },
     {
@@ -388,12 +455,27 @@
       "date": "2018-10-01",
       "url": "/assets/newsletters/TheMtn.ReViewFall2018.pdf",
       "highlights": [
-        "For the Love ofApricots",
+        "For the Love of Apricots",
         "MVHA Fall Meeting",
         "News & Notes",
         "Board Elections",
         "Inaugural MV Harvest History Festival",
         "Summer Meeting Photos",
+        "President’s Message"
+      ]
+    },
+    {
+      "id": "summer-2018",
+      "title": "Summer 2018",
+      "date": "2018-07-01",
+      "url": "/assets/newsletters/The-Mtn.-ReView-Summer-2018.pdf",
+      "highlights": [
+        "The Peopling Of Silicon Valley",
+        "MVHA Summer Event",
+        "News & Notes",
+        "Spring Meeting Photos",
+        "Barbara Kinchen Plaque Dedication",
+        "Hop on Board!",
         "President’s Message"
       ]
     },
@@ -418,9 +500,9 @@
       "date": "2018-01-01",
       "url": "/assets/newsletters/The-Mtn.-ReView-Winter-2018.pdf",
       "highlights": [
-        "Dia De los Muertos",
+        "Día de los Muertos",
         "News & Notes",
-        "Winter 2018Event Preview",
+        "Winter 2018 Event Preview",
         "Fall 2017 Event Recap",
         "Special Feature",
         "Mark your calendar!",
@@ -433,13 +515,11 @@
       "date": "2017-10-01",
       "url": "/assets/newsletters/The-Mtn.-ReView-Fall-2017.pdf",
       "highlights": [
-        "Dia De los Muertos",
-        "Mtn. View",
-        "2nd Annual",
+        "Día de los Muertos: 2nd Annual Community Celebration",
         "News & Notes",
         "Summer BBQ",
         "Fall Event",
-        "President’s Message"
+        "President's Message"
       ]
     },
     {
@@ -465,11 +545,25 @@
       "highlights": [
         "Japanese in Mountain View",
         "News & Notes",
-        "Street T alk",
+        "Street Talk",
         "The Rengstorff House",
         "President’s Message",
         "History Center Update",
         "Immigrant House Update"
+      ]
+    },
+    {
+      "id": "winter-2017",
+      "title": "Winter 2017",
+      "date": "2017-01-01",
+      "url": "/assets/newsletters/The-Mtn.-ReView-Winter-2017.pdf",
+      "highlights": [
+        "Día de los Muertos",
+        "Barbara “Bobby” Kinchen",
+        "News & Notes",
+        "Fall 2016 Event Recap",
+        "Special Remembrance",
+        "Winter 2017 Event"
       ]
     },
     {
@@ -478,7 +572,7 @@
       "date": "2016-10-01",
       "url": "/assets/newsletters/The-Mtn.-ReView-Fall-2016.pdf",
       "highlights": [
-        "Dia De los Muertos",
+        "Día de los Muertos",
         "Dia de los Muertos Altar",
         "Celebrating Mtn. View’s Mexican Heritage",
         "Fe, Amistad y Progresso",
@@ -495,11 +589,10 @@
       "highlights": [
         "Patricia Figueroa",
         "News & Notes",
-        "Street T alk",
+        "Street Talk",
         "Abbott House Restored",
         "Spring Meeting Recap",
-        "Summer BBQ Preview!",
-        "Raffle P rizes! No-Host Bar(beer + wine)Film Screening!Oldies Music!"
+        "Summer BBQ Preview!"
       ]
     },
     {
@@ -510,7 +603,7 @@
       "highlights": [
         "The Chili House",
         "News & Notes",
-        "Street T alk",
+        "Street Talk",
         "Special Feature",
         "Winter Meeting Recap",
         "Moving Mountain View",
@@ -524,7 +617,7 @@
       "url": "/assets/newsletters/The-Mtn.-ReView-Winter-2016.pdf",
       "highlights": [
         "News & Notes",
-        "Street T alk",
+        "Street Talk",
         "Special Remembrances",
         "Message to Our Members",
         "Moving Mountain View",
@@ -538,10 +631,10 @@
       "date": "2015-10-01",
       "url": "/assets/newsletters/The-Mtn.-ReView-Fall-2015.pdf",
       "highlights": [
-        "Memories& Mementos",
+        "Memories & Mementos",
         "News & Notes",
         "On the Web",
-        "Summerbbq 2015",
+        "Summer BBQ 2015",
         "President’s Message",
         "Financial Report",
         "History Center Update"
@@ -553,12 +646,11 @@
       "date": "2015-07-01",
       "url": "/assets/newsletters/The-Mtn.-ReView-Summer-2015.pdf",
       "highlights": [
-        "Mountain View",
         "News & Notes",
-        "Street T alk",
-        "Spring2015 Event Recap",
+        "Street Talk",
+        "Spring 2015 Event Recap",
         "Summer Barbeque",
-        "President’s Message",
+        "President's Message",
         "Financial Report"
       ]
     },
@@ -569,7 +661,7 @@
       "url": "/assets/newsletters/The-Mtn.-ReView-Spring-2015.pdf",
       "highlights": [
         "News & Notes",
-        "Street T alk",
+        "Street Talk",
         "Blue & Gold",
         "“Kennel Club”",
         "Blue & Gold “Kennel Club”",
@@ -593,6 +685,21 @@
       ]
     },
     {
+      "id": "fall-2014",
+      "title": "Fall 2014",
+      "date": "2014-10-01",
+      "url": "/assets/newsletters/MVHA-Newsletter-2014-10.pdf",
+      "highlights": [
+        "Fall Event Preview: NASA Ames at 75",
+        "60th Anniversary BBQ Snapshots",
+        "Street Talk: Palmita Park at 90",
+        "MVHA Gets Involved",
+        "News & Notes",
+        "President's Message",
+        "Financial Report"
+      ]
+    },
+    {
       "id": "summer-2014",
       "title": "Summer 2014",
       "date": "2014-08-01",
@@ -613,12 +720,13 @@
       "date": "2014-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2014-05.pdf",
       "highlights": [
-        "1174 In Val, High School",
+        "Spring Meeting Preview: A Tribute to Mountain View's High Schools",
+        "\"Dog City\" Memories",
+        "Hop on Board!",
         "A Call for Volunteers",
+        "News & Notes",
         "On the Web",
-        "News &Notes",
-        "I I tk",
-        "The Campuses Of 11Vhs",
+        "Street Talk",
         "New to the History Center"
       ]
     },
@@ -628,13 +736,13 @@
       "date": "2014-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2014-02.pdf",
       "highlights": [
-        "gar& 111 inchata",
+        "History on Display: three initiatives for 2014",
+        "Winter Meeting Preview: Sarah Winchester",
+        "News & Notes",
         "On the Web",
+        "President's Message",
         "Winter 2014 Events",
-        "News &Notes",
-        "I Ia",
-        "Oops, Sorry!",
-        "President's Message"
+        "Oops, Sorry!"
       ]
     },
     {
@@ -643,12 +751,12 @@
       "date": "2013-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2013-11.pdf",
       "highlights": [
+        "Fall Meeting Preview: our orchard heritage",
+        "Summer Snapshots",
+        "Cover: an 1896 apricot-cutting party",
+        "News & Notes",
+        "Street Talk",
         "Fall 2013 Events",
-        "News &Notes",
-        "Fall Meeting Preview",
-        "Neon& AP ICOTS",
-        "quAnm,vt, gnapzieuet&",
-        "eMcL banthi qcbvii",
         "Join us today!"
       ]
     },
@@ -658,13 +766,13 @@
       "date": "2013-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2013-08.pdf",
       "highlights": [
-        "Summer 2013 Events",
-        "MOUNTAIN VItv",
-        "Join us today!",
-        "Vaa ate inuited ta the",
-        "Sunday August 4 2013",
-        "Dive into history this Summer!",
-        "President's Message"
+        "Dive into History This Summer! The annual BBQ",
+        "Spring Snapshots",
+        "Memories of the Rengstorff Park pool",
+        "News & Notes",
+        "Street Talk",
+        "President's Message",
+        "Summer 2013 Events"
       ]
     },
     {
@@ -673,13 +781,12 @@
       "date": "2012-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2012-11.pdf",
       "highlights": [
+        "Mountain View: Then & Now",
+        "Curling Avenue?",
+        "Happy 110th Birthday, Mountain View",
         "Fall Meeting Preview",
         "Fall 2012 Events",
-        "Ull Or",
-        "Join us today!",
-        "Rqlister 4ber ports",
-        "Cur l i ng",
-        "South Shore...* PZ"
+        "Join us today!"
       ]
     },
     {
@@ -703,11 +810,11 @@
       "date": "2012-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2012-05.pdf",
       "highlights": [
-        "News &Notes",
+        "News & Notes",
         "On the Web",
         "Spring 2012 Events",
         "Join us today!",
-        "Abate Industrial 1—* 1SQ",
+        "Memories of a Mountain View Prune Picker",
         "President's Message",
         "Spring Meeting Preview"
       ]
@@ -733,13 +840,13 @@
       "date": "2011-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2011-05.pdf",
       "highlights": [
-        "Spring 1 Calender",
-        "News &Notes",
-        "Join us today!",
+        "New Life for an Old House",
+        "The New Newsletter",
         "President's Message",
-        "\\\\The Re ister-Leader",
         "May Meeting Preview",
-        "The New Newsletter"
+        "News & Notes",
+        "Spring 2011 Calendar",
+        "Join us today!"
       ]
     },
     {
@@ -748,9 +855,9 @@
       "date": "2011-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2011-02.pdf",
       "highlights": [
-        "Mark Your Calendars!",
-        "February 61",
-        "MOUNTAIN VIEW POLICE DEPARTMENT HISTORY Adobe Building"
+        "Mountain View Police Department History, 1902–1973: John Tomac",
+        "A new President: Patricia Figueroa",
+        "Renew your 2011 membership"
       ]
     },
     {
@@ -759,13 +866,10 @@
       "date": "2010-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2010-11.pdf",
       "highlights": [
-        "Mountain View",
-        "Acting President'S Message",
-        "By Robert Weaver",
-        "(See 2Nd To Last Page.) Please Fill",
-        "Out The Voucher, Cut Your",
-        "Check And Send It In. Also",
-        "Check Your Mailing Label To"
+        "The November meeting: Bill Hyler on Leslie Hurlbert Hyler Dyke",
+        "Board of Directors election",
+        "Acting President's Message",
+        "2011 dues are due"
       ]
     },
     {
@@ -774,8 +878,10 @@
       "date": "2010-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2010-08.pdf",
       "highlights": [
-        "Mountain View In Review",
-        "Ne W - - Auction Item At The Bbq"
+        "Annual BBQ, Raffle & Auction",
+        "Readying the museum's storage container",
+        "Mountain View in Review",
+        "New auction item at the BBQ"
       ]
     },
     {
@@ -784,13 +890,10 @@
       "date": "2010-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2010-05.pdf",
       "highlights": [
-        "Centen1C Plaza",
-        "the Adobe Building",
-        "At Moffett Blvd & Central Expressway Mountain View, CA",
-        "May Speaker",
-        "Mark Your Calendars - Upcoming Events",
-        "President'S Message",
-        "Association Officers And Executive Commm'Ee"
+        "The May meeting: Don McDonald",
+        "Farewell from President Honor Spitz",
+        "Mark Your Calendars",
+        "Association Officers and Executive Committee"
       ]
     },
     {
@@ -799,13 +902,8 @@
       "date": "2010-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2010-02.pdf",
       "highlights": [
-        "Mountain View",
-        "President'S Message",
-        "By Honor Spitz",
-        "Please Check Your Mailing",
-        "Label To See If Your Dues Are",
-        "January/February Newsletter February 7, 2010 Meeting",
-        "February Speaker"
+        "The Rengstorff Family, Their Home & the Friends of R House: Charles Grant",
+        "President's Message"
       ]
     },
     {
@@ -814,13 +912,11 @@
       "date": "2008-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2008-11.pdf",
       "highlights": [
-        "Nxiow\\ODer,_ 2-ex)",
-        "The History Of Moffett Field And Hangar One",
-        "Presented By Bernie Mcdonough",
-        "President'S Message: By Robert Weaver",
-        "***Urgent Notice***",
-        "Old Newspaper Items: Compiled By Barbar4, Kinchen",
-        "Street Talk: By Barbara Kinchen"
+        "The History of Moffett Field and Hangar One: Bernie McDonough",
+        "Urgent: the History Museum needs your help",
+        "Proposed by-law revisions",
+        "Old Newspaper Items",
+        "Street Talk"
       ]
     },
     {
@@ -829,13 +925,8 @@
       "date": "2008-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2008-05.pdf",
       "highlights": [
-        "Mountain View",
-        "Mountain View, CA 94042",
-        "Trudi Tuban - Editor",
-        "The El Camino Real Mission Bells",
-        "Presented By John Kolstad",
-        "Introduction--By Honor Spitz",
-        "President'S Message--By Robert Weaver"
+        "The El Camino Real Mission Bells: John Kolstad",
+        "President's Message"
       ]
     },
     {
@@ -844,8 +935,9 @@
       "date": "2007-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2007-11.pdf",
       "highlights": [
-        "Over 750,000 Bigger, and Better Chevroletsdelivered.sinceJan.1st!",
-        "New To The Mountain View Library'S History Center By Barbara Kinchen"
+        "Oral Histories: Roberta Bubb Sweeney, Doris Awalt Ebere and Anne Bakotich",
+        "The Eagle Shack Reunion",
+        "New to the Mountain View Library's History Center"
       ]
     },
     {
@@ -854,8 +946,8 @@
       "date": "2007-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2007-08.pdf",
       "highlights": [
-        "k uc7r",
-        "Annual Barbeque And Raffle Augusts, 2007, Sunday, Doors Open At 1 Pm"
+        "Annual Barbecue & Raffle",
+        "President's Message: lessons from the Los Altos museum"
       ]
     },
     {
@@ -864,13 +956,8 @@
       "date": "2007-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2007-05.pdf",
       "highlights": [
-        "Los Altos, California",
-        "Los Altos",
-        "History Museum",
-        "Parking at",
-        "Hillview iCQ",
-        "Community Center J. Gilbert Smith IIII o,)",
-        "History House Los Altos Civic Center Library"
+        "A visit to the Los Altos History Museum",
+        "How the Los Altos museum began: Robert Grimm"
       ]
     },
     {
@@ -879,13 +966,9 @@
       "date": "2007-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2007-02.pdf",
       "highlights": [
-        "Mountain View",
-        "Mountain View, CA 94042",
-        "Trudi Tuban - Editor",
-        "The 1930 Census As A Mountain View Time Capsule",
-        "Presented by DON McDONALD, Sunday, February 4,2007 at 2",
-        "President'S Message By Robert Weaver",
-        "Old Newspaper Items Compiled By Barbara Kinchen"
+        "The 1930 Census as a Mountain View Time Capsule: Don McDonald",
+        "President's Message",
+        "Old Newspaper Items"
       ]
     },
     {
@@ -894,13 +977,9 @@
       "date": "2006-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2006-11.pdf",
       "highlights": [
-        "Mountain View",
-        "Mountain View, CA 94042",
-        "Trudi Tuban - Editor",
         "Deer Hollow Farm",
-        "President'S Message By Nick Galiotto",
-        "Bob Weaver for President, Vivian Schatz for Vice President, Margaret Peterson for",
-        "November 5th!"
+        "President's Message",
+        "Nominees for 2007 officers"
       ]
     },
     {
@@ -909,12 +988,11 @@
       "date": "2006-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2006-08.pdf",
       "highlights": [
-        "Annual Barbeque And Raffle August 6,2006 -- Doors Open At 1 Pm",
-        "Please join us. Fill out form on other side & mail",
+        "Annual Barbecue & Raffle",
+        "A plaque for the old Mountain View High School",
         "Old Newspaper Items",
-        "Street Talk By",
-        "New Question",
-        "New To The Mountain View History Center",
+        "Street Talk",
+        "New to the Mountain View History Center",
         "Executive Committee Report"
       ]
     },
@@ -924,8 +1002,7 @@
       "date": "2006-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2006-05.pdf",
       "highlights": [
-        "Miss Edith La1Vdels -- Well Loved Kindergarten Teacher",
-        "Presented By Donald Lawson"
+        "Miss Edith Landels, Well-Loved Kindergarten Teacher"
       ]
     },
     {
@@ -934,12 +1011,11 @@
       "date": "2006-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2006-02.pdf",
       "highlights": [
-        "Special Gathering",
-        "President'S Message",
+        "A Tour of the Computer History Museum",
+        "President's Message",
         "Old Newspaper Items",
-        "Street Talkby",
-        "New Question",
-        "New To The Mountain View History Center",
+        "Street Talk",
+        "New to the Mountain View History Center",
         "Executive Committee Report"
       ]
     },
@@ -949,13 +1025,11 @@
       "date": "2005-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2005-11.pdf",
       "highlights": [
-        "Regular Meeting Ms. Becky Reynolds",
-        "Chinese Lives In Early Mountain View",
-        "Donations For The Bbq Raffle",
+        "Chinese Lives in Early Mountain View: Becky McReynolds",
+        "Donations for the BBQ Raffle",
         "Old Newspaper Items",
         "Street Talk",
-        "New Question",
-        "President'S Message"
+        "President's Message"
       ]
     },
     {
@@ -964,13 +1038,12 @@
       "date": "2005-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2005-08.pdf",
       "highlights": [
-        "Barbecue Order Form",
-        "Please Mail By",
-        "President'S Message",
+        "Annual Barbecue & Raffle",
+        "A committee looks at a Mountain View History Museum",
+        "President's Message",
         "Old Newspaper Items",
-        "New To The Mountain View History Center",
-        "Executive Committee Report",
-        "Membership Report By June"
+        "New to the Mountain View History Center",
+        "Membership Report"
       ]
     },
     {
@@ -979,13 +1052,11 @@
       "date": "2005-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2005-05.pdf",
       "highlights": [
-        "IY\\AV 20es",
-        "Mountain View'S Low-Land Pioneers",
-        "Mrs. Barbara Mcpheeters Kinchen",
-        "President'S Message",
+        "Mountain View's Low-Land Pioneers: Barbara Kinchen",
+        "President's Message",
         "Old Newspaper Items",
         "Help! Help!",
-        "Executtve Committee Report"
+        "Executive Committee Report"
       ]
     },
     {
@@ -994,13 +1065,10 @@
       "date": "2005-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2005-02.pdf",
       "highlights": [
-        "Mountain View HistoricalAssociation Regular Meeting",
-        "Donors For The August Bbq Raffle",
-        "A Pioneer Family Of Mountain View - The Kleins",
-        "Ms. Patricia Klein Snow",
+        "A Pioneer Family of Mountain View: The Kleins",
+        "Donors for the August BBQ Raffle",
         "Editorial Note",
-        "President'S Message",
-        "Nicholas Galiotto"
+        "President's Message"
       ]
     },
     {
@@ -1009,13 +1077,9 @@
       "date": "2004-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2004-11.pdf",
       "highlights": [
-        "Mountain View",
-        "Association Regular Meeting",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "and city",
-        "Membership Report June Casey",
-        "Association Officers And Executive Committee",
-        "Life, Honored And Special Members"
+        "The Seventh Day Adventist Church in Mountain View",
+        "Barbecue & Raffle thank-yous",
+        "Membership Report"
       ]
     },
     {
@@ -1024,13 +1088,10 @@
       "date": "2004-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2004-08.pdf",
       "highlights": [
-        "Mountain View'S Loving Cup Returns Home",
-        "Barbara Kinchen",
-        "Membership Report June Casey",
-        "Life, Honored",
-        "Association Officers And Executive Committee",
-        "And Special Members",
-        "Eleventh Annual Barbecue & Raffle August 1, 2004"
+        "Eleventh Annual Barbecue & Raffle",
+        "Mountain View's Loving Cup Returns Home",
+        "Prunes and Apricots: the May meeting",
+        "Membership Report"
       ]
     },
     {
@@ -1039,13 +1100,10 @@
       "date": "2004-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2004-05.pdf",
       "highlights": [
-        "Prunes And Apricots",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "Membership Report June Casey",
-        "Association Officers And Executive Committee",
-        "Life, Honored And Special Members",
-        "Prunes And Apricots Agriculture In Santa Clara Valley The Sunsweet Story",
-        "Mr. Richard Azevedo The May Meeting"
+        "Prunes and Apricots: The Sunsweet Story",
+        "Silicon Valley: the February meeting",
+        "Membership Report",
+        "Association Officers and Executive Committee"
       ]
     },
     {
@@ -1054,13 +1112,12 @@
       "date": "2004-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2004-02.pdf",
       "highlights": [
-        "Silicon Valley",
-        "Street Talk By Barbara Kinchen",
-        "Silicon Valley: Exploring The Communities Behind The Digital Revolution",
-        "Mr. David A. Laws The February Meeting",
-        "President'S Message",
-        "Old Newspaper Items Compiled By Barbara Kinchen",
-        "Some Castro Family Genealogy From Barbara Kinchen"
+        "Silicon Valley: Exploring the Communities Behind the Digital Revolution",
+        "Meeting moves to the Library Community Room",
+        "President's Message",
+        "Street Talk",
+        "Old Newspaper Items",
+        "Some Castro Family Genealogy"
       ]
     },
     {
@@ -1069,13 +1126,12 @@
       "date": "2003-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2003-11.pdf",
       "highlights": [
-        "In Commemoration",
+        "A Century of Change: Growing Up in a Japanese American Family",
+        "Our new MVHA brochure",
+        "By-law revisions up for a vote",
         "El Camino Hospital Bond Issue",
-        "Hilton U. Brown, Iii Editor A Century Of Change President'S Message",
-        "A Century",
-        "Change Growing Up In Mountain View Fora Japanese American Family",
-        "All Mvha Members",
-        "What Happened? Explanations And Excuses From Your Editor, Hilton Brown"
+        "In Commemoration",
+        "What Happened? Explanations and Excuses from Your Editor"
       ]
     },
     {
@@ -1084,13 +1140,11 @@
       "date": "2003-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2003-05.pdf",
       "highlights": [
-        "Historical Association Regular Meeting",
+        "Local Boy Makes Good: Victor Calvo's Own Story",
+        "Plans for the City: the February meeting",
+        "President's Message",
         "In Commemoration",
-        "Local Boy Makes Good Victor Calvo'S Own Story The May Meeting",
-        "Plans For The City The February Meeting",
-        "President'S Message",
-        "Craig Holden",
-        "Old Newspaper Items Compiled By Barbara Kinchen"
+        "Old Newspaper Items"
       ]
     },
     {
@@ -1099,13 +1153,11 @@
       "date": "2003-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2003-02.pdf",
       "highlights": [
-        "Historical Association Newsletter",
-        "Plans For The New Senior & Community Centers The February Meeting",
-        "Centennial Party And Election Of Officers The November Meeting",
-        "President'S Message",
-        "Craig Holden",
+        "Plans for the New Senior & Community Centers: Kevin Duggan",
+        "Centennial Party and Election of Officers: the November meeting",
+        "President's Message",
         "In Commemoration",
-        "Membership Report June Casey"
+        "Membership Report"
       ]
     },
     {
@@ -1114,13 +1166,11 @@
       "date": "2002-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2002-11.pdf",
       "highlights": [
-        "Mountain View H Istor I Ca L Association Newsletter",
-        "Centennial Party Celebrating Mountain View The November Meeting",
-        "Don'T Forget To Vote! Tuesday November 5, 2002",
-        "Barbecue Fic Raffle The August Meeting",
-        "Mvha 2002 Elections Report Of The Nominating Committee",
-        "Ninth Annual Barbecue & Raffle Accounting",
-        "Old Newspaper Items Compiled By Barbara Kinchen"
+        "Centennial Party: Celebrating Mountain View",
+        "MVHA 2002 Elections",
+        "Barbecue & Raffle: the August meeting",
+        "Old Newspaper Items",
+        "Don't Forget to Vote!"
       ]
     },
     {
@@ -1129,13 +1179,8 @@
       "date": "2002-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2002-08.pdf",
       "highlights": [
-        "Menu: Cost",
-        "Agenda Bring your own",
-        "Mountain View H I Stor I Ca L Association Newsletter",
-        "The Adobe Building Moffett Blvd And Central Expressway",
-        "Ninth Annual Bar",
-        "Becue & Raffle",
-        "Barbecue Order Form"
+        "Ninth Annual Barbecue & Raffle at the Adobe",
+        "Milestones: the May meeting"
       ]
     },
     {
@@ -1144,13 +1189,9 @@
       "date": "2002-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2002-05.pdf",
       "highlights": [
-        "Mountain View",
-        "Ca L Association",
-        "Regular Meeting Milestones: A His",
-        "The Centennial",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "Milestones: A History Of Mountain View The Mountain View Centennial The May Meeting",
-        "Mountain View Time Line Special Insert"
+        "Milestones: A History of Mountain View",
+        "The Mountain View Centennial",
+        "Mountain View Time Line: special insert"
       ]
     },
     {
@@ -1159,13 +1200,10 @@
       "date": "2002-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2002-02.pdf",
       "highlights": [
-        "Mountain View H I Stor I Ca L Association Newsletter",
-        "Mountain View: A Video Presentation",
-        "Hilton U. Brown, III - Editor",
-        "Mountain View: Moving Forward Looking Into The Past The February Meeting",
-        "Celebrating The Adobe The November Meeting",
-        "The Hoo Hoo House By Kathleen Lowe Owen",
-        "Old Newspaper Items Compiled By Barbara Kinchen"
+        "Mountain View: Moving Forward, Looking into the Past",
+        "Celebrating the Adobe: the November meeting",
+        "The Hoo Hoo House",
+        "Old Newspaper Items"
       ]
     },
     {
@@ -1174,13 +1212,10 @@
       "date": "2001-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2001-11.pdf",
       "highlights": [
-        "Historical Association Regular Meeting",
-        "Celebrating The Adobe",
+        "Celebrating the Adobe: our first meeting in the restored building",
+        "Save the Adobe: six years on",
         "In Commemoration",
-        "Executive Committee Meeting",
-        "Membership Report June Casey",
-        "Life, Honored And Association Officers And Executive Committee",
-        "Special Members"
+        "Membership Report"
       ]
     },
     {
@@ -1189,13 +1224,8 @@
       "date": "2001-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2001-08.pdf",
       "highlights": [
-        "Bring your own",
-        "Historical Association Regular Meeting",
-        "Historical Association",
-        "Senior Center 266 Esquela Ave. Mtn. View, Ca 94042",
         "Eighth Annual Barbecue & Raffle",
-        "Table Settings Beverages",
-        "Please Mail By"
+        "First Presbyterian at 150 and Saint Joseph at 100: the May meeting"
       ]
     },
     {
@@ -1204,13 +1234,11 @@
       "date": "2001-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2001-05.pdf",
       "highlights": [
-        "Regular Meeting!",
-        "spnior cpntpr",
-        "First Presbyterian Church",
-        "Executive Committee Meetings",
-        "Check Your Address Lab E L",
-        "Street Talk Puzzler",
-        "Fxpfnsf Hilton Brown"
+        "Memories and Memorabilia",
+        "150 Years: First Presbyterian Church",
+        "100 Years: Saint Joseph Catholic Church",
+        "A $50,000 gift for the Centennial book",
+        "Street Talk Puzzler"
       ]
     },
     {
@@ -1219,13 +1247,13 @@
       "date": "2000-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2000-11.pdf",
       "highlights": [
-        "Chester Awalt By Carol Fischer",
-        "Treasurer'S Report Hilton Brown",
-        "Old Newspaper Items Compiled By Barbara Kinchen",
-        "New To The Mountain View History Center By Barbara Kinchen",
-        "Seventh Annual Barbecue 8C Raffle Accounting",
-        "Street Talk By Barbara Kinchen",
-        "Membership Report Association Officers By Edna Thompson"
+        "The Olive Oil Industry",
+        "Adobe Building Update",
+        "Seventh Annual Barbecue & Raffle",
+        "Chester Awalt",
+        "Old Newspaper Items",
+        "Street Talk",
+        "New to the Mountain View History Center"
       ]
     },
     {
@@ -1234,13 +1262,8 @@
       "date": "2000-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2000-08.pdf",
       "highlights": [
-        "Menu: Cost",
-        "Agenda: Bring your own",
-        "Senior Center 266 Escuela Ave. Mtn. View, Ca 94042",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "CA' ocial Hour Table Settings -13-arbebue Beverages .';'25:R u—s-iness",
-        "Barbecue Order Form",
-        "Please Mail By"
+        "Seventh Annual Barbecue & Raffle",
+        "Fire Fighting in the Santa Clara Valley: the May meeting"
       ]
     },
     {
@@ -1249,13 +1272,11 @@
       "date": "2000-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2000-05.pdf",
       "highlights": [
-        "Mountain Vipw Historical Association Newsletter",
-        "Fire Fighting In The Santa Clara Valley The May Meeting",
-        "California'S First Leg- Islature The February Meeting",
-        "Need Transportation?",
-        "Executive Committee Meeting",
-        "Elmer Stricklett By Carol Fischer",
-        "Mountain View City Council Actions Of Special Interest Adobe Restoration"
+        "Fire Fighting in the Santa Clara Valley: Leonard W. Williams",
+        "California's First Legislature: the February meeting",
+        "Elmer Stricklett",
+        "City Council actions: Adobe restoration",
+        "Need Transportation?"
       ]
     },
     {
@@ -1264,13 +1285,8 @@
       "date": "2000-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-2000-02.pdf",
       "highlights": [
-        "Topic and Speaker California's First Legisla- ture",
-        "Mary Joe lgnoffo",
-        "Presented by",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "Author, Editor, Historian",
-        "California'S First Legislature The February Meeting",
-        "South Los Altos The November Meeting"
+        "California's First Legislature: Mary Jo Ignoffo",
+        "South Los Altos: the November meeting"
       ]
     },
     {
@@ -1279,13 +1295,12 @@
       "date": "1999-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1999-11.pdf",
       "highlights": [
-        "EVE,, `3,,EiresmivdMIFivigtsgralleiMc",
-        "Sunday, November 7, 1999 2:00 PM Senior Center - 266 Escuela Topic and Speakers",
-        "Presented by",
-        "In Commemoration",
-        "1999 Annual Barbecue 8C Raffle Donors 8C Contributors",
-        "Steel Rails To Mountain View By Nyle C. Monday",
-        "New To The Mountain View History Center By Barbara Kinchen"
+        "South Los Altos: A Suburb of Mountain View",
+        "Adobe Building restoration report",
+        "Steel Rails to Mountain View",
+        "Street Talk",
+        "New to the Mountain View History Center",
+        "In Commemoration"
       ]
     },
     {
@@ -1294,13 +1309,8 @@
       "date": "1999-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1999-08.pdf",
       "highlights": [
-        "Bring your own",
-        "Historical Association Regular Meeting",
-        "Compiled by Barbara Kinchen",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "Table Settings Beverages",
-        "Please Mail By",
-        "Ountain View Membership"
+        "Sixth Annual Barbecue & Raffle",
+        "Family Industries: the Herrero and Ambra families"
       ]
     },
     {
@@ -1309,12 +1319,9 @@
       "date": "1999-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1999-05.pdf",
       "highlights": [
-        "A Panel Presentation Family Industries in Mountain View",
-        "Compiled by Barbara Kinchen",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor",
-        "By Candace Bowers",
-        "Panelists: Trudy Herrero Odbert Mario Am bra",
-        "Editor'S Exclamation!",
+        "Periods of Industry: Family Industries in Mountain View",
+        "Agriculture in Mountain View: the February meeting",
+        "Editor's Exclamation!",
         "Adobe Armory"
       ]
     },
@@ -1324,13 +1331,10 @@
       "date": "1999-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1999-02.pdf",
       "highlights": [
-        "Save The Adobe",
-        "A Panel Presentation Periods of Industry Agriculture in Mtn. View",
-        "Moderator: Wally Erichsen Panelists: John Viscovich, Leo Kalcic and Ralph Faravelli",
-        "Compiled By Barbara Kinchen",
-        "In Commemoration",
-        "Frank L. Huff",
-        "Kathleen Lowe Owen"
+        "Periods of Industry: Agriculture in Mountain View, a panel",
+        "Silicon Valley & the Barn: the November meeting",
+        "Save the Adobe",
+        "In Commemoration"
       ]
     },
     {
@@ -1339,13 +1343,8 @@
       "date": "1998-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1998-11.pdf",
       "highlights": [
-        "Save The Adobe",
-        "Topic and Speaker Where It All Started Silicon Valley & The Barn",
-        "Jacques Beaudouin",
-        "Mountain View",
-        "Presented by",
-        "by Carol Fischer",
-        "Box 252 Mountain View, CA 94042 Hilton U. Brown, III - Editor"
+        "Where It All Started: Silicon Valley & the Barn, Jacques Beaudouin",
+        "Save the Adobe"
       ]
     },
     {
@@ -1354,12 +1353,9 @@
       "date": "1998-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1998-08.pdf",
       "highlights": [
-        "Menu: Cost",
-        "Bring your own",
         "Fifth Annual Barbecue & Raffle",
-        "Table Settings Beverages",
-        "Please Mail By",
-        "The Great War In Santa Clara County Nyle",
+        "El Camino Hospital and Medicine After WWII: the May meeting",
+        "The Great War in Santa Clara County",
         "Street Talk"
       ]
     },
@@ -1369,13 +1365,8 @@
       "date": "1998-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1998-05.pdf",
       "highlights": [
-        "Topic and Speaker El Camino Hospital and the Practice of Medicine After WW II",
-        "Dr. H.M. [Hugh] Upton",
-        "Presented by",
-        "The May 1998 Meeting",
-        "The February 1998 Meeting",
-        "El Camino Hospital And The Practice",
-        "Medicine After Ww Ii"
+        "El Camino Hospital and the Practice of Medicine After WWII: Dr. Hugh Upton",
+        "Your Police at Work: the February meeting"
       ]
     },
     {
@@ -1384,13 +1375,8 @@
       "date": "1998-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1998-02.pdf",
       "highlights": [
-        "Regular Meeting",
-        "Topic and Speaker",
-        "Action Your Police At Work",
-        "Sgt. Richard Elias",
-        "Presented 1oy",
-        "The February 1998 Meeting",
-        "The November 1997 Meeting"
+        "Community Action: Your Police at Work, Sgt. Richard Elias",
+        "A Celebration: The First 95 Years, the November meeting"
       ]
     },
     {
@@ -1399,13 +1385,9 @@
       "date": "1997-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1997-11.pdf",
       "highlights": [
-        "A Celebration The First 95 Years",
-        "The City of Mountain View",
-        "Mountain Vi Fw Historical",
-        "Sunday, November 9, 1997 1:30 PM Council Chambers Mountain View City Hall",
-        "Check Your Calendars",
-        "Reported by Edna Thompson",
-        "Presented by"
+        "A Celebration: The First 95 Years, with the City of Mountain View",
+        "How Mountain View came to incorporate in 1902",
+        "Barbecue & Raffle: the August meeting"
       ]
     },
     {
@@ -1414,13 +1396,10 @@
       "date": "1997-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1997-08.pdf",
       "highlights": [
-        "Mep Adobe",
-        "Menu: Cost",
-        "Bring your own",
         "Fourth Annual Barbecue & Raffle",
+        "Fighting Fire & Disaster: the May meeting",
         "Save the Adobe Fund",
-        "The Memorial Fund",
-        "Table Settings Beverages"
+        "The Memorial Fund"
       ]
     },
     {
@@ -1429,13 +1408,9 @@
       "date": "1997-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1997-05.pdf",
       "highlights": [
-        "Topic and Sp&akei Fighting Fire & Disaster",
-        "Battalion Chief John Fetz",
-        "Presented by",
-        "by Carol Fischer",
-        "Reported by Barbara Kinchen",
-        "The May Meeting",
-        "The February Meeting"
+        "Fighting Fire & Disaster: Battalion Chief John Fetz",
+        "History of the Mountain View Public Library: the February meeting",
+        "Old Newspaper Items"
       ]
     },
     {
@@ -1444,13 +1419,12 @@
       "date": "1997-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1997-02.pdf",
       "highlights": [
-        "Historical Association Newsletter",
+        "The Mountain View Library: Susan Ozubko",
+        "Life Aboard the USS Macon: the November meeting",
         "Library Foundation",
-        "Old Newspaper Items",
-        "Save The Adobe Task Force",
+        "Save the Adobe Task Force",
         "In Commemoration",
-        "The Mountain View",
-        "The Mountain View Library A Presentation By Susan Ozubko"
+        "Old Newspaper Items"
       ]
     },
     {
@@ -1459,13 +1433,12 @@
       "date": "1996-11-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1996-11.pdf",
       "highlights": [
-        "Save The Adobe Task Force",
-        "Life Aboard The Macon",
+        "Life as a Crewman on the USS Macon",
+        "Barbecue & Raffle: the August meeting",
+        "Save the Adobe Task Force",
         "Mission Statement",
-        "New To The Pioneer Room",
-        "Mvha 1996 Elections",
-        "1996 Annual Barbecue & Raffle Donors And Contributors",
-        "Executive Committee Meeting"
+        "MVHA 1996 Elections",
+        "New to the Pioneer Room"
       ]
     },
     {
@@ -1474,12 +1447,11 @@
       "date": "1996-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1996-08.pdf",
       "highlights": [
-        "New Location: Senior Center 266 Esquela Ave Mtn. View, Ca 94042",
-        "Save The Adobe Task Force",
-        "Barbecue Order Form",
-        "Mountain View El Historical Association Newsletter",
+        "Third Annual Barbecue & Raffle",
+        "Agriculture in the Santa Clara Valley: the May meeting",
+        "Save the Adobe Task Force",
+        "Electing a Nominating Committee",
         "In Memoriam",
-        "Adults Children Raffle tickets",
         "Old Newspaper Items"
       ]
     },
@@ -1489,13 +1461,11 @@
       "date": "1996-05-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1996-05.pdf",
       "highlights": [
-        "Mountain View",
-        "Association Newsletter",
-        "This And That",
+        "Agriculture in the Santa Clara Valley: Arthur Walton",
+        "Save the Adobe Building",
+        "This and That",
         "In Memoriam",
-        "Old Newspaper Items",
-        "Agriculture in the Santa Clara Valley A Presentation",
-        "Arthur Walton"
+        "Old Newspaper Items"
       ]
     },
     {
@@ -1504,13 +1474,12 @@
       "date": "1996-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1996-02.pdf",
       "highlights": [
-        "Save The Adobe",
-        "Joseph F. Kennedy",
-        "The Editor'S Ramblings",
+        "Save the Old Adobe",
+        "The Peace Corps in Hungary: the November meeting",
+        "The Editor's Ramblings",
         "Old Newspaper Items",
         "Membership Report",
-        "New To The Pioneer Room",
-        "Save The Adobe Committee"
+        "New to the Pioneer Room"
       ]
     },
     {
@@ -1519,13 +1488,10 @@
       "date": "1995-08-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1995-08.pdf",
       "highlights": [
-        "Barbecue Social",
-        "Raffl e s' Y",
-        "Mountain View _ Historical",
-        "Barbecue Social and Raffle",
-        "Spanish Influence",
-        "View Historical Asso Cia 4 0, 311R",
-        "New To"
+        "Spanish Influence: Dr. Chatham H. Forbes",
+        "Second Annual Barbecue Social & Raffle",
+        "This 'n That: Meanderings from the Editor",
+        "New to the Pioneer Room"
       ]
     },
     {
@@ -1534,13 +1500,12 @@
       "date": "1995-02-01",
       "url": "/assets/newsletters/MVHA-Newsletter-1995-02.pdf",
       "highlights": [
-        "Nettle Maria Stevens",
-        "In Memorium",
-        "New To The Pioneer Room",
+        "Experiences with the Peace Corps in Hungary",
+        "Barbecue Social & Raffle",
+        "In Memoriam",
+        "New to the Pioneer Room",
         "Membership Report",
-        "Life Members",
-        "Experiences With The Peace Corps In Hungary",
-        "Barbecue Social Raffle"
+        "Life Members"
       ]
     }
   ]

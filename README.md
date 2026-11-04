@@ -489,10 +489,12 @@ page with a 301 redirect, so existing links and search rankings carry over.
 These were external on the old site too and continue to work unchanged:
 
 - **Event registration** — Eventbrite
-- **Pre-2015 newsletters** — Joomag, now a plain link rather than an embed.
-  Issues from 2015 onward are listed year by year on your own site. To bring
-  the older ones across, add them to `data/newsletters.json` and re-run the
-  indexer.
+- **Newsletters** — no longer external. Every issue from February 1995 on is
+  listed in `data/newsletters.json` with its PDF in `assets/newsletters/`.
+  Joomag still carries the 2014-onward issues as flip-through editions, but
+  the site no longer links to it: the old link broke, and everything Joomag
+  has is now here. Fall 2014 was rebuilt from Joomag's page images in
+  November 2026 because Joomag would not offer it as a PDF.
 - **Landmarks map** — Google My Maps (embedded on `landmarks.html`)
 - **Videos** — YouTube (embedded on `videos.html`)
 

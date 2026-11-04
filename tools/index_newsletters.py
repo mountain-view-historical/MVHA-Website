@@ -231,8 +231,32 @@ BOILERPLATE = re.compile(
 )
 
 
+# Words that really are written with a capital in the middle, so the
+# missing-space repair in clean_heading() must leave them alone.
+CAMEL_OK = {"YouTube", "PayPal", "MacArthur", "McDonald", "McReynolds"}
+
+
 def clean_heading(text):
     text = re.sub(r"\s+", " ", text).strip(" —-–—·•,:;")
+    # Repairs for the ways headings come out of a PDF broken, all seen in
+    # real issues (November 2026):
+    # - Wide letter-spacing splits the first letter off: "Street T alk",
+    #   "Y our". Leave "A" and "I", which are real one-letter words.
+    text = re.sub(r"\b([B-HJ-Z]) ([a-z]{2,})\b", r"\1\2", text)
+    # - Some layouts draw a heading twice, once as a shadow:
+    #   "A Path to HistoryA Path to History".
+    doubled = re.fullmatch(r"(.{4,}?) ?\1", text)
+    if doubled:
+        text = doubled.group(1)
+    # - Two text boxes run together with no space: "For the Love ofApricots".
+    def split_camel(m):
+        word = m.group(0)
+        if word in CAMEL_OK:
+            return word
+        return m.group(1) + " " + m.group(2)
+    text = re.sub(r"\b([A-Za-z]*[a-z]{2})([A-Z][a-z]{2,})\b", split_camel, text)
+    # - An ampersand glued to the word before it: "Memories& Mementos".
+    text = re.sub(r"(\w)& ", r"\1 & ", text)
     # Headings set in all caps read badly in a list; give them title case.
     letters = [c for c in text if c.isalpha()]
     if letters and sum(1 for c in letters if c.isupper()) / len(letters) > 0.85:
