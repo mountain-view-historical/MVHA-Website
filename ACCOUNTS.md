@@ -9,8 +9,9 @@ properly, what each level of access can and cannot do, and what to ask for.
 the Association relies on runs on them and nobody has approved that site, so
 anything here about them applies only if it goes ahead.
 
-`MVHA-account-access-memo.docx` in this folder is the same material written up
-for someone who does not maintain the website. It is deliberately kept out of
+`MVHA-account-access-memo.docx` is the same material written up for someone
+who does not maintain the website. It lives in the sister folder
+**MVHA Website Documents**, beside this one, and is deliberately kept out of
 the repository, because the repository is public.
 
 ## The domain, in one place

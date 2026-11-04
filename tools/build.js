@@ -45,9 +45,14 @@ const JS_V = assetVersion('assets/js/site.js');
 const SITE = {
   name: 'Mountain View Historical Association',
   url: 'https://www.mountainviewhistorical.org',
-  logo: 'https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/MVHA-Logo-300x300.jpg',
-  defaultImage: 'https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Station.png'
+  logo: '/assets/images/MVHA-Logo-300x300.jpg',
+  defaultImage: '/assets/images/Mountain-View-Station.png'
 };
+
+/* Social-media previews need a full web address, not "/assets/...". */
+function absoluteUrl(u) {
+  return /^\//.test(u) ? SITE.url + u : u;
+}
 
 /* ---- Navigation: edit here and every page updates on the next build ---- */
 
@@ -240,7 +245,7 @@ function layout(meta, body) {
 <meta property="og:title" content="${meta.title === 'Home' ? SITE.name : meta.title + ' — ' + SITE.name}">
 <meta property="og:description" content="${meta.description}">
 <meta property="og:type" content="${meta.slug === 'index' ? 'website' : 'article'}">
-<meta property="og:image" content="${meta.image || SITE.defaultImage}">
+<meta property="og:image" content="${absoluteUrl(meta.image || SITE.defaultImage)}">
 <meta name="twitter:card" content="summary_large_image">
 ${TEST_SITE ? '<meta name="robots" content="noindex, nofollow">\n' : ''}<link rel="icon" href="${SITE.logo}">
 <link rel="preconnect" href="https://fonts.googleapis.com">

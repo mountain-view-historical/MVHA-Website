@@ -31,7 +31,7 @@ public_folder: assets/images
 # Show an "In preview" link that opens the real page.
 site_url: https://mvha-website.mvha.workers.dev
 display_url: https://mvha-website.mvha.workers.dev
-logo_url: https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/MVHA-Logo-300x300.jpg
+logo_url: /assets/images/MVHA-Logo-300x300.jpg
 
 # Editors write in their own language of the interface; content stays as typed.
 locale: en
@@ -353,7 +353,7 @@ collections:
             widget: hidden
             default: "Board of Directors. Order in this list is the order shown on the About page. Leave 'photo' empty to show a placeholder."
 
-          - { name: term, label: Term, widget: string, hint: 'Shown above the list — for example: 2023–24' }
+          - { name: term, label: Term, widget: string, hint: 'Shown above the list — for example: 2026–27' }
 
           - name: members
             label: Members
