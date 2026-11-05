@@ -65,6 +65,7 @@ const NAV = [
   { label: 'Photos', href: 'archive.html' },
   { label: 'Archives', href: 'archives.html', children: [
     { label: 'City Directories', href: 'directories.html' },
+    { label: 'Collection Guides', href: 'collections.html' },
     { label: 'City Timeline', href: 'timeline.html' },
     { label: 'Video Gallery', href: 'videos.html' },
     { label: 'Useful Links', href: 'links.html' }
@@ -491,7 +492,157 @@ ${post.image ? `      <p><img class="post-hero" src="${escapeHtml(post.image)}" 
 `;
 }
 
+/* ==========================================================================
+   Collection guides (finding aids)
+   --------------------------------------------------------------------------
+   The History Center volunteers inventory each donated collection in a
+   spreadsheet. tools/finding-aids/build_finding_aids.py reads those into
+   data/finding-aids.json; this turns that file into:
+
+     collections/<slug>.html   one real page per collection, box by box
+     the list of collections on collections.html (where the page says
+     <!-- COLLECTION-LIST -->), so it is there without JavaScript too
+
+   The search box on collections.html reads the same JSON in the browser.
+   ========================================================================== */
+
+const COLLECTIONS_DIR = path.join(ROOT, 'collections');
+
+function readCollections() {
+  const file = path.join(ROOT, 'data', 'finding-aids.json');
+  if (!fs.existsSync(file)) return [];
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8')).collections || [];
+  } catch (e) {
+    console.error(`  !  data/finding-aids.json could not be read (${e.message}) — no collection pages built`);
+    return [];
+  }
+}
+
+/** Volunteers break a long description over several lines in one cell. */
+function cellText(s) {
+  return escapeHtml(s || '').replace(/\n/g, '<br>');
+}
+
+/** "18 boxes · 1960–2010" — the one line that sums a collection up. */
+function collectionSummaryLine(c) {
+  return [c.extent, c.dates && c.dates.toLowerCase() !== 'various' ? c.dates : '']
+    .filter(Boolean).map(escapeHtml).join(' &middot; ');
+}
+
+/** "Box 9" -> box-9, "shelf 4" -> box-shelf-4. site.js makes the same link. */
+function boxId(label) {
+  const s = slugify(label);
+  return /^box-/.test(s) ? s : 'box-' + s;
+}
+
+function collectionListHtml(collections) {
+  if (!collections.length) {
+    return '<p>The collection guides are being prepared. Please check back soon.</p>';
+  }
+  const rows = collections.map(c => `      <tr>
+        <td class="fa-col-title"><a href="collections/${c.slug}.html">${escapeHtml(c.title)}</a>${c.significance ? `<span class="fa-col-note">${escapeHtml(c.significance)}</span>` : ''}</td>
+        <td class="fa-col-extent">${collectionSummaryLine(c)}</td>
+        <td class="fa-col-loc">${escapeHtml(c.location || '')}</td>
+      </tr>`).join('\n');
+  return `<div class="dir-table fa-list">
+    <table>
+      <thead><tr><th>Collection</th><th>Size and dates</th><th>Where it is kept</th></tr></thead>
+      <tbody>
+${rows}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function collectionPage(c) {
+  const facts = [
+    ['Significance', c.significance],
+    ['Scope and contents', c.scope],
+    ['Subjects', c.subjects],
+    ['Creator', c.creator],
+    ['Dates', c.dates],
+    ['Place', c.place],
+    ['Extent', c.extent],
+    ['Language', c.language]
+  ].filter(([, v]) => v);
+
+  const held = [
+    ['Where it is kept', c.location ? `<strong>${escapeHtml(c.location)}</strong>` : 'Ask the librarian'],
+    ['Owned by', escapeHtml(c.ownerName || c.owner || '')],
+    ['Given by', escapeHtml(c.donor || '')],
+    ['Accession number', escapeHtml(c.accession || '')],
+    ['Restrictions on access', escapeHtml(c.access || '')]
+  ].filter(([, v]) => v);
+
+  const dl = pairs => '<dl class="fa-facts">\n' + pairs.map(([k, v]) =>
+    `      <dt>${k}</dt><dd>${v}</dd>`).join('\n') + '\n    </dl>';
+
+  // Columns that nobody filled in for this collection are left out, so a
+  // small family archive is not drawn as a table of empty boxes.
+  const all = c.boxes.flatMap(b => b.items);
+  const has = key => all.some(i => i[key]);
+  const cols = [
+    ['d', 'Description'], ['dates', 'Dates'], ['container', 'Container'],
+    ['condition', 'Condition'], ['donor', 'Donor'], ['accessioned', 'Accessioned']
+  ].filter(([key]) => key === 'd' || has(key));
+
+  const boxes = c.boxes.map(b => `    <h3 id="${boxId(b.box)}" class="fa-box">${escapeHtml(b.box)} <span>${b.items.length} item${b.items.length === 1 ? '' : 's'}</span></h3>
+    <div class="dir-table fa-items">
+      <table>
+        <thead><tr>${cols.map(([k, label]) => `<th class="fa-${k}">${label}</th>`).join('')}</tr></thead>
+        <tbody>
+${b.items.map(i => `          <tr>${cols.map(([k]) => `<td class="fa-${k}">${cellText(i[k])}</td>`).join('')}</tr>`).join('\n')}
+        </tbody>
+      </table>
+    </div>`).join('\n\n');
+
+  const jump = c.boxes.length > 3
+    ? `<p class="fa-jump">Go to: ${c.boxes.map(b => `<a href="#${boxId(b.box)}">${escapeHtml(b.box)}</a>`).join(' ')}</p>`
+    : '';
+
+  const prepared = [c.archivist ? 'Prepared by ' + escapeHtml(c.archivist) : '',
+    c.created ? escapeHtml(c.created) : ''].filter(Boolean).join(', ');
+
+  return `
+<section class="pagehead">
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="archives.html">Archives</a><span>&rsaquo;</span><a href="collections.html">Collection Guides</a><span>&rsaquo;</span>${escapeHtml(c.title)}</p>
+    <h1>${escapeHtml(c.title)}</h1>
+    <p>${collectionSummaryLine(c) || 'A collection held at the Mountain View History Center.'}</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap">
+    <div class="fa-head">
+      <div>
+        <h2>About this collection</h2>
+    ${dl(facts)}
+      </div>
+      <div class="callout fa-visit">
+        <h3>Seeing it in person</h3>
+        <p>This collection is kept at the Mountain View Public Library and is not on open shelves. Ask the librarian at the <a href="history-center.html">History Center</a> to bring it out, and give them the location and box number below &mdash; it saves them a search.</p>
+    ${dl(held)}
+      </div>
+    </div>
+
+    <h2 class="fa-contents-head">What is in it</h2>
+    <p class="fa-count">${c.count} item${c.count === 1 ? '' : 's'} in ${c.boxes.length} ${c.boxes.length === 1 ? 'box or group' : 'boxes or groups'}, listed as the volunteers found them.</p>
+    ${jump}
+
+${boxes}
+
+    ${prepared ? `<p class="fa-prepared">${prepared}.</p>` : ''}
+    <p class="post-back"><a class="btn btn--ghost" href="collections.html">&larr; All collection guides</a></p>
+  </div>
+</section>
+`;
+}
+
 /* ---- Build ---- */
+
+const collections = readCollections();
 
 const files = fs.readdirSync(CONTENT).filter(f => f.endsWith('.html')).sort();
 const slugs = [];
@@ -506,7 +657,8 @@ for (const file of files) {
   }
   const meta = JSON.parse(match[1]);
   meta.slug = path.basename(file, '.html');
-  const body = raw.slice(match[0].length);
+  const body = raw.slice(match[0].length)
+    .replace('<!-- COLLECTION-LIST -->', () => collectionListHtml(collections));
   fs.writeFileSync(path.join(ROOT, meta.slug + '.html'), layout(meta, body));
   console.log(`  ok  ${meta.slug}.html`);
   if (meta.slug !== '404') slugs.push(meta.slug);
@@ -562,6 +714,35 @@ fs.writeFileSync(path.join(ROOT, 'data', 'posts.json'), JSON.stringify({
   }))
 }, null, 2) + '\n');
 console.log(`  ok  data/posts.json (${posts.length} post${posts.length === 1 ? '' : 's'})`);
+
+/* ---- Collection guides: one page per finding aid ---- */
+
+if (collections.length) {
+  fs.mkdirSync(COLLECTIONS_DIR, { recursive: true });
+
+  // A collection dropped from the spreadsheets loses its page too.
+  const wanted = new Set(collections.map(c => c.slug + '.html'));
+  for (const stale of fs.readdirSync(COLLECTIONS_DIR).filter(f => f.endsWith('.html'))) {
+    if (!wanted.has(stale)) {
+      fs.unlinkSync(path.join(COLLECTIONS_DIR, stale));
+      console.log(`  --  removed collections/${stale} (no longer in the finding aids)`);
+    }
+  }
+
+  for (const c of collections) {
+    const description = (c.significance || c.scope || `What is in the ${c.title}, box by box.`)
+      + (c.location ? ` Kept at the Mountain View History Center: ${c.location}.` : '');
+    fs.writeFileSync(path.join(COLLECTIONS_DIR, c.slug + '.html'), layout({
+      title: c.title,
+      description: escapeHtml(description),
+      slug: c.slug,
+      url: 'collections/' + c.slug + '.html',
+      prefix: '../'
+    }, collectionPage(c)));
+    built++;
+  }
+  console.log(`  ok  collections/ (${collections.length} collection guide${collections.length === 1 ? '' : 's'})`);
+}
 
 /* ---- sitemap.xml + robots.txt ---- */
 
@@ -698,6 +879,10 @@ ${slugs.map(s => `  <url>
     <loc>${SITE.url}/news/${p.slug}.html</loc>
     <lastmod>${p.date}</lastmod>
     <priority>0.6</priority>
+  </url>`)).concat(collections.map(c => `  <url>
+    <loc>${SITE.url}/collections/${c.slug}.html</loc>
+    <lastmod>${today}</lastmod>
+    <priority>0.5</priority>
   </url>`)).join('\n')}
 </urlset>
 `;

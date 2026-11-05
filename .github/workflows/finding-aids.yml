@@ -1,0 +1,76 @@
+# ==========================================================================
+# Turn the finding-aid spreadsheets into the Collection Guides, by itself.
+# --------------------------------------------------------------------------
+# The History Center volunteers keep one spreadsheet per donated collection
+# (David Salinero's Google Drive folder, "MVHA-findingaids-storage"). Copies
+# of them live in tools/finding-aids/source/.
+#
+# When a spreadsheet there is added or replaced, GitHub runs
+# tools/finding-aids/build_finding_aids.py, which writes
+# data/finding-aids.json, and commits that back. Cloudflare then rebuilds the
+# site, which makes a page per collection from it.
+#
+# So updating the Collection Guides is: copy the new spreadsheets into
+# tools/finding-aids/source/, commit, push. Nobody opens a Terminal.
+#
+# WHAT TO KNOW IF SOMETHING LOOKS WRONG
+#   * Watch it run: the Actions tab of the repository on GitHub. The log
+#     lists every spreadsheet, and says why any was skipped.
+#   * Run it by hand: Actions -> Collection guides -> Run workflow.
+#   * It needs write permission: Settings -> Actions -> General ->
+#     Workflow permissions -> "Read and write permissions".
+#   * This commits to the repository, so Fetch origin in GitHub Desktop
+#     before your next commit, or Git will ask you to merge.
+#
+# The commit made here uses GitHub's own token, and GitHub never starts a
+# workflow from such a push, so this cannot set itself off in a loop.
+# ==========================================================================
+
+name: Collection guides
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finding-aids/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: finding-aids
+  cancel-in-progress: false
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the site
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the spreadsheet reader
+        run: pip install --quiet openpyxl
+
+      - name: Read the finding-aid spreadsheets
+        run: python3 tools/finding-aids/build_finding_aids.py
+
+      - name: Check the site data still makes sense
+        run: node tools/check.js
+
+      - name: Save the result
+        run: |
+          if git diff --quiet -- data/finding-aids.json; then
+            echo "The Collection Guides already match the spreadsheets."
+            exit 0
+          fi
+          git config user.name  "MVHA collection guides"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/finding-aids.json
+          git commit -m "Update the collection guides from the finding-aid spreadsheets"
+          git push

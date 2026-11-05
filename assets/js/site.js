@@ -1654,6 +1654,165 @@
   })();
 
   /* ====================================================================
+     8c. Collection guides (finding aids)
+     --------------------------------------------------------------------
+     collections.html lists every collection already, built from
+     data/finding-aids.json. This adds the search box: it looks through
+     every item in every box and shows the matches grouped by collection,
+     each with its box number and shelf location -- what a visitor needs
+     to ask the librarian for it.
+
+     Each item is searched together with the name of its collection, so
+     "Ames photo" finds the photographs in the Ames Family Archives.
+     ==================================================================== */
+
+  (async function initCollections() {
+    const input = $('[data-fa-q]');
+    if (!input) return;
+    const results = $('[data-fa-results]');
+    const status = $('[data-fa-status]');
+    const all = $('[data-fa-all]');
+
+    const data = await loadData('finding-aids');
+    const collections = (data && data.collections) || [];
+    if (!collections.length) return;
+
+    collections.forEach(function (c) {
+      const about = [c.title, c.significance, c.scope, c.subjects, c.creator,
+        c.donor, c.place, c.dates].filter(Boolean).join(' ');
+      c.hay = about.toLowerCase();
+      c.titleHay = c.title.toLowerCase();
+      c.flat = [];
+      c.boxes.forEach(function (b) {
+        b.items.forEach(function (it) {
+          const text = [it.d, it.dates, it.container, it.condition, it.donor].filter(Boolean).join(' ');
+          c.flat.push({ box: b.box, item: it, hay: (text + ' ' + b.box).toLowerCase() });
+        });
+      });
+    });
+
+    const PER_COLLECTION = 6;
+    const PAGE = BASE + 'collections/';
+
+    /* Must match boxId() in tools/build.js: "Box 9" -> box-9. */
+    function boxAnchor(label) {
+      const s = String(label).toLowerCase().normalize('NFD')
+        .replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      return /^box-/.test(s) ? s : 'box-' + s;
+    }
+
+    function mark(text, terms) {
+      let out = esc(text).replace(/\n/g, '<br>');
+      terms.forEach(function (t) {
+        if (t.length < 2) return;
+        out = out.replace(wordStartPattern(esc(t)), '$1<mark>$2</mark>');
+      });
+      return out;
+    }
+
+    function run(query) {
+      const terms = searchTerms(query);
+      if (!terms.length) {
+        results.innerHTML = '';
+        status.hidden = true;
+        all.hidden = false;
+        return;
+      }
+
+      const groups = [];
+      collections.forEach(function (c) {
+        // Every word typed must start a word in the item, or in the name of
+        // its collection.
+        const items = c.flat.filter(function (f) {
+          return terms.every(function (t) { return startsAWord(f.hay, t) || startsAWord(c.titleHay, t); });
+        });
+        // Items that matched on their own words, not only the collection's
+        // name, are the interesting ones -- show those first.
+        items.sort(function (a, b) {
+          return (matchesTerms(b.hay, terms) ? 1 : 0) - (matchesTerms(a.hay, terms) ? 1 : 0);
+        });
+        const aboutMatch = matchesTerms(c.hay, terms);
+        if (!items.length && !aboutMatch) return;
+        let score = items.length;
+        terms.forEach(function (t) { if (startsAWord(c.titleHay, t)) score += 1000; });
+        groups.push({ c: c, items: items, aboutMatch: aboutMatch, score: score });
+      });
+      groups.sort(function (a, b) { return b.score - a.score || a.c.title.localeCompare(b.c.title); });
+
+      const itemCount = groups.reduce(function (n, g) { return n + g.items.length; }, 0);
+      status.hidden = false;
+      all.hidden = true;
+      if (!groups.length) {
+        status.textContent = 'Nothing in the collection guides matches “' + query.trim() +
+          '”. Try a shorter word, or search the whole site.';
+        results.innerHTML = '<p><a class="btn btn--ghost" href="' + BASE + 'search.html?q=' +
+          encodeURIComponent(query.trim()) + '">Search the whole site for “' + esc(query.trim()) + '”</a></p>';
+        return;
+      }
+      // Collections that match only on their description, not on any item.
+      const withItems = groups.filter(function (g) { return g.items.length; }).length;
+      const aboutOnly = groups.length - withItems;
+      const plural = function (n, word) { return n.toLocaleString() + ' ' + word + (n === 1 ? '' : 's'); };
+      status.textContent = (withItems
+        ? plural(itemCount, 'item') + ' in ' + plural(withItems, 'collection') +
+          (aboutOnly ? ', and ' + plural(aboutOnly, 'more collection') + ' described that way' : '')
+        : plural(aboutOnly, 'collection') + ' described that way');
+
+      results.innerHTML = groups.map(function (g) {
+        const c = g.c;
+        const url = PAGE + c.slug + '.html';
+        const shown = g.items.slice(0, PER_COLLECTION);
+        const rows = shown.map(function (f) {
+          const it = f.item;
+          return '<tr>' +
+            '<td class="fa-r-box"><a href="' + url + '#' + boxAnchor(f.box) + '">' + esc(f.box) + '</a></td>' +
+            '<td class="fa-r-desc">' + mark(it.d, terms) + '</td>' +
+            '<td class="fa-r-meta">' + esc([it.dates, it.container].filter(Boolean).join(' · ')) + '</td>' +
+          '</tr>';
+        }).join('');
+        const more = g.items.length > shown.length
+          ? '<p class="fa-more"><a href="' + url + '">' + (g.items.length - shown.length) +
+            ' more in this collection &rarr;</a></p>'
+          : '';
+        const note = !g.items.length && g.aboutMatch
+          ? '<p class="fa-about">' + mark(c.significance || c.scope || c.subjects || '', terms) + '</p>'
+          : '';
+        return '<div class="dir-group fa-group">' +
+          '<h3><a href="' + url + '">' + mark(c.title, terms) + '</a></h3>' +
+          '<p class="dir-group-meta">' +
+            (g.items.length ? g.items.length + ' matching item' + (g.items.length === 1 ? '' : 's') + ' · ' : '') +
+            (c.location ? 'Kept at ' + esc(c.location) : 'Ask the librarian where it is kept') +
+          '</p>' + note +
+          (rows ? '<div class="dir-table"><table><tbody>' + rows + '</tbody></table></div>' : '') +
+          more +
+        '</div>';
+      }).join('');
+    }
+
+    let timer = null;
+    input.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        run(input.value);
+        const url = new URL(window.location.href);
+        if (input.value.trim()) url.searchParams.set('q', input.value.trim());
+        else url.searchParams.delete('q');
+        history.replaceState(null, '', url);
+      }, 120);
+    });
+    $$('[data-fa-example]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        input.value = btn.dataset.faExample;
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+      });
+    });
+
+    const initial = new URLSearchParams(window.location.search).get('q') || '';
+    if (initial) { input.value = initial; run(initial); }
+  })();
+
+  /* ====================================================================
      9. Site search
      ==================================================================== */
 
@@ -1673,6 +1832,10 @@
        the Association's own photographs below, so that a search for a family
        name or a street reaches all thirteen hundred of them. */
     const archiveData = await loadData('photos-ia');
+
+    /* The collection guides: one result per collection, with the passage
+       from its box list that matched. */
+    const guidesData = await loadData('finding-aids');
 
     /* The newsletters' text lives in its own file; join it on before indexing,
        or a search for a name inside a PDF would find nothing. */
@@ -1734,6 +1897,27 @@
       });
     }
 
+    if (guidesData) {
+      (guidesData.collections || []).forEach(function (c) {
+        const about = [c.significance, c.scope, c.subjects, c.donor].filter(Boolean).join('. ');
+        const contents = [];
+        c.boxes.forEach(function (b) {
+          b.items.forEach(function (it) {
+            contents.push(b.box + ': ' + String(it.d).replace(/\n/g, '; ') +
+              (it.dates ? ' (' + it.dates + ')' : ''));
+          });
+        });
+        const fullText = contents.join(' · ');
+        index.push({
+          kind: 'Collection guide', title: c.title, url: BASE + 'collections/' + c.slug + '.html',
+          fullText: fullText,
+          snippet: [c.extent, c.location ? 'kept at ' + c.location : ''].filter(Boolean).join(', ') +
+            (about ? ' — ' + about : ''),
+          haystack: ('collection guide finding aid ' + c.title + ' ' + about + ' ' + fullText).toLowerCase()
+        });
+      });
+    }
+
     /** Pull a readable snippet out of a long document, centred on the match. */
     function contextSnippet(fullText, terms) {
       if (!fullText) return '';
@@ -1768,7 +1952,8 @@
       { kind: 'News', label: 'News & stories' },
       { kind: 'Photograph', label: 'Photo archive' },
       { kind: 'Timeline', label: 'City timeline' },
-      { kind: 'Newsletter', label: 'Newsletters' }
+      { kind: 'Newsletter', label: 'Newsletters' },
+      { kind: 'Collection guide', label: 'Collection guides' }
     ].filter(function (s) {
       return index.some(function (i) { return i.kind === s.kind; });
     });

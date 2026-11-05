@@ -859,6 +859,67 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 }
 
 /* ==========================================================================
+   Collection guides (finding aids)
+   --------------------------------------------------------------------------
+   Built on the directory tables above, so the two read as one family.
+   ========================================================================== */
+
+.fa-list th, .fa-items th {
+  text-align: left; font-size: .72rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint);
+  padding: .55rem .85rem; background: var(--paper-2); border-bottom: 1px solid var(--rule);
+}
+
+.fa-all-head { font-size: 1.35rem; margin: .5rem 0 1rem; }
+.fa-list .fa-col-title a { font-weight: 600; }
+.fa-col-note { display: block; font-size: .85rem; color: var(--ink-soft); margin-top: .15rem; }
+.fa-col-extent { width: 210px; color: var(--ink-soft); }
+.fa-col-loc { width: 230px; color: var(--ink-soft); }
+
+.fa-group h3 a { text-decoration: none; }
+.fa-group h3 mark, .fa-group td mark, .fa-about mark { background: #fbeaba; color: inherit; border-radius: 2px; padding: 0 .1em; }
+.fa-about { font-size: .92rem; color: var(--ink-soft); margin: 0 0 .5rem; }
+.fa-r-box { width: 110px; white-space: nowrap; font-weight: 600; }
+.fa-r-box a { text-decoration: none; }
+.fa-r-meta { width: 220px; color: var(--ink-soft); }
+.fa-more { font-size: .88rem; margin: .5rem 0 0; }
+
+/* ---- One collection's own page ---- */
+
+.fa-head { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 2.5rem; align-items: start; }
+.fa-head h2 { font-size: 1.35rem; }
+.fa-facts { display: grid; grid-template-columns: max-content 1fr; gap: .45rem 1.25rem; margin: 0 0 1rem; font-size: .95rem; }
+.fa-facts dt { font-weight: 600; color: var(--ink-soft); }
+.fa-facts dd { margin: 0; }
+.fa-visit .fa-facts { font-size: .92rem; }
+
+.fa-contents-head { font-size: 1.5rem; margin: 3rem 0 .3rem; }
+.fa-count { color: var(--ink-faint); font-size: .92rem; margin: 0 0 .5rem; }
+.fa-jump { font-size: .88rem; color: var(--ink-faint); line-height: 2; }
+.fa-jump a { display: inline-block; margin-right: .6rem; white-space: nowrap; }
+
+.fa-box { font-size: 1.15rem; margin: 2.25rem 0 .6rem; scroll-margin-top: 1rem; }
+.fa-box span { font-family: var(--font-body); font-size: .8rem; font-weight: 500; color: var(--ink-faint); margin-left: .4rem; }
+.fa-items .fa-dates { width: 110px; color: var(--ink-soft); }
+.fa-items .fa-container { width: 170px; color: var(--ink-soft); }
+.fa-items .fa-condition { width: 110px; color: var(--ink-soft); }
+.fa-items .fa-donor, .fa-items .fa-accessioned { width: 130px; color: var(--ink-soft); }
+.fa-items :target, .fa-box:target { background: var(--clay-light); }
+.fa-prepared { font-size: .85rem; color: var(--ink-faint); margin: 2.5rem 0 1rem; }
+
+@media (max-width: 860px) {
+  .fa-head { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+@media (max-width: 760px) {
+  /* Stack each row on a phone rather than squeeze four columns side by side. */
+  .fa-list tr, .fa-items tr, .fa-group tr { display: block; padding: .55rem .2rem; }
+  .fa-list td, .fa-items td, .fa-group td { display: block; width: auto !important; padding: .1rem .6rem; }
+  .fa-items td:not(.fa-d), .fa-list td:not(.fa-col-title), .fa-r-meta { font-size: .84rem; }
+  .fa-items td:empty { display: none; }
+}
+
+/* ==========================================================================
    Search results
    ========================================================================== */
 
