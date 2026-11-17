@@ -1,5 +1,5 @@
 # ==========================================================================
-# Turn the finding-aid spreadsheets into the Collection Guides, by itself.
+# Turn the finding-aid spreadsheets into the Collection Finding Aids, by itself.
 # --------------------------------------------------------------------------
 # The History Center volunteers keep one spreadsheet per donated collection
 # (David Salinero's Google Drive folder, "MVHA-findingaids-storage"). Copies
@@ -10,13 +10,13 @@
 # data/finding-aids.json, and commits that back. Cloudflare then rebuilds the
 # site, which makes a page per collection from it.
 #
-# So updating the Collection Guides is: copy the new spreadsheets into
+# So updating the Collection Finding Aids is: copy the new spreadsheets into
 # tools/finding-aids/source/, commit, push. Nobody opens a Terminal.
 #
 # WHAT TO KNOW IF SOMETHING LOOKS WRONG
 #   * Watch it run: the Actions tab of the repository on GitHub. The log
 #     lists every spreadsheet, and says why any was skipped.
-#   * Run it by hand: Actions -> Collection guides -> Run workflow.
+#   * Run it by hand: Actions -> Collection finding aids -> Run workflow.
 #   * It needs write permission: Settings -> Actions -> General ->
 #     Workflow permissions -> "Read and write permissions".
 #   * This commits to the repository, so Fetch origin in GitHub Desktop
@@ -26,7 +26,7 @@
 # workflow from such a push, so this cannot set itself off in a loop.
 # ==========================================================================
 
-name: Collection guides
+name: Collection finding aids
 
 on:
   push:
@@ -66,11 +66,11 @@ jobs:
       - name: Save the result
         run: |
           if git diff --quiet -- data/finding-aids.json; then
-            echo "The Collection Guides already match the spreadsheets."
+            echo "The Collection Finding Aids already match the spreadsheets."
             exit 0
           fi
-          git config user.name  "MVHA collection guides"
+          git config user.name  "MVHA finding aids"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/finding-aids.json
-          git commit -m "Update the collection guides from the finding-aid spreadsheets"
+          git commit -m "Update the collection finding aids from the finding-aid spreadsheets"
           git push
