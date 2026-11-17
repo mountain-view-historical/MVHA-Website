@@ -259,9 +259,9 @@ if (unindexed.length || noBullets.length) {
   warn(`${n} issue(s) still incomplete — run Launchers/Index Newsletters.command`);
 }
 
-/* ---- Collection guides ---- */
+/* ---- Collection finding aids ---- */
 
-console.log('\nChecking collection guides');
+console.log('\nChecking collection finding aids');
 const faPath = path.join(dataDir, 'finding-aids.json');
 if (!fs.existsSync(faPath)) {
   warn('data/finding-aids.json is missing — run tools/finding-aids/build_finding_aids.py');
@@ -270,17 +270,17 @@ if (!fs.existsSync(faPath)) {
   const slugsSeen = new Set();
   let items = 0;
   for (const c of fa) {
-    if (!c.slug || !c.title) { fail('a collection guide has no slug or title'); continue; }
-    if (slugsSeen.has(c.slug)) fail(`two collection guides share the address ${c.slug}`);
+    if (!c.slug || !c.title) { fail('a finding aid has no slug or title'); continue; }
+    if (slugsSeen.has(c.slug)) fail(`two finding aids share the address ${c.slug}`);
     slugsSeen.add(c.slug);
-    if (!Array.isArray(c.boxes)) fail(`collection guide ${c.slug} has no box list`);
+    if (!Array.isArray(c.boxes)) fail(`finding aid ${c.slug} has no box list`);
     items += (c.boxes || []).reduce((n, b) => n + b.items.length, 0);
-    if (!c.location) warn(`collection guide "${c.title}" says nothing about where it is kept`);
+    if (!c.location) warn(`finding aid "${c.title}" says nothing about where it is kept`);
   }
   const dir = path.join(ROOT, 'collections');
   const built = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => f.endsWith('.html')) : [];
   const unbuilt = fa.filter(c => !built.includes(c.slug + '.html'));
-  if (unbuilt.length) warn(`${unbuilt.length} collection guide(s) have no page yet — run the build`);
+  if (unbuilt.length) warn(`${unbuilt.length} finding aid(s) have no page yet — run the build`);
   console.log(`  ok    ${fa.length} collections, ${items} items`);
 }
 

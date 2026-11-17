@@ -65,7 +65,7 @@ const NAV = [
   { label: 'Photos', href: 'archive.html' },
   { label: 'Archives', href: 'archives.html', children: [
     { label: 'City Directories', href: 'directories.html' },
-    { label: 'Collection Guides', href: 'collections.html' },
+    { label: 'Collection Finding Aids', href: 'collections.html' },
     { label: 'City Timeline', href: 'timeline.html' },
     { label: 'Video Gallery', href: 'videos.html' },
     { label: 'Useful Links', href: 'links.html' }
@@ -493,7 +493,7 @@ ${post.image ? `      <p><img class="post-hero" src="${escapeHtml(post.image)}" 
 }
 
 /* ==========================================================================
-   Collection guides (finding aids)
+   Collection finding aids
    --------------------------------------------------------------------------
    The History Center volunteers inventory each donated collection in a
    spreadsheet. tools/finding-aids/build_finding_aids.py reads those into
@@ -538,7 +538,7 @@ function boxId(label) {
 
 function collectionListHtml(collections) {
   if (!collections.length) {
-    return '<p>The collection guides are being prepared. Please check back soon.</p>';
+    return '<p>The collection finding aids are being prepared. Please check back soon.</p>';
   }
   const rows = collections.map(c => `      <tr>
         <td class="fa-col-title"><a href="collections/${c.slug}.html">${escapeHtml(c.title)}</a>${c.significance ? `<span class="fa-col-note">${escapeHtml(c.significance)}</span>` : ''}</td>
@@ -607,7 +607,7 @@ ${b.items.map(i => `          <tr>${cols.map(([k]) => `<td class="fa-${k}">${cel
   return `
 <section class="pagehead">
   <div class="wrap">
-    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="archives.html">Archives</a><span>&rsaquo;</span><a href="collections.html">Collection Guides</a><span>&rsaquo;</span>${escapeHtml(c.title)}</p>
+    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="archives.html">Archives</a><span>&rsaquo;</span><a href="collections.html">Collection Finding Aids</a><span>&rsaquo;</span>${escapeHtml(c.title)}</p>
     <h1>${escapeHtml(c.title)}</h1>
     <p>${collectionSummaryLine(c) || 'A collection held at the Mountain View History Center.'}</p>
   </div>
@@ -634,7 +634,7 @@ ${b.items.map(i => `          <tr>${cols.map(([k]) => `<td class="fa-${k}">${cel
 ${boxes}
 
     ${prepared ? `<p class="fa-prepared">${prepared}.</p>` : ''}
-    <p class="post-back"><a class="btn btn--ghost" href="collections.html">&larr; All collection guides</a></p>
+    <p class="post-back"><a class="btn btn--ghost" href="collections.html">&larr; All collection finding aids</a></p>
   </div>
 </section>
 `;
@@ -715,7 +715,7 @@ fs.writeFileSync(path.join(ROOT, 'data', 'posts.json'), JSON.stringify({
 }, null, 2) + '\n');
 console.log(`  ok  data/posts.json (${posts.length} post${posts.length === 1 ? '' : 's'})`);
 
-/* ---- Collection guides: one page per finding aid ---- */
+/* ---- Collection finding aids: one page per collection ---- */
 
 if (collections.length) {
   fs.mkdirSync(COLLECTIONS_DIR, { recursive: true });
@@ -741,7 +741,7 @@ if (collections.length) {
     }, collectionPage(c)));
     built++;
   }
-  console.log(`  ok  collections/ (${collections.length} collection guide${collections.length === 1 ? '' : 's'})`);
+  console.log(`  ok  collections/ (${collections.length} finding aid${collections.length === 1 ? '' : 's'})`);
 }
 
 /* ---- sitemap.xml + robots.txt ---- */

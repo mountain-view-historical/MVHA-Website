@@ -13,7 +13,7 @@ one file:
     data/finding-aids.json
 
 which the build (tools/build.js) turns into a page per collection, and which
-the Collection Guides page and site search read in the browser.
+the Collection Finding Aids page and site search read in the browser.
 
 HOW TO UPDATE THE WEBSITE AFTER DAVID CHANGES A FINDING AID
   1. Download the folder from Google Drive (right-click it -> Download).

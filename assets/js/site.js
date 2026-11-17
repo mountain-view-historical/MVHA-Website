@@ -1654,7 +1654,7 @@
   })();
 
   /* ====================================================================
-     8c. Collection guides (finding aids)
+     8c. Collection finding aids
      --------------------------------------------------------------------
      collections.html lists every collection already, built from
      data/finding-aids.json. This adds the search box: it looks through
@@ -1743,7 +1743,7 @@
       status.hidden = false;
       all.hidden = true;
       if (!groups.length) {
-        status.textContent = 'Nothing in the collection guides matches “' + query.trim() +
+        status.textContent = 'Nothing in the collection finding aids matches “' + query.trim() +
           '”. Try a shorter word, or search the whole site.';
         results.innerHTML = '<p><a class="btn btn--ghost" href="' + BASE + 'search.html?q=' +
           encodeURIComponent(query.trim()) + '">Search the whole site for “' + esc(query.trim()) + '”</a></p>';
@@ -1833,7 +1833,7 @@
        name or a street reaches all thirteen hundred of them. */
     const archiveData = await loadData('photos-ia');
 
-    /* The collection guides: one result per collection, with the passage
+    /* The collection finding aids: one result per collection, with the passage
        from its box list that matched. */
     const guidesData = await loadData('finding-aids');
 
@@ -1909,11 +1909,11 @@
         });
         const fullText = contents.join(' · ');
         index.push({
-          kind: 'Collection guide', title: c.title, url: BASE + 'collections/' + c.slug + '.html',
+          kind: 'Finding aid', title: c.title, url: BASE + 'collections/' + c.slug + '.html',
           fullText: fullText,
           snippet: [c.extent, c.location ? 'kept at ' + c.location : ''].filter(Boolean).join(', ') +
             (about ? ' — ' + about : ''),
-          haystack: ('collection guide finding aid ' + c.title + ' ' + about + ' ' + fullText).toLowerCase()
+          haystack: ('collection finding aid ' + c.title + ' ' + about + ' ' + fullText).toLowerCase()
         });
       });
     }
@@ -1953,7 +1953,7 @@
       { kind: 'Photograph', label: 'Photo archive' },
       { kind: 'Timeline', label: 'City timeline' },
       { kind: 'Newsletter', label: 'Newsletters' },
-      { kind: 'Collection guide', label: 'Collection guides' }
+      { kind: 'Finding aid', label: 'Collection finding aids' }
     ].filter(function (s) {
       return index.some(function (i) { return i.kind === s.kind; });
     });
