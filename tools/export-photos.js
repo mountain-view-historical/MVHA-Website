@@ -100,8 +100,8 @@ for (const s of slides) {
 /* ---- 3. Pictures used inside pages: banners, flyers, illustrations ---- */
 
 const pages = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'))
-  .concat(fs.existsSync(path.join(ROOT, 'news'))
-    ? fs.readdirSync(path.join(ROOT, 'news')).filter(f => f.endsWith('.html')).map(f => 'news/' + f)
+  .concat(fs.existsSync(path.join(ROOT, 'articles'))
+    ? fs.readdirSync(path.join(ROOT, 'articles')).filter(f => f.endsWith('.html')).map(f => 'articles/' + f)
     : []);
 
 for (const page of pages) {

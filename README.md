@@ -162,50 +162,22 @@ for a second event in the same year), an `era` matching one of the ids in the
 
 Edit `data/board.json`. The order in the file is the order on the page.
 
-### News & Stories
-
-Unlike everything else in this section, news posts are **not** in `data/`.
-Each post is a Markdown file in `tools/content/posts/`, starting with a short
-block of settings:
-
-```
----
-title: The Rengstorff House at 150
-date: 2026-09-14
-author: Mountain View Historical Association
-summary: One or two sentences for the News page and for Google.
-image: assets/images/rengstorff.jpg
-draft: false
----
-
-The body of the post, in Markdown. Blank line between paragraphs,
-`## ` for a heading, `- ` for a bullet, `[words](page.html)` for a link,
-`**bold**` and `*italic*`.
-```
-
-Only `title`, `date` and the body are required. Set `draft: true` to keep a
-post out of the published site while you work on it.
-
-Posts **do** need a rebuild, because each one becomes a real page — that is
-what lets Google index them properly. Run `Rebuild Website.command` after
-adding or editing a post. The build writes:
-
-- `news/<name-of-the-file>.html` — the post itself
-- `data/posts.json` — the index the News page and site search read
-
-Both are generated. Never edit them by hand; the next build overwrites them.
-Deleting a post's `.md` file deletes its page on the next build.
+### How articles are written
 
 The Markdown renderer in `tools/build.js` deliberately covers only headings,
 paragraphs, lists, quotes, links, pictures and rules. Anything that looks
 like HTML is passed straight through, from its first line to the next blank
-line, so a post can drop in a YouTube embed where it needs one.
+line, so an article can drop in a map or a YouTube embed where it needs one.
+
+There used to be a News & Stories section built the same way. It was removed
+in November 2026 — upcoming events go on the Events page, longer pieces are
+articles, and Association news is in the newsletter. Old `news/` addresses
+redirect to the Books & Articles page.
 
 ### Articles
 
 Longer pieces that stay useful for years — research, local history, profiles
-— are articles rather than news. They work like news posts, with a few more
-settings, and live in `tools/content/articles/`, one Markdown file each.
+— are articles. They live in `tools/content/articles/`, one Markdown file each.
 Board members write them in `/admin` under **Articles**.
 
 ```
@@ -622,9 +594,6 @@ assets/images/                  Local image copies (after localise-images.sh).
 admin/index.html                The editing panel at /admin. See SETUP-CMS.md.
 admin/config.yml                What that panel is allowed to edit.
 
-news/                           Generated. One page per news post.
-data/posts.json                 Generated. The news index, for the listing
-                                page and for site search.
 articles/                       Generated. One page per article.
 data/articles.json              Generated. The articles' text, for site search.
 assets/documents/               Files attached to articles as related materials.
@@ -660,7 +629,6 @@ tools/index_newsletters.py      Reads the newsletter PDFs: full text for search,
 tools/render-test.js            Optional browser simulation tests.
 tools/localise-images.sh        Downloads images off the old WordPress server.
 tools/content/                  The page wording. This is what you edit.
-tools/content/posts/            News posts, one Markdown file each.
 tools/content/articles/         Articles, one Markdown file each.
 ```
 

@@ -1,7 +1,7 @@
 # Turning on the editing panel
 
 This sets up `/admin` — a proper login page where board members edit events,
-photographs, the board list and news posts through forms, without ever seeing
+photographs, the board list and articles through forms, without ever seeing
 a JSON file.
 
 It takes about an hour, once. Everything below is free.
@@ -361,7 +361,7 @@ site rather than the old one.
 Go to `https://your-address.workers.dev/admin`.
 
 You should get a **Sign in with GitHub** button. Sign in, and you should see
-four sections: News & Stories, Events, Photographs, and Board of Directors.
+sections for Articles, Events, Photographs, the Board of Directors and more.
 
 Make a small change — add a full stop somewhere — and press **Publish**.
 Then watch **Compute → Workers & Pages → your project → Deployments** in Cloudflare:
@@ -457,8 +457,8 @@ which file it choked on. The site stays on the last good version until the
 build succeeds, so a bad edit can never take the site down — it just does
 not appear.
 
-**A news post does not show up.**
-Check that "Keep as a draft" is unticked, and that it has a date.
+**An article does not show up.**
+Check that "Keep as a draft" is unticked.
 
 ---
 

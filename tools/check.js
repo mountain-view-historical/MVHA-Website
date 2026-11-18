@@ -38,10 +38,10 @@ for (const f of fs.readdirSync(dataDir).filter(f => f.endsWith('.json'))) {
 
 console.log('\nChecking pages');
 const pages = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
-/* Articles and news posts are built into folders of their own. Their links
+/* Articles and finding aids are built into folders of their own. Their links
    are checked too; they reach site search through data/articles.json and
-   data/posts.json, so they are not expected in pages.json. */
-const builtPages = ['articles', 'news'].flatMap(dir =>
+   data/finding-aids.json, so they are not expected in pages.json. */
+const builtPages = ['articles', 'collections'].flatMap(dir =>
   fs.existsSync(path.join(ROOT, dir))
     ? fs.readdirSync(path.join(ROOT, dir)).filter(f => f.endsWith('.html')).map(f => dir + '/' + f)
     : []);

@@ -39,52 +39,6 @@ locale: en
 collections:
 
   # ------------------------------------------------------------------
-  # News & Stories — one Markdown file per post.
-  # ------------------------------------------------------------------
-  - name: posts
-    label: News & Stories
-    label_singular: Post
-    folder: tools/content/posts
-    create: true
-    delete: true
-    extension: md
-    format: frontmatter
-    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
-    summary: '{{title}} — {{date | date("MMM D, YYYY")}}'
-    sortable_fields: [date, title]
-    view_groups:
-      - label: Year
-        field: date
-        pattern: \d{4}
-    fields:
-      - { name: title, label: Title, widget: string }
-      - { name: date, label: Date published, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
-      - name: author
-        label: Written by
-        widget: string
-        required: false
-        default: Mountain View Historical Association
-      - name: summary
-        label: Summary
-        widget: text
-        hint: One or two sentences. This is what shows on the News page and in Google results.
-      - name: image
-        label: Main picture
-        widget: image
-        required: false
-        hint: Optional. Shown at the top of the post and beside it in the listing.
-      - name: draft
-        label: Keep as a draft
-        widget: boolean
-        default: false
-        required: false
-        hint: Tick this to save your work without publishing it. Untick when you are ready.
-      - name: body
-        label: The post
-        widget: markdown
-        hint: Use the toolbar for headings, bold, links and pictures.
-
-  # ------------------------------------------------------------------
   # Articles — longer pieces that stay useful for years: research, local
   # history, profiles. One Markdown file each, built into articles/<name>.html
   # and listed on the Books & Articles page. See tools/build.js.
@@ -92,7 +46,7 @@ collections:
   - name: articles
     label: Articles
     label_singular: Article
-    description: Longer pieces that stay useful for years. For announcements and short items, use News & Stories instead.
+    description: Longer pieces that stay useful for years. Upcoming events go under Events instead.
     folder: tools/content/articles
     create: true
     delete: true

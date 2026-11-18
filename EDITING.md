@@ -51,11 +51,10 @@ You stay signed in afterwards, so this is a one-off.
 
 ## What you will see
 
-Eight sections down the left-hand side:
+Seven sections down the left-hand side:
 
 | Section | What it controls |
 | --- | --- |
-| **News & Stories** | Short pieces and announcements on the News page |
 | **Articles** | Longer pieces on the Books & Articles page — research, local history, profiles |
 | **Events** | Every event, and the annual community calendar |
 | **Photographs** | The photo archive |
@@ -71,28 +70,11 @@ anything else, and you do not have to tell anyone.
 
 ---
 
-## Writing a news post
-
-1. **News & Stories → New Post.**
-2. Fill in the title, the date and a one-or-two sentence summary. The summary
-   is what people see on the News page and in Google results, so it is worth
-   a moment's thought.
-3. Write the post in the big box. The buttons above it do headings, bold,
-   links and pictures — it works like any word processor.
-4. A picture at the top is optional. If you add one it also appears beside
-   the post in the listing.
-5. Press **Publish**.
-
-**Not finished?** Tick **Keep as a draft** and press Publish. Your work is
-saved but nothing appears on the website. Untick it when you are ready.
-
----
-
 ## Writing an article
 
-**Articles or News & Stories?** News is for things that go out of date: an
-event coming up, an announcement. An article is for something a reader could
-still want in ten years.
+**An article or an event?** Something coming up — a talk, a tour, a
+save-the-date — goes under **Events**. An article is for something a reader
+could still want in ten years.
 
 1. **Articles → New Article.**
 2. Fill in the title and a one-or-two sentence summary. As with news, the
@@ -108,6 +90,9 @@ still want in ten years.
    or upload a PDF. A photograph from the Internet Archive shows its picture
    automatically.
 6. Press **Publish**.
+
+**Not finished?** Tick **Keep as a draft** and press Publish. Your work is
+saved but nothing appears on the website. Untick it when you are ready.
 
 The optional boxes, in brief:
 

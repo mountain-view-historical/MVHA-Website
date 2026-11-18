@@ -49,8 +49,7 @@ migrate later.
 ## Editing panel
 
 **Sveltia CMS** at `/admin`, git-backed, signing in with GitHub. Chosen over
-Decap (stagnant, and Netlify Identity is deprecated). Collections: News &
-Stories, Articles, Events, Photographs, Newsletters, Home page pictures,
+Decap (stagnant, and Netlify Identity is deprecated). Collections: Articles, Events, Photographs, Newsletters, Home page pictures,
 Payment links, Board of Directors. Config in
 `admin/config.yml`.
 
@@ -66,13 +65,12 @@ panel commits to GitHub, which triggers a rebuild — live in a minute or two.
   `--test-site` adds noindex and drops the old-WordPress redirects (because
   the GoDaddy copy sits in a subfolder). Running the wrong one before
   packaging is the easy mistake.
-- **News posts are build-time.** Each post is a Markdown file in
-  `tools/content/posts/` with YAML front matter. The build renders it to a
-  real page at `news/<slug>.html` and writes `data/posts.json` for the
-  listing page and site search. Done this way so Google can index posts.
-  The Markdown renderer is small and self-contained inside `build.js` —
-  deliberately no npm dependency, so `Rebuild Website.command` works with
-  nothing installed.
+- **Articles are the only Markdown content.** The renderer is small and
+  self-contained inside `build.js` — deliberately no npm dependency, so
+  `Rebuild Website.command` works with nothing installed. News & Stories
+  (`tools/content/posts/`, `news/`, `data/posts.json`) was removed on
+  18 November 2026 at Craig's request: it had two posts and duplicated
+  Events, Articles and the newsletter. `news/*` redirects to Books & Articles.
 - **Articles are build-time too (November 2026).** Longer, lasting pieces
   live in `tools/content/articles/*.md`, edited in `/admin` → Articles, and
   are built to `articles/<slug>.html` plus `data/articles.json` (full text,
@@ -86,15 +84,15 @@ panel commits to GitHub, which triggers a rebuild — live in a minute or two.
   of only pictures becomes figures with the picture title as caption (side
   by side if more than one); a blockquote ending in a "— name" paragraph
   gets a `<cite>`; raw HTML runs to the next blank line.
-- **Generated, never edit by hand:** every `*.html` in the root, `news/`,
-  `articles/`, `data/posts.json`, `data/articles.json`, `sitemap.xml`,
+- **Generated, never edit by hand:** every `*.html` in the root,
+  `articles/`, `collections/`, `data/articles.json`, `sitemap.xml`,
   `robots.txt`, `.htaccess`.
 - **Day-to-day content needs no rebuild.** Events, photos, timeline and board
-  come from `data/*.json`, read in the browser. Only page wording and news
-  posts require a build.
+  come from `data/*.json`, read in the browser. Only page wording and
+  articles require a build.
 - **The menu has four top-level sections for content**: Photographs, Archives
   (directories, timeline, videos, links), Books & Articles (the history
-  overview, the four articles, the three books, news posts) and Newsletters.
+  overview, the articles, the three books) and Newsletters.
   There is deliberately no "History" tab — the whole site is about the history
   of Mountain View, so the word carried no information and read as though it
   meant the history of the Association. Changed 2 September 2026 after board

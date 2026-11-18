@@ -74,8 +74,7 @@ const NAV = [
     { label: 'History of Mountain View', href: 'history.html' },
     // Every article with a "menu title" is listed here, newest first.
     // Set in the admin panel; see Articles below.
-    { articles: true },
-    { label: 'News &amp; Stories', href: 'news.html' }
+    { articles: true }
   ]},
   { label: 'Events', href: 'events.html' },
   { label: 'Newsletters', href: 'newsletters.html' },
@@ -218,7 +217,7 @@ ${socialHtml()}
 </footer>`;
 }
 
-/* Pages that sit in a subfolder — news/rengstorff-house.html and the like —
+/* Pages that sit in a subfolder — articles/castro-legacy.html and the like —
    need every relative link lifted by one level. Rather than thread a prefix
    through every piece of markup above, the finished page is rewritten once:
    any href or src that is genuinely relative gets the prefix, and anything
@@ -274,31 +273,17 @@ ${footer()}
 }
 
 /* ==========================================================================
-   News posts
+   Markdown and front matter
    --------------------------------------------------------------------------
-   Each post is one Markdown file in tools/content/posts/, written either by
-   hand or by the admin panel at /admin. A post looks like this:
+   Articles are Markdown files with a block of settings at the top (front
+   matter), written by hand or by the admin panel. The reader and renderer
+   below turn them into HTML here, at build time, so that search engines and
+   people without JavaScript see the whole article.
 
-       ---
-       title: The Rengstorff House at 150
-       date: 2026-09-14
-       summary: One sentence for the listing page and for Google.
-       image: assets/images/rengstorff.jpg
-       ---
-
-       The body of the post, in Markdown.
-
-   Two things are generated from them on every build:
-
-     news/<slug>.html   a real, static, indexable page per post
-     data/posts.json    the index the listing page and site search read
-
-   Markdown is rendered here rather than in the browser so that search
-   engines and people without JavaScript see the whole post.
+   (Until November 2026 there was also a News & Stories section built the
+   same way. It was removed: events go on the Events page, longer pieces are
+   Articles, and Association news is in the newsletter.)
    ========================================================================== */
-
-const POSTS_DIR = path.join(CONTENT, 'posts');
-const NEWS_DIR = path.join(ROOT, 'news');
 
 /** Read the YAML front matter the admin panel writes.
     Deliberately a subset, with no npm dependency: mappings, lists (of plain
@@ -726,63 +711,6 @@ function plainText(html) {
     .replace(/\s+/g, ' ').trim();
 }
 
-function readPosts() {
-  if (!fs.existsSync(POSTS_DIR)) return [];
-  return fs.readdirSync(POSTS_DIR)
-    .filter(f => /\.md$/i.test(f))
-    .map(file => {
-      const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-      const { meta, body } = frontMatter(raw);
-      const slug = meta.slug || slugify(path.basename(file, path.extname(file)));
-      const html = markdown(body);
-      const text = plainText(html);
-      return {
-        slug,
-        file,
-        title: meta.title || slug,
-        date: (meta.date || '').slice(0, 10),
-        author: meta.author || '',
-        image: meta.image || '',
-        draft: meta.draft === true,
-        summary: meta.summary || (text.slice(0, 180) + (text.length > 180 ? '…' : '')),
-        html,
-        text
-      };
-    })
-    .filter(p => {
-      if (p.draft) { console.log(`  --  ${p.file} is a draft, not published`); return false; }
-      if (!p.date) { console.error(`  !  ${p.file} has no date, skipped`); return false; }
-      return true;
-    })
-    .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
-}
-
-function postPage(post) {
-  const d = new Date(post.date + 'T12:00:00');
-  const pretty = isNaN(d) ? post.date : d.toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
-  });
-
-  return `
-<section class="pagehead">
-  <div class="wrap">
-    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="news.html">News</a><span>&rsaquo;</span>${escapeHtml(post.title)}</p>
-    <h1>${escapeHtml(post.title)}</h1>
-    <p class="post-meta"><time datetime="${post.date}">${pretty}</time>${post.author ? ' &middot; ' + escapeHtml(post.author) : ''}</p>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <article class="prose post-body">
-${post.image ? `      <p><img class="post-hero" src="${escapeHtml(post.image)}" alt=""></p>\n` : ''}${post.html}
-    </article>
-    <p class="post-back"><a class="btn btn--ghost" href="news.html">&larr; All news &amp; stories</a></p>
-  </div>
-</section>
-`;
-}
-
 /* ==========================================================================
    Articles
    --------------------------------------------------------------------------
@@ -1206,56 +1134,6 @@ for (const file of files) {
   built++;
 }
 
-/* ---- News posts: one page each, plus the index the site reads ---- */
-
-const posts = readPosts();
-const postUrls = [];
-
-if (posts.length) {
-  fs.mkdirSync(NEWS_DIR, { recursive: true });
-
-  // Remove pages for posts that have been deleted, so the folder always
-  // matches tools/content/posts/ exactly.
-  const wanted = new Set(posts.map(p => p.slug + '.html'));
-  for (const stale of fs.readdirSync(NEWS_DIR).filter(f => f.endsWith('.html'))) {
-    if (!wanted.has(stale)) {
-      fs.unlinkSync(path.join(NEWS_DIR, stale));
-      console.log(`  --  removed news/${stale} (post no longer exists)`);
-    }
-  }
-
-  for (const post of posts) {
-    fs.writeFileSync(path.join(NEWS_DIR, post.slug + '.html'), layout({
-      title: post.title,
-      description: post.summary.replace(/"/g, '&quot;'),
-      image: post.image,
-      slug: post.slug,
-      url: 'news/' + post.slug + '.html',
-      prefix: '../'
-    }, postPage(post)));
-    console.log(`  ok  news/${post.slug}.html`);
-    postUrls.push('news/' + post.slug + '.html');
-    built++;
-  }
-}
-
-/* The listing page and site search both read this. It is generated — edit the
-   Markdown files in tools/content/posts/, or use the admin panel, not this. */
-fs.writeFileSync(path.join(ROOT, 'data', 'posts.json'), JSON.stringify({
-  _comment: 'GENERATED by tools/build.js from tools/content/posts/*.md. Do not edit by hand — your changes will be overwritten on the next build.',
-  posts: posts.map(p => ({
-    slug: p.slug,
-    title: p.title,
-    date: p.date,
-    author: p.author,
-    image: p.image,
-    summary: p.summary,
-    url: 'news/' + p.slug + '.html',
-    text: p.text
-  }))
-}, null, 2) + '\n');
-console.log(`  ok  data/posts.json (${posts.length} post${posts.length === 1 ? '' : 's'})`);
-
 /* ---- Articles: one page each, plus the index site search reads ---- */
 
 if (articles.length) {
@@ -1443,6 +1321,10 @@ ${OLD_URLS.map(([from, to]) =>
 RedirectMatch 301 ^/events/page/.*$ /events.html
 RedirectMatch 301 ^/eventbrite-event/.*$ /events.html
 
+# News & Stories was removed in November 2026.
+RedirectMatch 301 ^/news(\\.html)?$ /books-articles.html
+RedirectMatch 301 ^/news/.*$ /books-articles.html
+
 # The four articles that sat at the top of the site before November 2026.
 ${MOVED_TO_ARTICLES.map(slug =>
   `RedirectMatch 301 ^/${slug}(\\.html)?$ /articles/${slug}.html`).join('\n')}
@@ -1474,11 +1356,7 @@ ${slugs.map(s => `  <url>
     <loc>${SITE.url}/${s === 'index' ? '' : s + '.html'}</loc>
     <lastmod>${today}</lastmod>
     <priority>${s === 'index' ? '1.0' : '0.7'}</priority>
-  </url>`).concat(posts.map(p => `  <url>
-    <loc>${SITE.url}/news/${p.slug}.html</loc>
-    <lastmod>${p.date}</lastmod>
-    <priority>0.6</priority>
-  </url>`)).concat(articles.map(a => `  <url>
+  </url>`).concat(articles.map(a => `  <url>
     <loc>${SITE.url}/articles/${a.slug}.html</loc>
     <lastmod>${a.date || today}</lastmod>
     <priority>0.7</priority>

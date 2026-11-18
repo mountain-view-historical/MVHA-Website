@@ -138,10 +138,9 @@ async function render(page, query, patch) {
 
   console.log('\nBooks & Articles');
   doc = await render('books-articles.html');
-  check('lists the most recent news, not all of it',
-    doc.querySelectorAll('[data-news-list] .news-item').length > 0 &&
-    doc.querySelectorAll('[data-news-list] .news-item').length <= 3,
-    String(doc.querySelectorAll('[data-news-list] .news-item').length));
+  check('lists the articles, with pictures',
+    doc.querySelectorAll('.article-cards .card-media img').length >= 4,
+    String(doc.querySelectorAll('.article-cards .card-media img').length));
 
   console.log('\nEvents');
   doc = await render('events.html');
@@ -397,7 +396,7 @@ async function render(page, query, patch) {
   console.log('\nAdvanced search — source filters');
   doc = await render('search.html', '?q=castro');
   const sources = [...doc.querySelectorAll('[data-search-sources] .source')];
-  check(`offers one filter per source (${sources.length})`, sources.length === 7,
+  check(`offers one filter per source (${sources.length})`, sources.length === 6,
     sources.map(s => s.textContent.trim().split(/\s+/)[0]).join(', '));
   check('all sources are on by default',
     sources.every(s => s.querySelector('input').checked));

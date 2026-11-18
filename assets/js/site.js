@@ -867,52 +867,6 @@
   })();
 
   /* ====================================================================
-     6b. News & Stories listing
-     --------------------------------------------------------------------
-     Each post also exists as its own page in /news, written out by
-     tools/build.js. This only builds the list that links to them.
-     ==================================================================== */
-
-  (async function initNews() {
-    const mount = $('[data-news-list]');
-    if (!mount) return;
-
-    const data = await loadData('posts');
-    /* A page may ask for only the most recent few, by writing a number in the
-       attribute: data-news-list="3". The News page itself leaves it empty and
-       gets everything. */
-    const limit = Number(mount.dataset.newsList) || 0;
-    const all = (data && data.posts) || [];
-    const posts = limit ? all.slice(0, limit) : all;
-
-    if (!posts.length) {
-      mount.innerHTML = '<div class="empty-state">' +
-        '<p><strong>Nothing here just yet.</strong></p>' +
-        '<p>News and short pieces from the archive will appear here. In the ' +
-        'meantime, our <a href="' + BASE + 'newsletters.html">newsletter archive</a> ' +
-        'goes back many years and is fully searchable.</p></div>';
-      return;
-    }
-
-    mount.innerHTML = posts.map(function (p) {
-      const thumb = p.image
-        ? '<a class="news-thumb" href="' + BASE + esc(p.url) + '">' +
-            '<img src="' + BASE + esc(p.image) + '" alt="" loading="lazy"></a>'
-        : '';
-      return '<article class="news-item">' + thumb +
-        '<div class="news-body">' +
-          '<p class="eyebrow"><time datetime="' + esc(p.date) + '">' +
-            esc(formatDateLong(p.date)) + '</time>' +
-            (p.author ? ' &middot; ' + esc(p.author) : '') + '</p>' +
-          '<h2><a href="' + BASE + esc(p.url) + '">' + esc(p.title) + '</a></h2>' +
-          '<p>' + esc(p.summary) + '</p>' +
-          '<p><a class="more" href="' + BASE + esc(p.url) + '">Read on &rarr;</a></p>' +
-        '</div>' +
-      '</article>';
-    }).join('');
-  })();
-
-  /* ====================================================================
      7. Newsletter archive
      ==================================================================== */
 
@@ -1823,9 +1777,9 @@
     const input = $('[data-search-input]');
     const summary = $('[data-search-summary]');
 
-    const [pagesData, photosData, timelineData, newsData, postsData, articlesData] = await Promise.all([
+    const [pagesData, photosData, timelineData, newsData, articlesData] = await Promise.all([
       loadData('pages'), loadData('photos'), loadData('timeline'), loadData('newsletters'),
-      loadData('posts'), loadData('articles')
+      loadData('articles')
     ]);
 
     /* The Internet Archive catalogue is fetched separately and folded in with
@@ -1872,16 +1826,6 @@
           fullText: a.text || '',
           snippet: a.summary,
           haystack: (a.title + ' ' + a.summary + ' ' + (a.author || '') + ' ' + (a.text || '')).toLowerCase()
-        });
-      });
-    }
-    if (postsData) {
-      (postsData.posts || []).forEach(function (p) {
-        index.push({
-          kind: 'News', title: p.title, url: BASE + p.url,
-          fullText: p.text || '',
-          snippet: p.summary,
-          haystack: (p.title + ' ' + p.summary + ' ' + (p.text || '')).toLowerCase()
         });
       });
     }
@@ -1962,7 +1906,6 @@
     const SOURCES = [
       { kind: 'Page', label: 'Website pages' },
       { kind: 'Article', label: 'Articles' },
-      { kind: 'News', label: 'News & stories' },
       { kind: 'Photograph', label: 'Photo archive' },
       { kind: 'Timeline', label: 'City timeline' },
       { kind: 'Newsletter', label: 'Newsletters' },

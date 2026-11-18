@@ -59,6 +59,12 @@
 /eagle-monument.html                       /articles/eagle-monument.html    301
 /eagle-monument                            /articles/eagle-monument.html    301
 
+# News & Stories was removed in November 2026. Its pages send visitors to
+# Books & Articles, where the longer pieces now live.
+/news.html                                 /books-articles.html             301
+/news                                      /books-articles.html             301
+/news/*                                    /books-articles.html             301
+
 # Anything else that is not found
 #
 # Netlify handles a missing page with the rule below. Cloudflare rejects it —
