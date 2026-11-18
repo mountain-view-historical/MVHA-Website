@@ -996,11 +996,29 @@ ${related.replace('<!-- BACK -->', back)}`;
 }
 
 function articleCardsHtml(articles) {
-  return articles.map(a => `      <div class="card"><div class="card-body">
-        <h3><a href="articles/${a.slug}.html">${escapeHtml(a.title)}</a></h3>
-        <p>${escapeHtml(a.summary)}</p>
-        <a class="more" href="articles/${a.slug}.html">Read on &rarr;</a>
-      </div></div>`).join('\n\n');
+  return articles.map(a => {
+    const byline = [a.author ? 'By ' + escapeHtml(a.author) : '', a.date ? prettyDate(a.date) : '']
+      .filter(Boolean).join(' &middot; ');
+    return `      <a class="card card-link" href="articles/${a.slug}.html">
+${a.image ? `        <div class="card-media"><img src="${escapeHtml(a.image)}" alt="" loading="lazy"></div>\n` : ''}        <div class="card-body">
+${byline ? `          <p class="eyebrow">${byline}</p>\n` : ''}          <h3>${escapeHtml(a.title)}</h3>
+          <p>${escapeHtml(a.summary)}</p>
+          <span class="more">Read on &rarr;</span>
+        </div>
+      </a>`;
+  }).join('\n');
+}
+
+/* The cover of the newest newsletter that has one, for the Books & Articles
+   page. Adding an issue in the admin panel rebuilds the site, so this keeps
+   itself up to date. */
+function latestNewsletterCoverHtml() {
+  const data = readJson('data/newsletters.json');
+  const issue = ((data && data.issues) || [])
+    .filter(i => i.cover)
+    .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')))[0];
+  if (!issue) return '<img src="assets/images/MVHA-Logo-300x300.jpg" alt="">';
+  return `<img src="${escapeHtml(localHref(issue.cover))}" alt="Cover of The Mountain ReView, ${escapeHtml(issue.title || '')}" loading="lazy">`;
 }
 
 /* ==========================================================================
@@ -1173,7 +1191,8 @@ for (const file of files) {
   meta.slug = path.basename(file, '.html');
   const body = raw.slice(match[0].length)
     .replace('<!-- COLLECTION-LIST -->', () => collectionListHtml(collections))
-    .replace('<!-- ARTICLE-CARDS -->', () => articleCardsHtml(articles));
+    .replace('<!-- ARTICLE-CARDS -->', () => articleCardsHtml(articles))
+    .replace('<!-- LATEST-NEWSLETTER-COVER -->', () => latestNewsletterCoverHtml());
   fs.writeFileSync(path.join(ROOT, meta.slug + '.html'), layout(meta, body));
   console.log(`  ok  ${meta.slug}.html`);
   if (meta.slug !== '404') slugs.push(meta.slug);

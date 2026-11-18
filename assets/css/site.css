@@ -1282,3 +1282,44 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
   overflow: hidden; background: var(--card);
 }
 .map-embed iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+/* ---- Books & Articles page ---- */
+
+/* A heading that is also a link, without the underline of body text. */
+.plain-link { color: inherit; text-decoration: none; }
+.plain-link:hover { color: var(--clay); text-decoration: underline; }
+a.feature-media { display: block; }
+
+/* Two across on a wide screen, so the pictures are a good size. */
+.article-cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.article-cards .card-body h3 { font-size: 1.35rem; }
+.article-cards .more, .book .more {
+  text-align: left; padding: .6rem 0 0; font-size: .92rem; font-weight: 600; color: var(--clay);
+}
+.article-cards .more { margin-top: auto; }
+
+/* The newsletter cover is a tall page, so it is kept narrow. */
+.newsletter-band { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.newsletter-band .feature-media img { max-height: 380px; width: auto; margin: 0 auto; }
+@media (max-width: 720px) {
+  .newsletter-band { grid-template-columns: 1fr; }
+  .newsletter-band .feature-media { order: 0; }
+}
+
+/* A recommended book: its cover above the description, like a shelf. */
+.book { display: flex; flex-direction: column; }
+.book h3 { font-size: 1.2rem; margin-bottom: .45rem; }
+.book p { color: var(--ink-soft); font-size: .95rem; }
+.book-cover {
+  display: block; width: 150px; height: 220px; object-fit: cover; margin-bottom: 1.25rem;
+  border-radius: 3px; box-shadow: var(--shadow-lift);
+}
+/* No picture of the cover yet: a plain lettered panel stands in for it. */
+.book-cover--none {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: .9rem; text-align: center;
+  background: var(--paper-2); border: 1px solid var(--rule);
+  font-family: 'Source Serif 4', Georgia, serif; color: var(--ink);
+}
+.book-cover--none span { font-size: 1.2rem; font-weight: 600; }
+.book-cover--none small { font-size: .75rem; color: var(--ink-faint); margin-top: .4rem; }
