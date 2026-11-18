@@ -198,8 +198,70 @@ Deleting a post's `.md` file deletes its page on the next build.
 
 The Markdown renderer in `tools/build.js` deliberately covers only headings,
 paragraphs, lists, quotes, links, pictures and rules. Anything that looks
-like HTML is passed straight through, so a post can drop in a YouTube embed
-where it needs one.
+like HTML is passed straight through, from its first line to the next blank
+line, so a post can drop in a YouTube embed where it needs one.
+
+### Articles
+
+Longer pieces that stay useful for years — research, local history, profiles
+— are articles rather than news. They work like news posts, with a few more
+settings, and live in `tools/content/articles/`, one Markdown file each.
+Board members write them in `/admin` under **Articles**.
+
+```
+---
+title: The Castro Family Legacy
+subtitle: The line under the title at the top of the page.
+author: Who wrote it
+credits: Photographs by ...
+date: 2024-10-15
+summary: One or two sentences for the Books & Articles page and for Google.
+image: assets/images/castro-adobe.jpg
+menu_title: Castro Family Legacy
+note_title: What comes next
+note_text: A shaded box after the article. Markdown is fine here.
+related:
+  - label: Castro family 2nd Home, 1911
+    url: https://archive.org/details/cmv_000285
+    note: One line about it.
+---
+```
+
+Only `title` and `summary` are really needed. Everything else is optional:
+
+- **`date`** decides the order — newest first, undated ones after them by
+  title. The four articles moved over in November 2026 have no date because
+  nobody recorded when they were first published.
+- **`menu_title`** puts the article in the Books & Articles menu under that
+  name. Leave it empty and the article is still on the Books & Articles page
+  and in search; this just stops the menu growing without limit.
+- **`related`** becomes a "Related materials" panel of cards under the
+  article. An Internet Archive item shows its thumbnail; a PDF, a newsletter,
+  a video or a recording is labelled as such. Files uploaded in the panel go
+  to `assets/documents/`. Keep them under 25 MB — that is Cloudflare's limit
+  for a single file — and put recordings and big scans on the Internet
+  Archive instead.
+
+Two Markdown habits the articles rely on, both handled by the renderer in
+`tools/build.js`:
+
+- A picture on a line of its own becomes a figure, and the picture's title —
+  the words in quotes after its address — becomes the caption:
+  `![The adobe](assets/images/adobe.jpg "The Castro adobe, circa 1850.")`
+  Two or more pictures on consecutive lines sit side by side.
+- A quotation whose last paragraph starts with a dash — `> — Harry True, 1959`
+  — gets that line set as the attribution.
+
+Raw HTML still works for anything else, from its first line to the next
+blank line. The landmarks map is done that way.
+
+The build writes `articles/<name>.html`, `data/articles.json` (what site
+search reads — whole text, so there is no list of keywords to keep up) and
+the article cards on `books-articles.html`. All are generated.
+
+The four articles used to be pages at the top of the site
+(`castro-legacy.html` and so on). Their old addresses redirect to the new
+ones: `_redirects` for Cloudflare, `.htaccess` for Apache.
 
 ### Newsletters
 
@@ -563,6 +625,9 @@ admin/config.yml                What that panel is allowed to edit.
 news/                           Generated. One page per news post.
 data/posts.json                 Generated. The news index, for the listing
                                 page and for site search.
+articles/                       Generated. One page per article.
+data/articles.json              Generated. The articles' text, for site search.
+assets/documents/               Files attached to articles as related materials.
 
 data/events.json                Events. Edit freely.
 data/photos.json                Our own photographs. Edit freely.
@@ -596,6 +661,7 @@ tools/render-test.js            Optional browser simulation tests.
 tools/localise-images.sh        Downloads images off the old WordPress server.
 tools/content/                  The page wording. This is what you edit.
 tools/content/posts/            News posts, one Markdown file each.
+tools/content/articles/         Articles, one Markdown file each.
 ```
 
 ## Colours and fonts

@@ -1823,9 +1823,9 @@
     const input = $('[data-search-input]');
     const summary = $('[data-search-summary]');
 
-    const [pagesData, photosData, timelineData, newsData, postsData] = await Promise.all([
+    const [pagesData, photosData, timelineData, newsData, postsData, articlesData] = await Promise.all([
       loadData('pages'), loadData('photos'), loadData('timeline'), loadData('newsletters'),
-      loadData('posts')
+      loadData('posts'), loadData('articles')
     ]);
 
     /* The Internet Archive catalogue is fetched separately and folded in with
@@ -1863,6 +1863,18 @@
     }
     if (photosData) indexPhotos(photosData.photos);
     if (archiveData) indexPhotos(archiveData.photos);
+    /* Articles are searched on their whole text, as news posts are. The text
+       comes from data/articles.json, which the build writes. */
+    if (articlesData) {
+      (articlesData.articles || []).forEach(function (a) {
+        index.push({
+          kind: 'Article', title: a.title, url: BASE + a.url,
+          fullText: a.text || '',
+          snippet: a.summary,
+          haystack: (a.title + ' ' + a.summary + ' ' + (a.author || '') + ' ' + (a.text || '')).toLowerCase()
+        });
+      });
+    }
     if (postsData) {
       (postsData.posts || []).forEach(function (p) {
         index.push({
@@ -1949,6 +1961,7 @@
 
     const SOURCES = [
       { kind: 'Page', label: 'Website pages' },
+      { kind: 'Article', label: 'Articles' },
       { kind: 'News', label: 'News & stories' },
       { kind: 'Photograph', label: 'Photo archive' },
       { kind: 'Timeline', label: 'City timeline' },

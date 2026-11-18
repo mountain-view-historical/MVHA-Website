@@ -72,10 +72,9 @@ const NAV = [
   ]},
   { label: 'Books &amp; Articles', href: 'books-articles.html', children: [
     { label: 'History of Mountain View', href: 'history.html' },
-    { label: 'The Castro Family Legacy', href: 'castro-legacy.html' },
-    { label: 'Historical Landmarks', href: 'landmarks.html' },
-    { label: 'Who&rsquo;s the Oldest?', href: 'oldest-resident.html' },
-    { label: 'MVHS Eagle Monument', href: 'eagle-monument.html' },
+    // Every article with a "menu title" is listed here, newest first.
+    // Set in the admin panel; see Articles below.
+    { articles: true },
     { label: 'News &amp; Stories', href: 'news.html' }
   ]},
   { label: 'Events', href: 'events.html' },
@@ -97,12 +96,16 @@ const SOCIAL = [
 
 /* ---- Layout pieces ---- */
 
+/* Filled in from the articles before any page is built. */
+let menuArticles = [];
+
 function navHtml() {
   return NAV.map(item => {
     if (!item.children) {
       return `        <li><a href="${item.href}">${item.label}</a></li>`;
     }
     const subs = item.children
+      .flatMap(c => c.articles ? menuArticles : [c])
       .map(c => `            <a href="${c.href}">${c.label}</a>`)
       .join('\n');
     return `        <li class="has-sub"><a href="${item.href}">${item.label}</a>\n` +
@@ -297,21 +300,266 @@ ${footer()}
 const POSTS_DIR = path.join(CONTENT, 'posts');
 const NEWS_DIR = path.join(ROOT, 'news');
 
-/** Split a leading --- YAML block off a file. Supports the subset the admin
-    panel writes: `key: value`, optionally quoted, one per line. */
+/** Read the YAML front matter the admin panel writes.
+    Deliberately a subset, with no npm dependency: mappings, lists (of plain
+    values or of small mappings), quoted and unquoted text that may wrap onto
+    several lines, and | or > blocks. true and false become booleans; every
+    other value stays as text, so a date such as 2026-09-14 is never turned
+    into a number or a date object. */
+function parseYaml(src) {
+  const lines = String(src).replace(/\r\n?/g, '\n').split('\n');
+  let i = 0;
+
+  const indentOf = l => l.match(/^ */)[0].length;
+  const isBlank = l => /^\s*(#.*)?$/.test(l);
+  const KEY = /^([^\s#'"\-?:,\[\]{}][^:]*?|"[^"]*"|'[^']*')\s*:(?:[ \t]+(.*?))?\s*$/;
+
+  function nextContent() {
+    let j = i;
+    while (j < lines.length && isBlank(lines[j])) j++;
+    return j;
+  }
+
+  function unquoteKey(k) {
+    if (/^"/.test(k)) return unescapeDouble(k.slice(1, -1));
+    if (/^'/.test(k)) return k.slice(1, -1).replace(/''/g, "'");
+    return k;
+  }
+
+  function unescapeDouble(s) {
+    return s.replace(/\\(x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8}|.)/g, (_, e) => {
+      switch (e[0]) {
+        case 'n': return '\n';
+        case 't': return '\t';
+        case 'r': return '\r';
+        case '0': return '\0';
+        case 'b': return '\b';
+        case 'e': return '\x1b';
+        case 'a': return '\x07';
+        case 'v': return '\v';
+        case 'f': return '\f';
+        case 'N': return '\u0085';
+        case '_': return ' ';
+        case 'L': return ' ';
+        case 'P': return ' ';
+        case 'x': case 'u': case 'U': return String.fromCodePoint(parseInt(e.slice(1), 16));
+        default: return e; // \" \\ \/ and escaped space or tab
+      }
+    });
+  }
+
+  /** Line folding shared by quoted and plain text that runs onto more lines:
+      one line break becomes a space, each blank line becomes a line break. */
+  function fold(parts) {
+    let out = parts[0];
+    let blanks = 0;
+    for (let k = 1; k < parts.length; k++) {
+      const p = parts[k];
+      if (p === '') { blanks++; continue; }
+      out += blanks ? '\n'.repeat(blanks) : ' ';
+      out += p;
+      blanks = 0;
+    }
+    return out + (blanks ? '\n'.repeat(blanks) : '');
+  }
+
+  function scalar(text) {
+    if (text === 'true' || text === 'True' || text === 'TRUE') return true;
+    if (text === 'false' || text === 'False' || text === 'FALSE') return false;
+    if (text === '~' || text === 'null' || text === 'Null' || text === 'NULL' || text === '') return '';
+    return text;
+  }
+
+  /** A quoted value, which may continue over several lines. `first` is what
+      follows the opening quote on its own line. */
+  function quoted(first, q) {
+    const raw = [first];
+    // Find the closing quote, which may be on a later line.
+    const closes = s => {
+      if (q === "'") {
+        for (let k = 0; k < s.length; k++) {
+          if (s[k] === "'") { if (s[k + 1] === "'") { k++; continue; } return k; }
+        }
+      } else {
+        for (let k = 0; k < s.length; k++) {
+          if (s[k] === '\\') { k++; continue; }
+          if (s[k] === '"') return k;
+        }
+      }
+      return -1;
+    };
+    let end = closes(first);
+    while (end === -1 && i < lines.length) {
+      raw.push(lines[i++]);
+      end = closes(raw[raw.length - 1]);
+    }
+    raw[raw.length - 1] = raw[raw.length - 1].slice(0, Math.max(end, 0));
+
+    if (raw.length === 1) {
+      return q === "'" ? raw[0].replace(/''/g, "'") : unescapeDouble(raw[0]);
+    }
+    // Trim the white space that line folding ignores, but an escaped line
+    // break (a backslash at the very end of a line) joins without a space.
+    const parts = [];
+    let joinNext = false;
+    raw.forEach((line, k) => {
+      let s = k === 0 ? line.replace(/[ \t]+$/, '') : line.trim();
+      if (k > 0 && k < raw.length - 1 && s === '') { parts.push(''); return; }
+      if (k === raw.length - 1) s = line.replace(/^[ \t]+/, '');
+      if (joinNext) { parts[parts.length - 1] += s; joinNext = false; }
+      else parts.push(s);
+      if (q === '"' && k < raw.length - 1 && /(^|[^\\])(\\\\)*\\$/.test(line.replace(/[ \t]+$/, ''))) {
+        // escaped line break
+        parts[parts.length - 1] = parts[parts.length - 1].replace(/\\$/, '');
+        joinNext = true;
+        // keep trailing spaces that were before the backslash
+        if (k === 0) parts[parts.length - 1] = line.replace(/\\[ \t]*$/, '');
+      }
+    });
+    const folded = fold(parts);
+    return q === "'" ? folded.replace(/''/g, "'") : unescapeDouble(folded);
+  }
+
+  /** A | or > block. */
+  function block(header, parentIndent) {
+    const literal = header[0] === '|';
+    const chomp = /-/.test(header) ? 'strip' : /\+/.test(header) ? 'keep' : 'clip';
+    const explicit = header.match(/[1-9]/);
+    const collected = [];
+    let contentIndent = explicit ? parentIndent + Number(explicit[0]) : -1;
+    while (i < lines.length) {
+      const line = lines[i];
+      if (/^\s*$/.test(line)) { collected.push(''); i++; continue; }
+      const ind = indentOf(line);
+      if (contentIndent === -1) {
+        if (ind <= parentIndent) break;
+        contentIndent = ind;
+      }
+      if (ind < contentIndent) break;
+      collected.push(line.slice(contentIndent));
+      i++;
+    }
+    // Trailing blank lines belong to the chomping rule, not the content.
+    let trailing = 0;
+    while (collected.length && collected[collected.length - 1] === '') { collected.pop(); trailing++; }
+    let text;
+    if (literal) {
+      text = collected.join('\n');
+    } else {
+      text = '';
+      let prevMore = false;
+      collected.forEach((l, k) => {
+        const more = /^[ \t]/.test(l);
+        if (k === 0) { text = l; prevMore = more; return; }
+        const prev = collected[k - 1];
+        if (l === '') { text += '\n'; return; }
+        if (prev === '') {
+          // the blank lines already added their breaks; folding adds nothing
+          // unless either side is more indented
+          if (more || prevMore) text += '\n';
+          text += l;
+        } else if (more || prevMore) {
+          text += '\n' + l;
+        } else {
+          text += ' ' + l;
+        }
+        prevMore = more;
+      });
+    }
+    if (!collected.length) return chomp === 'keep' ? '\n'.repeat(trailing) : '';
+    if (chomp === 'strip') return text;
+    if (chomp === 'clip') return text + '\n';
+    return text + '\n' + '\n'.repeat(trailing);
+  }
+
+  /** Whatever follows "key:" or "- " on a line. */
+  function value(rest, parentIndent) {
+    if (rest === undefined || rest === '' || /^#/.test(rest)) {
+      const j = nextContent();
+      if (j < lines.length) {
+        const ind = indentOf(lines[j]);
+        const body = lines[j].slice(ind);
+        if (/^-( |$)/.test(body) && ind >= parentIndent) { i = j; return seq(ind); }
+        if (ind > parentIndent) { i = j; return map(ind); }
+      }
+      return '';
+    }
+    if (/^[|>]/.test(rest)) return block(rest, parentIndent);
+    if (rest[0] === '"' || rest[0] === "'") {
+      return quoted(rest.slice(1), rest[0]);
+    }
+    if (rest === '[]') return [];
+    if (rest === '{}') return {};
+    if (/^\[.*\]$/.test(rest)) {
+      return rest.slice(1, -1).split(',').map(s => s.trim()).filter(Boolean)
+        .map(s => /^(['"]).*\1$/.test(s) ? (s[0] === '"' ? unescapeDouble(s.slice(1, -1)) : s.slice(1, -1).replace(/''/g, "'")) : scalar(s));
+    }
+    // Plain text, possibly continued on more-indented lines.
+    const parts = [rest.replace(/\s+#.*$/, '')];
+    while (i < lines.length) {
+      const line = lines[i];
+      if (/^\s*$/.test(line)) {
+        const j = nextContent();
+        if (j < lines.length && indentOf(lines[j]) > parentIndent) {
+          for (let k = i; k < j; k++) parts.push('');
+          i = j;
+          continue;
+        }
+        break;
+      }
+      if (indentOf(line) <= parentIndent) break;
+      if (/^\s*#/.test(line)) break;
+      parts.push(line.trim().replace(/\s+#.*$/, ''));
+      i++;
+    }
+    return parts.length === 1 ? scalar(parts[0]) : fold(parts);
+  }
+
+  function map(indent) {
+    const obj = {};
+    while (i < lines.length) {
+      const line = lines[i];
+      if (isBlank(line)) { i++; continue; }
+      const ind = indentOf(line);
+      if (ind < indent) break;
+      const m = line.slice(ind).match(KEY);
+      if (ind > indent || !m) { i++; continue; }
+      i++;
+      obj[unquoteKey(m[1])] = value(m[2], ind);
+    }
+    return obj;
+  }
+
+  function seq(indent) {
+    const arr = [];
+    while (i < lines.length) {
+      const line = lines[i];
+      if (isBlank(line)) { i++; continue; }
+      const ind = indentOf(line);
+      if (ind !== indent || !/^-( |$)/.test(line.slice(ind))) break;
+      const content = line.slice(ind + 1).replace(/^ +/, '');
+      const contentIndent = ind + (line.slice(ind).length - content.length);
+      if (content === '' ) { i++; arr.push(value('', ind)); continue; }
+      if (KEY.test(content)) {
+        // A mapping that starts on the dash line.
+        lines[i] = ' '.repeat(contentIndent) + content;
+        arr.push(map(contentIndent));
+        continue;
+      }
+      i++;
+      arr.push(value(content, ind));
+    }
+    return arr;
+  }
+
+  return map(0);
+}
+
+/** Split a leading --- YAML block off a file. */
 function frontMatter(raw) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   if (!m) return { meta: {}, body: raw };
-  const meta = {};
-  for (const line of m[1].split(/\r?\n/)) {
-    const kv = line.match(/^([A-Za-z0-9_]+)\s*:\s*(.*)$/);
-    if (!kv) continue;
-    let value = kv[2].trim();
-    if (/^(['"]).*\1$/.test(value)) value = value.slice(1, -1);
-    if (value === 'true' || value === 'false') value = value === 'true';
-    meta[kv[1]] = value;
-  }
-  return { meta, body: raw.slice(m[0].length) };
+  return { meta: parseYaml(m[1]), body: raw.slice(m[0].length) };
 }
 
 function escapeHtml(s) {
@@ -343,6 +591,28 @@ function inline(text) {
   return out.replace(/\uE000(\d+)\uE000/g, (_, i) => `<code>${escapeHtml(codes[i])}</code>`);
 }
 
+/* A paragraph that holds nothing but pictures becomes a figure, and the
+   picture's title -- the text in quotes after its address, which the admin
+   panel's picture button calls "Title" -- becomes the caption underneath:
+
+       ![The Castro family adobe](assets/images/adobe.jpg "The adobe, circa 1850.")
+
+   Two or more pictures in the same paragraph (one line after another, with no
+   blank line between) are set side by side. Returns '' for anything else. */
+const PICTURE = /!\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'))?\s*\)/g;
+
+function figures(text) {
+  const found = [...String(text).matchAll(PICTURE)];
+  if (!found.length || text.replace(PICTURE, '').trim()) return '';
+  const one = m => {
+    const caption = (m[3] !== undefined ? m[3] : m[4] || '').replace(/\\(.)/g, '$1').trim();
+    return `<figure><img src="${escapeHtml(m[2])}" alt="${escapeHtml(m[1])}" loading="lazy">` +
+      (caption ? `<figcaption>${inline(caption)}</figcaption>` : '') + '</figure>';
+  };
+  if (found.length === 1) return one(found[0]);
+  return '<div class="grid grid-2 figure-row">\n' + found.map(one).join('\n') + '\n</div>';
+}
+
 /**
  * A deliberately small Markdown renderer: headings, paragraphs, lists,
  * blockquotes, rules, images and links. That is everything the admin panel's
@@ -358,13 +628,29 @@ function markdown(src) {
   let items = [];      // text of each item in the open list
 
   const flushPara = () => {
-    if (para.length) { out.push('<p>' + inline(para.join(' ')) + '</p>'); para = []; }
+    if (!para.length) return;
+    const text = para.join(' ');
+    out.push(figures(text) || '<p>' + inline(text) + '</p>');
+    para = [];
   };
+  /* A blockquote may run to several paragraphs (an empty "> " line between
+     them). If its last paragraph starts with a dash -- "— Councilman Harry
+     True, 1959" -- that line is who said it, and is set as a <cite>. */
   const flushQuote = () => {
-    if (quote.length) {
-      out.push('<blockquote><p>' + inline(quote.join(' ')) + '</p></blockquote>');
-      quote = [];
-    }
+    if (!quote.length) return;
+    const paras = [];
+    let cur = [];
+    quote.forEach(l => {
+      if (!l.trim()) { if (cur.length) paras.push(cur.join(' ')); cur = []; }
+      else cur.push(l.trim());
+    });
+    if (cur.length) paras.push(cur.join(' '));
+    let cite = '';
+    const last = paras[paras.length - 1] || '';
+    const who = last.match(/^(?:—|―|--)\s*(.+)$/);
+    if (who && paras.length > 1) { cite = `<cite>${inline(who[1])}</cite>`; paras.pop(); }
+    out.push('<blockquote>' + paras.map(t => '<p>' + inline(t) + '</p>').join('') + cite + '</blockquote>');
+    quote = [];
   };
   const flushList = () => {
     if (!list) return;
@@ -377,15 +663,20 @@ function markdown(src) {
   const flushAll = () => { flushPara(); flushQuote(); flushList(); };
 
   const isBlock = line =>
-    /^\s*<(\/?)(div|section|figure|iframe|table|ul|ol|p|h[1-6]|blockquote|img|video|script)\b/i.test(line);
+    /^\s*<(\/?)(div|section|figure|iframe|table|ul|ol|dl|p|h[1-6]|blockquote|img|video|audio|picture|aside|details|script)\b/i.test(line);
+  let inHtml = false;  // inside a block of raw HTML, which runs to the next blank line
 
   for (const raw of lines) {
     const line = raw.trimEnd();
 
-    if (!line.trim()) { flushAll(); continue; }
+    if (!line.trim()) { flushAll(); inHtml = false; continue; }
 
-    // Raw HTML block — leave it exactly as written.
-    if (isBlock(line)) { flushAll(); out.push(line); continue; }
+    /* Raw HTML — left exactly as written, from the line that opens it to the
+       next blank line, as in standard Markdown. That lets a figure, a map or
+       a box be written over several lines without the lines inside it being
+       wrapped in paragraphs. */
+    if (inHtml) { out.push(line); continue; }
+    if (isBlock(line)) { flushAll(); out.push(line); inHtml = true; continue; }
 
     if (/^(---|\*\*\*|___)\s*$/.test(line)) { flushAll(); out.push('<hr>'); continue; }
 
@@ -490,6 +781,226 @@ ${post.image ? `      <p><img class="post-hero" src="${escapeHtml(post.image)}" 
   </div>
 </section>
 `;
+}
+
+/* ==========================================================================
+   Articles
+   --------------------------------------------------------------------------
+   Longer pieces -- research, local history, profiles -- that stay useful for
+   years, unlike news. Each is one Markdown file in tools/content/articles/,
+   written by hand or in the admin panel under "Articles":
+
+       ---
+       title: The Castro Family Legacy
+       subtitle: The line under the title at the top of the page.
+       author: Who wrote it (optional)
+       credits: Photographs by ... (optional)
+       date: 2024-10-15            (optional; the newest is listed first)
+       summary: One or two sentences for the list of articles and for Google.
+       image: assets/images/...    (for the list and for link previews)
+       menu_title: Castro Family Legacy   (optional; puts it in the menu)
+       note_title: What comes next        (optional box at the end)
+       note_text: ...
+       related:                           (optional "Related materials")
+         - label: The 1876 map
+           url: https://archive.org/details/...
+           note: One line about it.
+       ---
+
+       The article, in Markdown.
+
+   Built into:
+
+     articles/<slug>.html   one real page per article
+     data/articles.json     what site search reads
+     the cards on books-articles.html (where it says <!-- ARTICLE-CARDS -->)
+     the Books & Articles menu (articles that have a menu title)
+
+   A related item that points at an Internet Archive item, at a photograph on
+   our own Photos page, or at a picture, shows a thumbnail. A PDF, a video and
+   a newsletter are labelled as such, so a reader knows what they are opening.
+   ========================================================================== */
+
+const ARTICLES_SRC = path.join(CONTENT, 'articles');
+const ARTICLES_DIR = path.join(ROOT, 'articles');
+
+/* An address saved by the admin panel as /assets/... is made relative, so it
+   works from the articles/ folder and in a test copy kept in a subfolder. */
+function localHref(href) {
+  return String(href || '').trim().replace(/^\/(assets\/)/, '$1');
+}
+
+function prettyDate(iso) {
+  const d = new Date(iso + 'T12:00:00Z');
+  return isNaN(d) ? iso : d.toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
+  });
+}
+
+function readJson(rel) {
+  try { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); } catch { return null; }
+}
+
+function readArticles() {
+  if (!fs.existsSync(ARTICLES_SRC)) return [];
+  return fs.readdirSync(ARTICLES_SRC)
+    .filter(f => /\.md$/i.test(f))
+    .map(file => {
+      const raw = fs.readFileSync(path.join(ARTICLES_SRC, file), 'utf8');
+      const { meta, body } = frontMatter(raw);
+      const slug = slugify(meta.slug || path.basename(file, path.extname(file)));
+      const html = markdown(body);
+      const text = plainText(html);
+      const str = k => (typeof meta[k] === 'string' ? meta[k].trim() : '');
+      return {
+        slug,
+        file,
+        title: str('title') || slug,
+        subtitle: str('subtitle'),
+        author: str('author'),
+        credits: str('credits'),
+        date: str('date').slice(0, 10),
+        image: localHref(str('image')),
+        menuTitle: str('menu_title'),
+        noteTitle: str('note_title'),
+        noteText: str('note_text'),
+        related: Array.isArray(meta.related) ? meta.related : [],
+        draft: meta.draft === true,
+        summary: str('summary') || (text.slice(0, 180) + (text.length > 180 ? '…' : '')),
+        html,
+        text
+      };
+    })
+    .filter(a => {
+      if (a.draft) { console.log(`  --  articles: ${a.file} is a draft, not published`); return false; }
+      return true;
+    })
+    // Newest first; articles with no date follow, in order of title.
+    .sort((a, b) => {
+      if (a.date && b.date) return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+      if (a.date || b.date) return a.date ? -1 : 1;
+      const key = t => t.replace(/^(the|a|an)\s+/i, '');
+      return key(a.title).localeCompare(key(b.title));
+    });
+}
+
+/** Work out what a related item is, and whether it has a picture to show. */
+function relatedItem(r, lookup) {
+  if (!r || typeof r !== 'object') return null;
+  const href = localHref(r.file || r.url);
+  const label = String(r.label || '').trim();
+  if (!href) return null;
+
+  let kind = 'Web page';
+  let thumb = '';
+  let title = label;
+  const ia = href.match(/^https?:\/\/(?:www\.)?archive\.org\/details\/([^/?#]+)/i);
+  const own = href.match(/(?:^|\/)archive\.html\?photo=([^&#]+)/);
+
+  if (ia) {
+    const photo = lookup.ia.get(ia[1]);
+    kind = photo ? 'Photograph' : 'Internet Archive';
+    thumb = 'https://archive.org/services/img/' + ia[1];
+    if (!title && photo) title = photo.title;
+  } else if (own) {
+    const photo = lookup.own.get(decodeURIComponent(own[1])) || lookup.ia.get(decodeURIComponent(own[1]));
+    kind = 'Photograph';
+    if (photo) {
+      thumb = photo.src ? localHref(photo.src) : 'https://archive.org/services/img/' + photo.id;
+      if (!title) title = photo.title;
+    }
+  } else if (/\.pdf($|[?#])/i.test(href)) {
+    kind = /(^|\/)assets\/newsletters\//.test(href) ? 'Newsletter' : 'Document (PDF)';
+  } else if (/\.(jpe?g|png|gif|webp)($|[?#])/i.test(href)) {
+    kind = 'Picture';
+    thumb = href;
+  } else if (/\.(mp3|m4a|wav|ogg)($|[?#])/i.test(href)) {
+    kind = 'Recording';
+  } else if (/^https?:\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\//i.test(href)) {
+    kind = 'Video';
+  } else if (!/^[a-z][a-z0-9+.-]*:/i.test(href)) {
+    kind = 'On this website';
+  }
+
+  return {
+    href, kind, thumb,
+    title: title || href,
+    note: String(r.note || '').trim(),
+    external: /^https?:\/\//i.test(href) || /\.pdf($|[?#])/i.test(href)
+  };
+}
+
+function relatedHtml(article, lookup) {
+  const items = article.related.map(r => relatedItem(r, lookup)).filter(Boolean);
+  if (!items.length) return '';
+  const cards = items.map(it => {
+    const target = it.external ? ' target="_blank" rel="noopener"' : '';
+    return `      <a class="card card-link related-item" href="${escapeHtml(it.href)}"${target}>
+${it.thumb ? `        <div class="card-media"><img src="${escapeHtml(it.thumb)}" alt="" loading="lazy"></div>\n` : ''}        <div class="card-body">
+          <p class="eyebrow">${escapeHtml(it.kind)}</p>
+          <h3>${escapeHtml(it.title)}</h3>
+${it.note ? `          <p>${inline(it.note)}</p>\n` : ''}        </div>
+      </a>`;
+  }).join('\n');
+  return `
+<section class="section section--tint" id="related">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Go further</p>
+      <h2>Related materials</h2>
+    </div>
+    <div class="grid grid-3">
+${cards}
+    </div>
+<!-- BACK -->  </div>
+</section>
+`;
+}
+
+function articlePage(a, lookup) {
+  const byline = [
+    a.date ? `<time datetime="${a.date}">${prettyDate(a.date)}</time>` : '',
+    a.author ? 'By ' + escapeHtml(a.author) : '',
+    a.credits ? escapeHtml(a.credits) : ''
+  ].filter(Boolean).join(' &middot; ');
+
+  // The opening paragraph is set a little larger, as the old pages did by hand.
+  const body = a.html.replace(/^<p>/, '<p class="lede">');
+
+  const note = a.noteTitle || a.noteText
+    ? `
+      <div class="callout">
+${a.noteTitle ? `        <h3>${escapeHtml(a.noteTitle)}</h3>\n` : ''}${markdown(a.noteText)}
+      </div>`
+    : '';
+
+  const back = '    <p class="post-back"><a class="btn btn--ghost" href="books-articles.html#articles">&larr; All articles</a></p>\n';
+  const related = relatedHtml(a, lookup);
+
+  return `
+<section class="pagehead">
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="books-articles.html">Books &amp; Articles</a><span>&rsaquo;</span>${escapeHtml(a.title)}</p>
+    <h1>${escapeHtml(a.title)}</h1>
+${a.subtitle ? `    <p>${inline(a.subtitle)}</p>\n` : ''}${byline ? `    <p class="post-meta">${byline}</p>\n` : ''}  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <article class="prose article-body">
+${body}${note}
+    </article>
+${related ? '' : back}  </div>
+</section>
+${related.replace('<!-- BACK -->', back)}`;
+}
+
+function articleCardsHtml(articles) {
+  return articles.map(a => `      <div class="card"><div class="card-body">
+        <h3><a href="articles/${a.slug}.html">${escapeHtml(a.title)}</a></h3>
+        <p>${escapeHtml(a.summary)}</p>
+        <a class="more" href="articles/${a.slug}.html">Read on &rarr;</a>
+      </div></div>`).join('\n\n');
 }
 
 /* ==========================================================================
@@ -643,6 +1154,9 @@ ${boxes}
 /* ---- Build ---- */
 
 const collections = readCollections();
+const articles = readArticles();
+menuArticles = articles.filter(a => a.menuTitle)
+  .map(a => ({ label: escapeHtml(a.menuTitle), href: 'articles/' + a.slug + '.html' }));
 
 const files = fs.readdirSync(CONTENT).filter(f => f.endsWith('.html')).sort();
 const slugs = [];
@@ -658,7 +1172,8 @@ for (const file of files) {
   const meta = JSON.parse(match[1]);
   meta.slug = path.basename(file, '.html');
   const body = raw.slice(match[0].length)
-    .replace('<!-- COLLECTION-LIST -->', () => collectionListHtml(collections));
+    .replace('<!-- COLLECTION-LIST -->', () => collectionListHtml(collections))
+    .replace('<!-- ARTICLE-CARDS -->', () => articleCardsHtml(articles));
   fs.writeFileSync(path.join(ROOT, meta.slug + '.html'), layout(meta, body));
   console.log(`  ok  ${meta.slug}.html`);
   if (meta.slug !== '404') slugs.push(meta.slug);
@@ -714,6 +1229,55 @@ fs.writeFileSync(path.join(ROOT, 'data', 'posts.json'), JSON.stringify({
   }))
 }, null, 2) + '\n');
 console.log(`  ok  data/posts.json (${posts.length} post${posts.length === 1 ? '' : 's'})`);
+
+/* ---- Articles: one page each, plus the index site search reads ---- */
+
+if (articles.length) {
+  fs.mkdirSync(ARTICLES_DIR, { recursive: true });
+
+  // An article deleted in the admin panel loses its page too.
+  const wanted = new Set(articles.map(a => a.slug + '.html'));
+  for (const stale of fs.readdirSync(ARTICLES_DIR).filter(f => f.endsWith('.html'))) {
+    if (!wanted.has(stale)) {
+      fs.unlinkSync(path.join(ARTICLES_DIR, stale));
+      console.log(`  --  removed articles/${stale} (article no longer exists)`);
+    }
+  }
+
+  const ia = readJson('data/photos-ia.json');
+  const own = readJson('data/photos.json');
+  const lookup = {
+    ia: new Map(((ia && ia.photos) || []).map(p => [p.id, p])),
+    own: new Map(((own && own.photos) || []).map(p => [p.id, p]))
+  };
+
+  for (const a of articles) {
+    fs.writeFileSync(path.join(ARTICLES_DIR, a.slug + '.html'), layout({
+      title: escapeHtml(a.title),
+      description: escapeHtml(a.summary),
+      image: a.image ? '/' + a.image.replace(/^\//, '') : '',
+      slug: a.slug,
+      url: 'articles/' + a.slug + '.html',
+      prefix: '../'
+    }, articlePage(a, lookup)));
+    console.log(`  ok  articles/${a.slug}.html`);
+    built++;
+  }
+}
+
+fs.writeFileSync(path.join(ROOT, 'data', 'articles.json'), JSON.stringify({
+  _comment: 'GENERATED by tools/build.js from tools/content/articles/*.md. Do not edit by hand — your changes will be overwritten on the next build.',
+  articles: articles.map(a => ({
+    slug: a.slug,
+    title: a.title,
+    date: a.date,
+    author: a.author,
+    summary: a.summary,
+    url: 'articles/' + a.slug + '.html',
+    text: a.text
+  }))
+}, null, 2) + '\n');
+console.log(`  ok  data/articles.json (${articles.length} article${articles.length === 1 ? '' : 's'})`);
 
 /* ---- Collection finding aids: one page per collection ---- */
 
@@ -799,15 +1363,20 @@ ErrorDocument 404 ${TEST_SITE ? '/mvhistory/404.html' : '/404.html'}
 </IfModule>
 `;
 
+/* Pages that were moved into articles/ when the Articles section was added,
+   November 2026. Their old addresses keep working. _redirects has the same
+   list for Cloudflare. */
+const MOVED_TO_ARTICLES = ['castro-legacy', 'landmarks', 'oldest-resident', 'eagle-monument'];
+
 const OLD_URLS = [
   ['about-the-association', 'about'], ['our-history', 'our-history'],
   ['mountain-view-history-center', 'history-center'], ['history', 'history'],
   ['mountain-view-history-timeline', 'timeline'],
-  ['castro-city-rengstorff-park', 'castro-legacy'],
-  ['historical-buildings-in-mountain-view-ca', 'landmarks'],
-  ['mvhs-eagle-monument', 'eagle-monument'], ['useful_links', 'links'],
+  ['castro-city-rengstorff-park', 'articles/castro-legacy'],
+  ['historical-buildings-in-mountain-view-ca', 'articles/landmarks'],
+  ['mvhs-eagle-monument', 'articles/eagle-monument'], ['useful_links', 'links'],
   ['video-gallery', 'videos'], ['events', 'events'],
-  ['oldest-living-resident', 'oldest-resident'], ['get-involved', 'join'],
+  ['oldest-living-resident', 'articles/oldest-resident'], ['get-involved', 'join'],
   ['donate', 'donate'], ['memberships', 'membership'], ['volunteer', 'volunteer'],
   ['newsletters', 'newsletters'], ['archived-newsletters', 'newsletters'],
   ['contact-us', 'contact']
@@ -847,6 +1416,10 @@ ${OLD_URLS.map(([from, to]) =>
   `RedirectMatch 301 ^/${from}/?$ /${to}.html`).join('\n')}
 RedirectMatch 301 ^/events/page/.*$ /events.html
 RedirectMatch 301 ^/eventbrite-event/.*$ /events.html
+
+# The four articles that sat at the top of the site before November 2026.
+${MOVED_TO_ARTICLES.map(slug =>
+  `RedirectMatch 301 ^/${slug}(\\.html)?$ /articles/${slug}.html`).join('\n')}
 ${HTACCESS_COMMON}`);
 console.log(`  ok  .htaccess${TEST_SITE ? ' (test site: no old-URL redirects)' : ''}`);
 
@@ -879,6 +1452,10 @@ ${slugs.map(s => `  <url>
     <loc>${SITE.url}/news/${p.slug}.html</loc>
     <lastmod>${p.date}</lastmod>
     <priority>0.6</priority>
+  </url>`)).concat(articles.map(a => `  <url>
+    <loc>${SITE.url}/articles/${a.slug}.html</loc>
+    <lastmod>${a.date || today}</lastmod>
+    <priority>0.7</priority>
   </url>`)).concat(collections.map(c => `  <url>
     <loc>${SITE.url}/collections/${c.slug}.html</loc>
     <lastmod>${today}</lastmod>

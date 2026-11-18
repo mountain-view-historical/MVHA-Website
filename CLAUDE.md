@@ -49,8 +49,9 @@ migrate later.
 ## Editing panel
 
 **Sveltia CMS** at `/admin`, git-backed, signing in with GitHub. Chosen over
-Decap (stagnant, and Netlify Identity is deprecated). Four collections:
-News & Stories, Events, Photographs, Board of Directors. Config in
+Decap (stagnant, and Netlify Identity is deprecated). Collections: News &
+Stories, Articles, Events, Photographs, Newsletters, Home page pictures,
+Payment links, Board of Directors. Config in
 `admin/config.yml`.
 
 Editors are board members added as repository collaborators. Saving in the
@@ -72,8 +73,22 @@ panel commits to GitHub, which triggers a rebuild — live in a minute or two.
   The Markdown renderer is small and self-contained inside `build.js` —
   deliberately no npm dependency, so `Rebuild Website.command` works with
   nothing installed.
+- **Articles are build-time too (November 2026).** Longer, lasting pieces
+  live in `tools/content/articles/*.md`, edited in `/admin` → Articles, and
+  are built to `articles/<slug>.html` plus `data/articles.json` (full text,
+  for site search), the cards on `books-articles.html` (`<!-- ARTICLE-CARDS
+  -->`) and, for articles with a `menu_title`, the Books & Articles menu.
+  The four hand-built articles (castro-legacy, landmarks, oldest-resident,
+  eagle-monument) were converted then; their old root addresses redirect.
+  Front matter supports lists (`related:` — related materials shown as
+  cards), so `build.js` carries a small YAML reader; it was fuzz-tested
+  against the `yaml` package Sveltia uses. Markdown additions: a paragraph
+  of only pictures becomes figures with the picture title as caption (side
+  by side if more than one); a blockquote ending in a "— name" paragraph
+  gets a `<cite>`; raw HTML runs to the next blank line.
 - **Generated, never edit by hand:** every `*.html` in the root, `news/`,
-  `data/posts.json`, `sitemap.xml`, `robots.txt`, `.htaccess`.
+  `articles/`, `data/posts.json`, `data/articles.json`, `sitemap.xml`,
+  `robots.txt`, `.htaccess`.
 - **Day-to-day content needs no rebuild.** Events, photos, timeline and board
   come from `data/*.json`, read in the browser. Only page wording and news
   posts require a build.

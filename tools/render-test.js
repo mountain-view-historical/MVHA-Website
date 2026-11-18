@@ -253,6 +253,14 @@ async function render(page, query, patch) {
   doc = await render('search.html', '?q=hangar%20one');
   check('multi-word search works', doc.querySelectorAll('[data-search-results] li').length > 0);
 
+  // Articles are searched on their full text, not on hand-written keywords.
+  doc = await render('search.html', '?q=elzene');
+  const articleHits = [...doc.querySelectorAll('[data-search-results] li')]
+    .filter(r => r.querySelector('.kind').textContent === 'Article');
+  check('finds a word that appears only inside an article', articleHits.length === 1);
+  check('and links to the article in its folder',
+    articleHits.length && /articles\/oldest-resident\.html$/.test(articleHits[0].querySelector('a').getAttribute('href')));
+
   doc = await render('search.html', '?q=zzzznotathing');
   check('handles no results gracefully', /No results/.test(doc.querySelector('[data-search-summary]').textContent));
 
@@ -389,7 +397,7 @@ async function render(page, query, patch) {
   console.log('\nAdvanced search — source filters');
   doc = await render('search.html', '?q=castro');
   const sources = [...doc.querySelectorAll('[data-search-sources] .source')];
-  check(`offers one filter per source (${sources.length})`, sources.length === 5,
+  check(`offers one filter per source (${sources.length})`, sources.length === 7,
     sources.map(s => s.textContent.trim().split(/\s+/)[0]).join(', '));
   check('all sources are on by default',
     sources.every(s => s.querySelector('input').checked));

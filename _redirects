@@ -16,12 +16,12 @@
 # /history/                                  /history.html              301   <- removed: caused a redirect loop on Cloudflare
 /mountain-view-history-timeline            /timeline.html             301
 /mountain-view-history-timeline/           /timeline.html             301
-/castro-city-rengstorff-park               /castro-legacy.html        301
-/castro-city-rengstorff-park/              /castro-legacy.html        301
-/historical-buildings-in-mountain-view-ca  /landmarks.html            301
-/historical-buildings-in-mountain-view-ca/ /landmarks.html            301
-/mvhs-eagle-monument                       /eagle-monument.html       301
-/mvhs-eagle-monument/                      /eagle-monument.html       301
+/castro-city-rengstorff-park               /articles/castro-legacy.html        301
+/castro-city-rengstorff-park/              /articles/castro-legacy.html        301
+/historical-buildings-in-mountain-view-ca  /articles/landmarks.html            301
+/historical-buildings-in-mountain-view-ca/ /articles/landmarks.html            301
+/mvhs-eagle-monument                       /articles/eagle-monument.html       301
+/mvhs-eagle-monument/                      /articles/eagle-monument.html       301
 /useful_links                              /links.html                301
 /useful_links/                             /links.html                301
 /video-gallery                             /videos.html               301
@@ -30,8 +30,8 @@
 # /events/                                   /events.html               301   <- removed: caused a redirect loop on Cloudflare
 /events/page/*                             /events.html               301
 /eventbrite-event/*                        /events.html               301
-/oldest-living-resident                    /oldest-resident.html      301
-/oldest-living-resident/                   /oldest-resident.html      301
+/oldest-living-resident                    /articles/oldest-resident.html      301
+/oldest-living-resident/                   /articles/oldest-resident.html      301
 /get-involved                              /join.html                 301
 /get-involved/                             /join.html                 301
 # /donate                                    /donate.html               301   <- removed: caused a redirect loop on Cloudflare
@@ -46,6 +46,18 @@
 /archived-newsletters/                     /newsletters.html          301
 /contact-us                                /contact.html              301
 /contact-us/                               /contact.html              301
+
+# The four articles that sat at the top of the site until November 2026, when
+# the Articles section was added. Both spellings, because Cloudflare itself
+# sends /page.html to /page.
+/castro-legacy.html                        /articles/castro-legacy.html     301
+/castro-legacy                             /articles/castro-legacy.html     301
+/landmarks.html                            /articles/landmarks.html         301
+/landmarks                                 /articles/landmarks.html         301
+/oldest-resident.html                      /articles/oldest-resident.html   301
+/oldest-resident                           /articles/oldest-resident.html   301
+/eagle-monument.html                       /articles/eagle-monument.html    301
+/eagle-monument                            /articles/eagle-monument.html    301
 
 # Anything else that is not found
 #

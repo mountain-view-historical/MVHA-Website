@@ -85,6 +85,107 @@ collections:
         hint: Use the toolbar for headings, bold, links and pictures.
 
   # ------------------------------------------------------------------
+  # Articles — longer pieces that stay useful for years: research, local
+  # history, profiles. One Markdown file each, built into articles/<name>.html
+  # and listed on the Books & Articles page. See tools/build.js.
+  # ------------------------------------------------------------------
+  - name: articles
+    label: Articles
+    label_singular: Article
+    description: Longer pieces that stay useful for years. For announcements and short items, use News & Stories instead.
+    folder: tools/content/articles
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    summary: '{{title}}'
+    sortable_fields: [title, date]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: subtitle
+        label: Line under the title
+        widget: string
+        required: false
+        hint: Optional. One sentence shown under the title at the top of the page.
+      - name: author
+        label: Written by
+        widget: string
+        required: false
+        hint: Optional. Shown as "By …" under the title.
+      - name: credits
+        label: Other credits
+        widget: string
+        required: false
+        hint: 'Optional. For example: Photographs by Anna Hoch-Kenney'
+      - name: date
+        label: Date published
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: true
+        required: false
+        hint: Optional. Articles are listed newest first; those with no date come after, in order of title.
+      - name: summary
+        label: Summary
+        widget: text
+        hint: One or two sentences. This is what shows on the Books & Articles page and in Google results.
+      - name: image
+        label: Picture for the listing and for link previews
+        widget: image
+        required: false
+        hint: Optional. Shown when the article is shared on Facebook and the like. It does not appear on the page itself — put pictures in the article where you want them.
+      - name: menu_title
+        label: Menu title
+        widget: string
+        required: false
+        hint: Fill this in to list the article in the Books & Articles menu, under this name. Leave it empty to keep the menu short — the article is still on the Books & Articles page and in search.
+      - name: draft
+        label: Keep as a draft
+        widget: boolean
+        default: false
+        required: false
+        hint: Tick this to save your work without publishing it. Untick when you are ready.
+      - name: body
+        label: The article
+        widget: markdown
+        hint: 'Use ## for section headings. A picture on its own line becomes a figure, and its Title becomes the caption underneath. Two pictures on consecutive lines sit side by side.'
+      - name: note_title
+        label: Box at the end — heading
+        widget: string
+        required: false
+        hint: 'Optional. A shaded box after the article, for example: How you can help'
+      - name: note_text
+        label: Box at the end — text
+        widget: markdown
+        required: false
+        minimal: true
+        buttons: [bold, italic, link]
+      - name: related
+        label: Related materials
+        label_singular: related item
+        widget: list
+        required: false
+        collapsed: true
+        summary: '{{fields.label}}'
+        hint: Documents, photographs, recordings and web pages for readers who want to go further. They appear as cards below the article.
+        fields:
+          - { name: label, label: What it is, widget: string, hint: 'For example: Castro family 2nd Home, 1911' }
+          - name: url
+            label: Web address
+            widget: string
+            required: false
+            hint: An Internet Archive item, a page on this site, a YouTube video, or any other address. Internet Archive items show a thumbnail.
+          - name: file
+            label: Or upload a file
+            widget: file
+            required: false
+            media_folder: /assets/documents
+            public_folder: /assets/documents
+            hint: A PDF or picture, kept on this website. Files must be under 25 MB — put recordings and large scans on the Internet Archive and use the web address box instead.
+          - { name: note, label: One line about it, widget: text, required: false }
+
+  # ------------------------------------------------------------------
   # Events — a single file with several lists inside it.
   # ------------------------------------------------------------------
   - name: events

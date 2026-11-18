@@ -38,9 +38,17 @@ for (const f of fs.readdirSync(dataDir).filter(f => f.endsWith('.json'))) {
 
 console.log('\nChecking pages');
 const pages = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
+/* Articles and news posts are built into folders of their own. Their links
+   are checked too; they reach site search through data/articles.json and
+   data/posts.json, so they are not expected in pages.json. */
+const builtPages = ['articles', 'news'].flatMap(dir =>
+  fs.existsSync(path.join(ROOT, dir))
+    ? fs.readdirSync(path.join(ROOT, dir)).filter(f => f.endsWith('.html')).map(f => dir + '/' + f)
+    : []);
 
-for (const page of pages) {
+for (const page of pages.concat(builtPages)) {
   const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
+  const here = path.join(ROOT, path.dirname(page));
   const issues = [];
 
   if (!/<title>[^<]+<\/title>/.test(html)) issues.push('no <title>');
@@ -55,7 +63,7 @@ for (const page of pages) {
     if (/^(https?:|mailto:|tel:|#)/.test(href)) continue;
     const target = href.split('#')[0].split('?')[0];
     if (!target) continue;
-    if (!fs.existsSync(path.join(ROOT, target))) {
+    if (!fs.existsSync(target.startsWith('/') ? path.join(ROOT, target) : path.join(here, target))) {
       issues.push(`broken link → ${target}`);
     }
   }
@@ -67,7 +75,7 @@ for (const page of pages) {
     // Assets carry a ?v=hash so a new release is not served from cache. The
     // query is not part of the filename, so drop it before looking on disk.
     const file = src.split('#')[0].split('?')[0];
-    if (!fs.existsSync(path.join(ROOT, file))) {
+    if (!fs.existsSync(file.startsWith('/') ? path.join(ROOT, file) : path.join(here, file))) {
       issues.push(`missing asset → ${src}`);
     }
   }

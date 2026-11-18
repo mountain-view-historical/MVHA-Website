@@ -51,11 +51,12 @@ You stay signed in afterwards, so this is a one-off.
 
 ## What you will see
 
-Seven sections down the left-hand side:
+Eight sections down the left-hand side:
 
 | Section | What it controls |
 | --- | --- |
-| **News & Stories** | Short articles and announcements on the News page |
+| **News & Stories** | Short pieces and announcements on the News page |
+| **Articles** | Longer pieces on the Books & Articles page — research, local history, profiles |
 | **Events** | Every event, and the annual community calendar |
 | **Photographs** | The photo archive |
 | **Newsletters** | Every issue of *The Mountain ReView* |
@@ -84,6 +85,46 @@ anything else, and you do not have to tell anyone.
 
 **Not finished?** Tick **Keep as a draft** and press Publish. Your work is
 saved but nothing appears on the website. Untick it when you are ready.
+
+---
+
+## Writing an article
+
+**Articles or News & Stories?** News is for things that go out of date: an
+event coming up, an announcement. An article is for something a reader could
+still want in ten years.
+
+1. **Articles → New Article.**
+2. Fill in the title and a one-or-two sentence summary. As with news, the
+   summary is what people see on the Books & Articles page and in Google.
+3. Write the article in the big box. Use the heading button for section
+   headings.
+4. **Pictures.** Put each picture on a line of its own. Whatever you type in
+   the picture's **Title** box appears as the caption underneath it. Put two
+   pictures one straight after the other and they sit side by side.
+5. **Related materials** (near the bottom) are for readers who want to go
+   further: a document, a photograph on the Internet Archive, a recording, a
+   web page. Add one item for each, with a short name. Paste a web address,
+   or upload a PDF. A photograph from the Internet Archive shows its picture
+   automatically.
+6. Press **Publish**.
+
+The optional boxes, in brief:
+
+- **Line under the title, Written by, Other credits** — shown at the top.
+- **Date published** — articles are listed newest first.
+- **Menu title** — fill this in only if the article should also appear in
+  the Books & Articles menu. Most should not; the menu would get too long.
+- **Box at the end** — a shaded box after the article, for something like
+  "How you can help".
+
+**Big files.** Uploads must be under 25 MB. Recordings, videos and large
+scans belong on the Internet Archive or YouTube — upload them there, then
+paste the address into Related materials.
+
+**A box or a map in an article** is written in a form the editor cannot show
+as formatted text. If you see code you do not recognise, leave it alone, or
+switch the box to its plain-text (Markdown) view to edit around it.
 
 ---
 
