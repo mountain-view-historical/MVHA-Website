@@ -960,11 +960,16 @@ ${cards}
 }
 
 function articlePage(a, lookup) {
-  const byline = [
+  /* Who wrote it and when sits at the top of the article itself, not in the
+     shaded heading band above, where it was easy to miss. */
+  const details = [
     a.date ? `<time datetime="${a.date}">${prettyDate(a.date)}</time>` : '',
-    a.author ? 'By ' + escapeHtml(a.author) : '',
     a.credits ? escapeHtml(a.credits) : ''
   ].filter(Boolean).join(' &middot; ');
+  const byline = a.author || details
+    ? `      <div class="article-byline">
+${a.author ? `        <p class="article-author">By ${escapeHtml(a.author)}</p>\n` : ''}${details ? `        <p class="article-details">${details}</p>\n` : ''}      </div>\n`
+    : '';
 
   // The opening paragraph is set a little larger, as the old pages did by hand.
   const body = a.html.replace(/^<p>/, '<p class="lede">');
@@ -984,13 +989,13 @@ ${a.noteTitle ? `        <h3>${escapeHtml(a.noteTitle)}</h3>\n` : ''}${markdown(
   <div class="wrap">
     <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="books-articles.html">Books &amp; Articles</a><span>&rsaquo;</span>${escapeHtml(a.title)}</p>
     <h1>${escapeHtml(a.title)}</h1>
-${a.subtitle ? `    <p>${inline(a.subtitle)}</p>\n` : ''}${byline ? `    <p class="post-meta">${byline}</p>\n` : ''}  </div>
+${a.subtitle ? `    <p>${inline(a.subtitle)}</p>\n` : ''}  </div>
 </section>
 
 <section class="section">
   <div class="wrap">
     <article class="prose article-body">
-${body}${note}
+${byline}${body}${note}
     </article>
 ${related ? '' : back}  </div>
 </section>

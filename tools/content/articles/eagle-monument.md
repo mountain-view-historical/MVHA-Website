@@ -4,6 +4,8 @@ subtitle: A monument and historic plaque at Eagle Park, dedicated to the accompl
 summary: The monument at Eagle Park dedicated in December 2023 to the 1975 Mountain View High School CCS championship football team — and the whole MVHS experience.
 image: assets/images/PXL_20231217_152512143-compressed-771x1024.jpg
 menu_title: MVHS Eagle Monument
+author: Pamela Baird and the MVHS Monument Committee
+credits: First published in The Mountain ReView, Winter 2024.
 note_title: Support the monument
 note_text: |-
   To donate to the Castro Street MVHS monument, make your check payable to **The Mountain View Pioneer & Historical Association**, write **MVHS monument** in the memo line, and mail it to P.O. Box 252, Mountain View, CA 94042.
