@@ -6,6 +6,7 @@ credits: 'With “What is a patent?” by Sundai Lott, attorney at law. First pu
 date: 2026-11-18
 summary: Nine early Mountain View residents who patented their inventions between 1868 and 1952 — from Henry Rengstorff's excavator and Jean Deray's diving suit to William Formway's Walnut Wizard.
 image: assets/images/articles/inventors/deray-1919-clipping.jpg
+menu_title: The Innovators
 note_title: Where this came from
 note_text: |-
   These profiles first appeared one or two at a time in *The Mountain ReView*, the Association's quarterly newsletter, from Winter 2025 to Winter 2026. They have been gathered here, in order of the first patent each inventor received, with the newsletters' pictures. Every issue is free to read in our [newsletter archive](newsletters.html).
