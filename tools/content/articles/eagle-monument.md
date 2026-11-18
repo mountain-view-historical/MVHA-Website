@@ -2,7 +2,7 @@
 title: MVHS Eagles Soar
 subtitle: A monument and historic plaque at Eagle Park, dedicated to the accomplishment of the 1975 Mountain View High School football team.
 summary: The monument at Eagle Park dedicated in December 2023 to the 1975 Mountain View High School CCS championship football team — and the whole MVHS experience.
-image: assets/images/PXL_20231216_193332065-compressed-1024x563.jpg
+image: assets/images/PXL_20231217_152512143-compressed-771x1024.jpg
 menu_title: MVHS Eagle Monument
 note_title: Support the monument
 note_text: |-

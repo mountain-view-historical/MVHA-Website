@@ -1323,3 +1323,7 @@ a.feature-media { display: block; }
 }
 .book-cover--none span { font-size: 1.2rem; font-weight: 600; }
 .book-cover--none small { font-size: .75rem; color: var(--ink-faint); margin-top: .4rem; }
+
+/* A tall picture on its own (a patent drawing, say) is kept to a sensible
+   height rather than filling the whole column. */
+.article-body > figure img { max-height: 640px; width: auto; max-width: 100%; }

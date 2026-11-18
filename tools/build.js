@@ -916,6 +916,8 @@ function relatedItem(r, lookup) {
     thumb = href;
   } else if (/\.(mp3|m4a|wav|ogg)($|[?#])/i.test(href)) {
     kind = 'Recording';
+  } else if (/^https?:\/\/patents\.google\.com\//i.test(href)) {
+    kind = 'Patent';
   } else if (/^https?:\/\/(www\.)?(youtube\.com|youtu\.be|vimeo\.com)\//i.test(href)) {
     kind = 'Video';
   } else if (!/^[a-z][a-z0-9+.-]*:/i.test(href)) {
